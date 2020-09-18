@@ -46,10 +46,13 @@ def Get_Lane_Fuction():
     # เวลารอของรถทุกคันในเลนนั้นๆ
     # gneE3_0, gneE3_1, gneE7_0, gneE7_1, gneE13_0, gneE13_1, gneE11_0, gneE11_1
     # (traci.lane.getWaitingTime(lane[0][0]) + traci.lane.getWaitingTime(lane[0][1])) / 2
+    # (traci.lane.getWaitingTime(lane[0][0]) + traci.lane.getWaitingTime(lane[0][1])) / 2
+    # (traci.lane.getWaitingTime(lane[0][0]) + traci.lane.getWaitingTime(lane[0][1])) / 2
+    # (traci.lane.getWaitingTime(lane[0][0]) + traci.lane.getWaitingTime(lane[0][1])) / 2
+    # ทำไงดีว้าาาาาาาาา
         for i in lane:
             waiting[lane.index(i)] = traci.lane.getWaitingTime(i)
         print(waiting)
-        print('hi')
         traci.simulationStep()    
     traci.close()
     sys.stdout.flush()   

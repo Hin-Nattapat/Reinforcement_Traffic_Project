@@ -49,10 +49,8 @@ def Get_Lane_Fuction():
     # (traci.lane.getWaitingTime(lane[0][0]) + traci.lane.getWaitingTime(lane[0][1])) / 2
     # (traci.lane.getWaitingTime(lane[0][0]) + traci.lane.getWaitingTime(lane[0][1])) / 2
     # (traci.lane.getWaitingTime(lane[0][0]) + traci.lane.getWaitingTime(lane[0][1])) / 2
-    # ทำไงดีว้าาาาาาาาา
-        for i in lane:
-            waiting[lane.index(i)] = traci.lane.getWaitingTime(i)
-        print(waiting)
+    # ทำไงดีว้าาาาาาาาา 
+        print(traci.l)
         traci.simulationStep()    
     traci.close()
     sys.stdout.flush()   
@@ -62,7 +60,7 @@ def Get_TLS_Fuction():
         # แสดงไฟจราจรทั้งหมด
         # print(traci.trafficlight.getIDList()) 
         # แสดง State TLS ขณะนั้น
-        # print(traci.trafficlight.getRedYellowGreenState('gneJ8'))
+        print(traci.trafficlight.getRedYellowGreenState('gneJ7'))
         # เวลาที่จะเปลี่ยนเป็น Next State
         # print(traci.trafficlight.getNextSwitch('gneJ8')) 
         # เวลาของ State นั้่นๆ 
@@ -73,6 +71,27 @@ def Get_TLS_Fuction():
         # print(traci.trafficlight.getPhase('gneJ8')) 
         # id ของชุด TLS
         # print(traci.trafficlight.getProgram('gneJ8'))
+        traci.simulationStep()
+    traci.close()
+    sys.stdout.flush()
+
+def get_mean_waiting():
+    wait_time = [0.0, 0.0, 0.0, 0.0]
+    keep = True
+    lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'], ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
+    while traci.simulation.getMinExpectedNumber() > 0:
+        phase = traci.trafficlight.getPhase('gneJ7')
+        if phase % 2 == 0 and keep:
+            temp = (traci.lane.getWaitingTime(lane[int(phase/2)][0]) + traci.lane.getWaitingTime(lane[int(phase/2)][1])) / 2
+            wait_time[int(phase/2)] = temp
+            print(temp)
+            keep = False
+        elif phase == 7:
+            print('Avg = ', end='')
+            print(sum(wait_time) / len(wait_time))
+        elif phase % 2 == 1:
+            keep = True
+
         traci.simulationStep()
     traci.close()
     sys.stdout.flush()
@@ -111,7 +130,8 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
     traci.start([sumoBinary, "-c", "16cross_TLS/2_2Cross.sumocfg"])
     # Get_Vehicel_Fuction()
-    Get_Lane_Fuction()
+    # Get_Lane_Fuction()
     # Get_TLS_Fuction()
+    get_mean_waiting()
     # Get_Simulation_Fuction()
     # Set_TLS_Fuction()

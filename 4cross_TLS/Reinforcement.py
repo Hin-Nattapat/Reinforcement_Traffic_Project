@@ -48,7 +48,7 @@ def get_options():
 class TrafficLight:
     def __init__(self, state):
         # self.phases = phases
-        # self.reward = reward
+        self.reward = 0.0
         self.state = state
         self.stateSpace = []
         self.action = [
@@ -59,7 +59,8 @@ class TrafficLight:
             [self.state[0], self.state[1], self.state[2]+15],
             [self.state[0], self.state[1], self.state[2]-15],
         ]
-        print(self.state)
+        self.maxQ = 0.0
+        # print(self.state)
 
     def setTLS(self):
         TrafficLightPhases = []
@@ -94,11 +95,12 @@ class TrafficLight:
                 temp = (traci.lane.getWaitingTime(
                     lane[int(phase/2)][0]) + traci.lane.getWaitingTime(lane[int(phase/2)][1])) / 2
                 wait_time[int(phase/2)] = temp
-                print(temp)
+                # print(temp)
                 keep = False
             elif phase == 7:
-                print('Avg = ', end='')
-                print(sum(wait_time) / len(wait_time))
+                self.reward = 1/(sum(wait_time) / len(wait_time))
+                # print('Avg = ', end='')
+                # print(sum(wait_time) / len(wait_time))
             elif phase % 2 == 1:
                 keep = True
 
@@ -106,23 +108,49 @@ class TrafficLight:
         traci.close()
         sys.stdout.flush()
 
-    def randomAction(self):
-        print("test_1", self.state)
-        action = randrange(0, 6)
+    def legalAction(self, action):
+        State = self.state
         if action == 0:
-            self.state = [self.state[0]+15, self.state[1], self.state[2]]
+            State = [State[0]+15, State[1], State[2]]
         elif action == 1:
-            self.state = [self.state[0]-15, self.state[1], self.state[2]]
+            State = [State[0]-15, State[1], State[2]]
         elif action == 2:
-            self.state = [self.state[0], self.state[1]+15, self.state[2]]
+            State = [State[0], State[1]+15, State[2]]
         elif action == 3:
-            self.state = [self.state[0], self.state[1]-15, self.state[2]]
+            State = [State[0], State[1]-15, State[2]]
         elif action == 4:
-            self.state = [self.state[0], self.state[1], self.state[2]+15]
+            State = [State[0], State[1], State[2]+15]
         else:
-            self.state = [self.state[0], self.state[1], self.state[2]-15],
-        print("test_2", self.state , action)
-        return self.state
+            State = [State[0], State[1], State[2]-15]
+
+        if State[0] == 0 or State[1] == 0 or State[2] == 0:
+            return False
+        else:
+            return True
+
+    def randomAction(self):
+        while True:
+            action = randrange(0, 6)
+            if x.legalAction(action):
+                break
+        return action
+
+    def takeAction(self,action):
+        State = self.state
+        if action == 0:
+            State = [State[0]+15, State[1], State[2]]
+        elif action == 1:
+            State = [State[0]-15, State[1], State[2]]
+        elif action == 2:
+            State = [State[0], State[1]+15, State[2]]
+        elif action == 3:
+            State = [State[0], State[1]-15, State[2]]
+        elif action == 4:
+            State = [State[0], State[1], State[2]+15]
+        else:
+            State = [State[0], State[1], State[2]-15]
+        self.state = State
+        return self.state 
 
     def InitStateSpace(self):
         self.stateSpace.append(
@@ -139,18 +167,29 @@ class TrafficLight:
                 [self.state[0], self.state[1], self.state[2], 0])
         return self.stateSpace
 
+    def fineMaxQ(self):
+        for i in range(6):
+            x.takeAction(i)
+            x.setTLS()
+
     def Get_TLS_Fuction(self):
         while traci.simulation.getMinExpectedNumber() > 0:
-            if (traci.simulation.getCurrentTime()) == 50000:
+
+
+
+
+
+
+            if (traci.simulation.getCurrentTime()) == 132000:
                 self.state = x.randomAction()
                 print(self.state)
                 x.setTLS()
 
-            if (traci.simulation.getCurrentTime()) == 100000:
+            if (traci.simulation.getCurrentTime()) == 264000:
                 self.state = x.randomAction()
                 print(self.state)
                 x.setTLS()
-            if (traci.simulation.getCurrentTime()) == 150000:
+            if (traci.simulation.getCurrentTime()) == 396000:
                 self.state = x.randomAction()
                 print(self.state)
                 x.setTLS()
@@ -183,10 +222,14 @@ if __name__ == "__main__":
 
     State = [15, 15, 15]
     x = TrafficLight(State)
-    x.setTLS()
     x.Get_TLS_Fuction()
 
+
+# State = [15, 15, 15]
 # x = TrafficLight(State)
-# # State = x.randomAction()
+# test = x.randomAction()
+# print(test)
+# x.findMaxQ()
+# State = x.randomAction()
 # test = x.InitStateSpace()
 # print(test[0][3])

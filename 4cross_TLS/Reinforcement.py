@@ -186,13 +186,6 @@ class TrafficLight:
                 print(self.state)
                 TLS.setTLS()
                 
-            if (traci.simulation.getCurrentTime()) == 396000:
-                action = TLS.randomAction()
-                TLS.takeAction(action)
-                print(self.state)
-                TLS.setTLS()
-
-
 
             # แสดงไฟจราจรทั้งหมด
             # print(traci.trafficlight.getIDList())

@@ -81,12 +81,13 @@ def get_mean_waiting():
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'], ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
     while traci.simulation.getMinExpectedNumber() > 0:
         phase = traci.trafficlight.getPhase('gneJ7')
+        print(phase)
         if phase % 2 == 0 and keep:
             temp = (traci.lane.getWaitingTime(lane[int(phase/2)][0]) + traci.lane.getWaitingTime(lane[int(phase/2)][1])) / 2
             wait_time[int(phase/2)] = temp
             print(temp)
             keep = False
-        elif phase == 7 or phase == 14 or phase == 21:
+        elif phase == 7:
             print('Avg = ', end='')
             print(sum(wait_time) / len(wait_time))
         elif phase % 2 == 1:

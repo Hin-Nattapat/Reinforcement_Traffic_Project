@@ -42,7 +42,6 @@ def get_options():
 #             self.sumo_binary = checkBinary('sumo-gui')
 #         else:
 #             self.sumo_binary = checkBinary('sumo')
-
 #         traci.start([self.sumo_binary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
 class TrafficLight:
@@ -136,20 +135,18 @@ class TrafficLight:
         return action
 
     def takeAction(self,action):
-        State = self.state
         if action == 0:
-            State = [State[0]+15, State[1], State[2]]
+            self.state = [self.state[0]+15, self.state[1], self.state[2]]
         elif action == 1:
-            State = [State[0]-15, State[1], State[2]]
+            self.state = [self.state[0]-15, self.state[1], self.state[2]]
         elif action == 2:
-            State = [State[0], State[1]+15, State[2]]
+            self.state = [self.state[0], self.state[1]+15, self.state[2]]
         elif action == 3:
-            State = [State[0], State[1]-15, State[2]]
+            self.state = [self.state[0], self.state[1]-15, self.state[2]]
         elif action == 4:
-            State = [State[0], State[1], State[2]+15]
+            self.state = [self.state[0], self.state[1], self.state[2]+15]
         else:
-            State = [State[0], State[1], State[2]-15]
-        self.state = State
+            self.state = [self.state[0], self.state[1], self.state[2]-15]
         return self.state 
 
     def InitStateSpace(self):
@@ -185,7 +182,7 @@ class TrafficLight:
                 TLS.takeAction(action)
                 print(self.state)
                 TLS.setTLS()
-                
+
 
             # แสดงไฟจราจรทั้งหมด
             # print(traci.trafficlight.getIDList())

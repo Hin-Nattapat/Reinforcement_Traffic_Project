@@ -86,7 +86,7 @@ def get_mean_waiting():
             wait_time[int(phase/2)] = temp
             print(temp)
             keep = False
-        elif phase == 7:
+        elif phase == 7 or phase == 14 or phase == 21:
             print('Avg = ', end='')
             print(sum(wait_time) / len(wait_time))
         elif phase % 2 == 1:

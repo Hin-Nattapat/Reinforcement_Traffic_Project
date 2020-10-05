@@ -152,7 +152,7 @@ class TrafficLight:
     def InitStateSpace(self):
         self.stateSpace.append(
             [self.state[0], self.state[1], self.state[2], 0])
-        while self.state != [75, 75, 75]:
+        while self.state != [75, 15, 15]:
             self.state[2] += 15
             if self.state[2] == 90:
                 self.state[2] = 15
@@ -164,7 +164,7 @@ class TrafficLight:
                 [self.state[0], self.state[1], self.state[2], 0])
         return self.stateSpace
 
-    def fineMaxQ(self):
+    def findMaxQ(self):
         for i in range(6):
             TLS.takeAction(i)
             TLS.setTLS()
@@ -211,16 +211,16 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
-    State = [15, 15, 15]
-    TLS = TrafficLight(State)
-    TLS.Get_TLS_Fuction()
+    # State = [15, 15, 15]
+    # TLS = TrafficLight(State)
+    # TLS.Get_TLS_Fuction()
 
 
-# State = [15, 15, 15]
-# TLS = TrafficLight(State)
+State = [15, 15, 15]
+TLS = TrafficLight(State)
 # test = TLS.randomAction()
 # print(test)
 # TLS.findMaxQ()
 # State = TLS.randomAction()
-# test = TLS.InitStateSpace()
-# print(test[0][3])
+test = TLS.InitStateSpace()
+print(test)

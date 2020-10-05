@@ -129,12 +129,12 @@ class TrafficLight:
 
     def randomAction(self):
         while True:
-            action = randrange(0, 6)
+            action = randrange(0, MAX_ACTION)
             if TLS.legalAction(action):
                 break
         return action
 
-    def takeAction(self,action):
+    def takeAction(self, action):
         if action == 0:
             self.state = [self.state[0]+15, self.state[1], self.state[2]]
         elif action == 1:
@@ -147,12 +147,12 @@ class TrafficLight:
             self.state = [self.state[0], self.state[1], self.state[2]+15]
         else:
             self.state = [self.state[0], self.state[1], self.state[2]-15]
-        return self.state 
+        return self.state
 
     def InitStateSpace(self):
         self.stateSpace.append(
             [self.state[0], self.state[1], self.state[2], 0])
-        while self.state != [75, 15, 15]:
+        while self.state != [75, 75, 75]:
             self.state[2] += 15
             if self.state[2] == 90:
                 self.state[2] = 15
@@ -160,14 +160,19 @@ class TrafficLight:
                 if self.state[1] == 90:
                     self.state[1] = 15
                     self.state[0] += 15
-            self.stateSpace.append(
-                [self.state[0], self.state[1], self.state[2], 0])
+            if sum(self.state) <= 105:
+                self.stateSpace.append(
+                    [self.state[0], self.state[1], self.state[2], 0])
         return self.stateSpace
 
     def findMaxQ(self):
-        for i in range(6):
+        for i in range(MAX_ACTION):
             TLS.takeAction(i)
             TLS.setTLS()
+            self.reward = 1/test
+            for j in len(self.stateSpace):
+                if self.stateSpace[j][0] == self.state[0] and self.stateSpace[j][1] == self.state[1] and self.stateSpace[j][2] == self.state[2]:
+                    self.reward = self.stateSpace[j][4]
 
     def Get_TLS_Fuction(self):
         while traci.simulation.getMinExpectedNumber() > 0:
@@ -182,7 +187,6 @@ class TrafficLight:
                 TLS.takeAction(action)
                 print(self.state)
                 TLS.setTLS()
-
 
             # แสดงไฟจราจรทั้งหมด
             # print(traci.trafficlight.getIDList())

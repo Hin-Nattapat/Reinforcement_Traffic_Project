@@ -131,7 +131,7 @@ class TrafficLight:
     def randomAction(self):
         while True:
             action = randrange(0, 6)
-            if x.legalAction(action):
+            if TLS.legalAction(action):
                 break
         return action
 
@@ -169,30 +169,31 @@ class TrafficLight:
 
     def fineMaxQ(self):
         for i in range(6):
-            x.takeAction(i)
-            x.setTLS()
+            TLS.takeAction(i)
+            TLS.setTLS()
 
     def Get_TLS_Fuction(self):
         while traci.simulation.getMinExpectedNumber() > 0:
-
-
-
-
-
-
             if (traci.simulation.getCurrentTime()) == 132000:
-                self.state = x.randomAction()
+                action = TLS.randomAction()
+                TLS.takeAction(action)
                 print(self.state)
-                x.setTLS()
+                TLS.setTLS()
 
             if (traci.simulation.getCurrentTime()) == 264000:
-                self.state = x.randomAction()
+                action = TLS.randomAction()
+                TLS.takeAction(action)
                 print(self.state)
-                x.setTLS()
+                TLS.setTLS()
+                
             if (traci.simulation.getCurrentTime()) == 396000:
-                self.state = x.randomAction()
+                action = TLS.randomAction()
+                TLS.takeAction(action)
                 print(self.state)
-                x.setTLS()
+                TLS.setTLS()
+
+
+
             # แสดงไฟจราจรทั้งหมด
             # print(traci.trafficlight.getIDList())
             # แสดง State TLS ขณะนั้น
@@ -221,15 +222,15 @@ if __name__ == "__main__":
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
     State = [15, 15, 15]
-    x = TrafficLight(State)
-    x.Get_TLS_Fuction()
+    TLS = TrafficLight(State)
+    TLS.Get_TLS_Fuction()
 
 
 # State = [15, 15, 15]
-# x = TrafficLight(State)
-# test = x.randomAction()
+# TLS = TrafficLight(State)
+# test = TLS.randomAction()
 # print(test)
-# x.findMaxQ()
-# State = x.randomAction()
-# test = x.InitStateSpace()
+# TLS.findMaxQ()
+# State = TLS.randomAction()
+# test = TLS.InitStateSpace()
 # print(test[0][3])

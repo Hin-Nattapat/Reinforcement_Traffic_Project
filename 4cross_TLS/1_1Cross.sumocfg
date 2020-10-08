@@ -9,13 +9,17 @@
 
     <time>
         <begin value="0"/>
-        <end value="500"/>
+        <end value="200"/>
     </time>
 	
     <gui_only>
         <gui-settings-file value="1_1Cross.settings.xml"/>
     </gui_only>
 
+    <simulation>
+        <start value = "1" />
+        <quit-on-end value = "1"/>
+    </simulation> 
 
 
 </configuration>

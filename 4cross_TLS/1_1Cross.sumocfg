@@ -9,7 +9,7 @@
 
     <time>
         <begin value="0"/>
-        <end value="200"/>
+        <end value="500"/>
     </time>
 	
     <gui_only>

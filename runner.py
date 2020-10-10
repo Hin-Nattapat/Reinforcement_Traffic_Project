@@ -23,7 +23,7 @@ if __name__ == "__main__":
     lane = [['gneE3_0', 'gneE3_1'], ['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
             ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
     init = [15, 15, 15]  
-    rl = RL.TrafficLight(init)
+    rl = RL.TrafficLight(init,lane)
     rl.InitStateSpace()
     options = get_options()
     if options.nogui:
@@ -33,12 +33,13 @@ if __name__ == "__main__":
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
     while traci.simulation.getMinExpectedNumber() > 0:
-        action = rl.randomAction()
-        state = rl.get_state(action)
-        api.set_Trafficlight(state)
-        rl.reward = 1 / api.get_waiting_time(lane)
-        rl.save_reward()
-        traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
+        rl.Find_Q_initState()
+        # action = rl.randomAction()
+        # state = rl.get_state(action)
+        # api.set_Trafficlight(state)
+        # rl.reward = 1 / api.get_waiting_time(lane)
+        # rl.save_reward()
+        # traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
         traci.simulationStep()
     #     print(api.get_waiting_time(lane))
-
+    traci.close()

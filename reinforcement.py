@@ -3,6 +3,7 @@ import sys
 import optparse
 import random
 import traci
+import api
 
 EXPLORE_RATE = 0.2
 LEARNING_RATE = 0.6
@@ -25,11 +26,13 @@ num_episodes = 5
 #         traci.start([self.sumo_binary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
 class TrafficLight:
-    def __init__(self, state):
+    def __init__(self, state, lane):
         # self.phases = phases
         self.reward = 0.0
         self.state = state
         self.stateSpace = []
+        self.lane = lane
+        self.complete = bool
         self.action = [
             [self.state[0]+15, self.state[1], self.state[2]],
             [self.state[0]-15, self.state[1], self.state[2]],
@@ -87,6 +90,8 @@ class TrafficLight:
 
         if State[0] == 0 or State[1] == 0 or State[2] == 0:
             return False
+        elif sum(State) > 105:
+            return False
         else:
             return True
 
@@ -126,55 +131,61 @@ class TrafficLight:
             if sum(State) <= 105:
                 self.stateSpace.append([[State[0], State[1], State[2]], 0])
 
-    def Find_Q_Statespace(self):
+    def Find_Q_initState(self):
+        print("--------------- RUN TIME ---------------")
         action = self.randomAction()
-        State = self.takeAction(action)
-        self.set_Trafficlight()
-        self.get_waiting_time()
-        # print("STATE : ",State,"REWARD : ",self.reward)
-        for i in range(len(self.stateSpace)):
-            if self.stateSpace[i][0] == State:
-                self.stateSpace[i][1] = self.reward
-        print(self.stateSpace)
-
-        traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
-        # index = self.stateSpace.index([15, 15, 15, 0])
-        # print(index)
-        # self.stateSpace[index][1] = self.reward
-        # print("test", self.stateSpace)
-
+        State = self.get_state(action)
+        api.set_Trafficlight(State)
+        self.reward = 1 / api.get_waiting_time(self.lane)
+        self.save_reward()
+        print("----------------------------------------")
+        if self.complete == False:
+            traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
+        else:
+            traci.close()
+            
+    
     def get_state(self, action):
         state = self.takeAction(action)
         return state
 
     def save_reward(self):
+        count = 0
+        self.complete = False
         for i in range(len(self.stateSpace)):
             if self.stateSpace[i][0] == self.state:
-                self.stateSpace[i][1] = self.reward
+                if self.stateSpace[i][1] == 0 or self.stateSpace[i][1] < self.reward:
+                    self.stateSpace[i][1] = self.reward  
+            
+            if self.stateSpace[i][1] != 0:
+                count += 1
+            if count == len(self.stateSpace):
+                self.complete = True
         print(self.stateSpace)
+        print("Remaining state : ", len(self.stateSpace)-count)
 
 
-    def Get_TLS_Fuction(self):
-        # print(self.stateSpace)
-        while traci.simulation.getMinExpectedNumber() > 0:
-            self.Find_Q_Statespace()
-            traci.simulationStep()
-        traci.close()
-        sys.stdout.flush()
+    # def Get_TLS_Fuction(self):
+    #     # print(self.stateSpace)
+    #     while traci.simulation.getMinExpectedNumber() > 0:
+    #         self.Find_Q_Statespace()
+    #         traci.simulationStep()
+    #     traci.close()
+    #     sys.stdout.flush()
 
 
-if __name__ == "__main__":
-    options = get_options()
-    if options.nogui:
-        sumoBinary = checkBinary('sumo')
-    else:
-        sumoBinary = checkBinary('sumo-gui')
-    traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
+# if __name__ == "__main__":
+#     options = get_options()
+#     if options.nogui:
+#         sumoBinary = checkBinary('sumo')
+#     else:
+#         sumoBinary = checkBinary('sumo-gui')
+#     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
-    State = [15, 15, 15]
-    TLS = TrafficLight(State)
-    TLS.InitStateSpace()
-    TLS.Get_TLS_Fuction()
+#     State = [15, 15, 15]
+#     TLS = TrafficLight(State)
+#     TLS.InitStateSpace()
+#     TLS.Get_TLS_Fuction()
 
 
 # State = [15, 15, 15]

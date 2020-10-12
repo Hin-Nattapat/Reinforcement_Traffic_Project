@@ -32,7 +32,7 @@ class TrafficLight:
         self.state = state
         self.stateSpace = []
         self.lane = lane
-        self.complete = bool
+        self.complete = False
         self.action = [
             [self.state[0]+15, self.state[1], self.state[2]],
             [self.state[0]-15, self.state[1], self.state[2]],
@@ -136,14 +136,19 @@ class TrafficLight:
         action = self.randomAction()
         State = self.get_state(action)
         api.set_Trafficlight(State)
-        self.reward = 1 / api.get_waiting_time(self.lane)
+        Reward = api.get_waiting_time(self.lane)
+
+        if Reward > 0:
+            self.reward = 1 / Reward
+        else:
+            self.reward = 0
+
         self.save_reward()
         print("----------------------------------------")
+
         if self.complete == False:
             traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
-        else:
-            traci.close()
-            
+    
     
     def get_state(self, action):
         state = self.takeAction(action)
@@ -156,13 +161,15 @@ class TrafficLight:
             if self.stateSpace[i][0] == self.state:
                 if self.stateSpace[i][1] == 0 or self.stateSpace[i][1] < self.reward:
                     self.stateSpace[i][1] = self.reward  
-            
+
             if self.stateSpace[i][1] != 0:
                 count += 1
             if count == len(self.stateSpace):
                 self.complete = True
+
         print(self.stateSpace)
         print("Remaining state : ", len(self.stateSpace)-count)
+        
 
 
     # def Get_TLS_Fuction(self):

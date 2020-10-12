@@ -103,23 +103,24 @@ class TrafficLight:
         return action
 
     def takeAction(self, action):
+        State = self.state.copy()
         if action == 0:
-            self.state = [self.state[0]+15, self.state[1], self.state[2]]
+            State = [State[0]+15, State[1], State[2]]
         elif action == 1:
-            self.state = [self.state[0]-15, self.state[1], self.state[2]]
+            State = [State[0]-15, State[1], State[2]]
         elif action == 2:
-            self.state = [self.state[0], self.state[1]+15, self.state[2]]
+            State = [State[0], State[1]+15, State[2]]
         elif action == 3:
-            self.state = [self.state[0], self.state[1]-15, self.state[2]]
+            State = [State[0], State[1]-15, State[2]]
         elif action == 4:
-            self.state = [self.state[0], self.state[1], self.state[2]+15]
+            State = [State[0], State[1], State[2]+15]
         else:
-            self.state = [self.state[0], self.state[1], self.state[2]-15]
-        return self.state
+            State = [State[0], State[1], State[2]-15]
+        return State
 
     def InitStateSpace(self):
         State = self.state.copy()
-        self.stateSpace.append([[State[0], State[1], State[2]], 0])
+        self.stateSpace.append([[State[0], State[1], State[2]], 0, 0])
         while State != [75, 75, 75]:
             State[2] += 15
             if State[2] == 90:
@@ -129,26 +130,25 @@ class TrafficLight:
                     State[1] = 15
                     State[0] += 15
             if sum(State) <= 105:
-                self.stateSpace.append([[State[0], State[1], State[2]], 0])
+                self.stateSpace.append([[State[0], State[1], State[2]], 0, 0])
 
     def Find_Q_initState(self):
         print("--------------- RUN TIME ---------------")
         action = self.randomAction()
-        State = self.get_state(action)
-        api.set_Trafficlight(State)
+        self.state = self.get_state(action)
+        api.set_Trafficlight(self.state)
         Reward = api.get_waiting_time(self.lane)
 
         if Reward > 0:
             self.reward = 1 / Reward
         else:
-            self.reward = 0
+            self.reward = -1
 
         self.save_reward()
         print("----------------------------------------")
 
         if self.complete == False:
             traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
-    
     
     def get_state(self, action):
         state = self.takeAction(action)
@@ -170,6 +170,35 @@ class TrafficLight:
         print(self.stateSpace)
         print("Remaining state : ", len(self.stateSpace)-count)
         
+
+    def Greedy_Al(self):
+        Q_Max = 0
+        Action_Max = 0
+        for i in range(MAX_ACTION):
+            action = self.legalAction(i)
+            if action:
+                tempState = self.takeAction(i)
+                print(tempState)
+                for j in range(len(self.stateSpace)):
+                    if self.stateSpace[j][0] == tempState:
+                        if self.stateSpace[j][1] > Q_Max:
+                            Q_Max = self.stateSpace[j][1]
+                            Action_Max = i
+        return Action_Max
+    
+
+    # def P_Greedy_Al(self):
+    #     randomNumber = random.uniform(0, 1)
+    #     if (EXPLORE_RATE > randomNumber):
+    #         return self.randomAction()
+    #     else:
+    #         action = self.randomAction()
+    #         for i in range(MAX_ACTION):
+    #             if legalAction(action):
+    #                 prob = 
+             
+
+
 
 
     # def Get_TLS_Fuction(self):

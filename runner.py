@@ -5,6 +5,7 @@ from sumolib import checkBinary
 import traci
 import api
 import reinforcement as RL
+import random
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -25,21 +26,22 @@ if __name__ == "__main__":
     init = [15, 15, 15]  
     rl = RL.TrafficLight(init,lane)
     rl.InitStateSpace()
+
     options = get_options()
     if options.nogui:
         sumoBinary = checkBinary('sumo')
     else:
         sumoBinary = checkBinary('sumo-gui')
-    traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
+
+    # temp = rl.P_Greedy_Al()
+    # print(temp)
+
+    traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
     while traci.simulation.getMinExpectedNumber() > 0:
         rl.Find_Q_initState()
-        # action = rl.randomAction()
-        # state = rl.get_state(action)
-        # api.set_Trafficlight(state)
-        # rl.reward = 1 / api.get_waiting_time(lane)
-        # rl.save_reward()
-        # traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
         traci.simulationStep()
-    #     print(api.get_waiting_time(lane))
     traci.close()
+    
+    # # temp = rl.Greedy_Al()
+    # # print(temp)

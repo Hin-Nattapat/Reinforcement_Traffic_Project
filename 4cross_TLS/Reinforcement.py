@@ -95,7 +95,7 @@ class TrafficLight:
         count = 0
         lane = [['gneE3_0', 'gneE3_1'], ['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
                 ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
-        while count < 5:
+        while count < 6:
             phase = traci.trafficlight.getPhase('gneJ7')
             if phase % 2 == 0 and keep:
                 temp = (traci.lane.getWaitingTime(
@@ -108,6 +108,7 @@ class TrafficLight:
                 keep = True
             print("STATE : ", self.state, "PHASE : ", phase, "TIME : ",
                   traci.trafficlight.getPhaseDuration('gneJ7'))
+            print(count)
             traci.simulationStep()
         wait_time.pop(0)
         # print("STATE : ", State, "ARRAY REWARD : ", wait_time, "REWARD : ", sum(wait_time) / len(wait_time))
@@ -130,10 +131,11 @@ class TrafficLight:
         else:
             State = [State[0], State[1], State[2]-15]
 
-        if State[0] == 0 or State[1] == 0 or State[2] == 0:
-            return False
-        else:
-            return True
+        for state_list in self.stateSpace:
+            if State == state_list[0]:
+                return True
+        return False
+
 
     def randomAction(self):
         while True:

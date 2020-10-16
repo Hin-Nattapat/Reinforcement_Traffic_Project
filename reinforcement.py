@@ -25,6 +25,24 @@ num_episodes = 5
 #             self.sumo_binary = checkBinary('sumo')
 #         traci.start([self.sumo_binary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
+
+class StateAction:
+    def __init__(self, state):
+        self.state_value = state
+        self.q_value = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+    def __str__(self):
+        return "state" + str(self.state_value)
+
+    def get_QMax(self):
+        self.q_Max = max(self.q_value)
+        return self.q_Max
+
+    def get_QSum(self):
+        self.q_Sum = sum(self.q_value)
+        return self.q_Sum
+
+
 class TrafficLight:
     def __init__(self, state, lane):
         # self.phases = phases
@@ -42,39 +60,8 @@ class TrafficLight:
             [self.state[0], self.state[1], self.state[2]-15],
         ]
         self.maxQ = 0.0
-        # print(self.state)
 
-    def set_Trafficlight(self):
-        print(traci.trafficlight.getCompleteRedYellowGreenDefinition('gneJ7'))
-        TrafficLightPhases = []
-        G4 = 120-self.state[0]-self.state[1]-self.state[2]
-        TrafficLightPhases.append(
-            traci.trafficlight.Phase(0, "rrrrrrrrrrrrrrrr", 0, 0))
-        TrafficLightPhases.append(
-            traci.trafficlight.Phase(45, "rrrrrrrrrrrrrrrr", 35, 35))
-        TrafficLightPhases.append(traci.trafficlight.Phase(
-            self.state[0], "rrrrrrrrrrrrGGGG", self.state[0], self.state[0]))
-        TrafficLightPhases.append(
-            traci.trafficlight.Phase(3, "rrrrrrrrrrrryyyy", 3, 3))
-        TrafficLightPhases.append(traci.trafficlight.Phase(
-            self.state[1], "rrrrGGGGrrrrrrrr", self.state[1], self.state[1]))
-        TrafficLightPhases.append(
-            traci.trafficlight.Phase(3, "rrrryyyyrrrrrrrr", 3, 3))
-        TrafficLightPhases.append(traci.trafficlight.Phase(
-            self.state[2], "GGGGrrrrrrrrrrrr", self.state[2], self.state[2]))
-        TrafficLightPhases.append(
-            traci.trafficlight.Phase(3, "yyyyrrrrrrrrrrrr", 3, 3))
-        TrafficLightPhases.append(
-            traci.trafficlight.Phase(G4,  "rrrrrrrrGGGGrrrr", G4, G4))
-        TrafficLightPhases.append(
-            traci.trafficlight.Phase(3, "rrrrrrrryyyyrrrr", 0, 0))
-        logic = traci.trafficlight.Logic("InitState", 0, 0, TrafficLightPhases)
-        print("LOGIC : ", logic)
-        traci.trafficlight.setProgramLogic('gneJ7', logic)
-
-
-    def legalAction(self, action):
-        State = self.state.copy()
+    def legalAction(self, action, State):
         if action == 0:
             State = [State[0]+15, State[1], State[2]]
         elif action == 1:
@@ -95,15 +82,31 @@ class TrafficLight:
         else:
             return True
 
+        # tot style
+        # for state_list in self.stateSpace:
+        #     if State == state_list[0]:
+        #         return True
+        # return False
+
     def randomAction(self):
         while True:
             action = random.randrange(0, MAX_ACTION)
-            if self.legalAction(action):
+            if self.legalAction(action,self.state):
                 break
         return action
 
-    def takeAction(self, action):
-        State = self.state.copy()
+    def get_nextState(self, action, State):
+        state = self.takeAction(action, State)
+        return state
+
+    def get_state(self):
+        for i in range(len(self.stateSpace)):
+            if self.stateSpace[i]["state"] == self.state:
+                state = self.stateSpace[i]
+        return state
+
+    def takeAction(self, action, State):
+        # State = self.state.copy()
         if action == 0:
             State = [State[0]+15, State[1], State[2]]
         elif action == 1:
@@ -120,7 +123,8 @@ class TrafficLight:
 
     def InitStateSpace(self):
         State = self.state.copy()
-        self.stateSpace.append([[State[0], State[1], State[2]], 0, 0])
+        self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
+                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
         while State != [75, 75, 75]:
             State[2] += 15
             if State[2] == 90:
@@ -130,109 +134,86 @@ class TrafficLight:
                     State[1] = 15
                     State[0] += 15
             if sum(State) <= 105:
-                self.stateSpace.append([[State[0], State[1], State[2]], 0, 0])
+                self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
+                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
+        return print(self.stateSpace)
 
     def Find_Q_initState(self):
         print("--------------- RUN TIME ---------------")
-        action = self.randomAction()
-        self.state = self.get_state(action)
-        api.set_Trafficlight(self.state)
-        Reward = api.get_waiting_time(self.lane)
+        for i in range(len(self.stateSpace)):
+            tempState = self.stateSpace[i]['state'].copy()
+            for j in range(MAX_ACTION):
+                if self.legalAction(j, tempState):
+                    takeActionState = self.get_nextState(j,tempState)
+                    api.set_Trafficlight(takeActionState)
+                    Reward = 1/api.get_waiting_time(self.lane)
+                    self.stateSpace[i]["Q_value"][j] = Reward
 
-        if Reward > 0:
-            self.reward = 1 / Reward
-        else:
-            self.reward = -1
-
-        self.save_reward()
+                    if self.stateSpace[34]["Q_value"][5] == 0:
+                        traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
+                    else:
+                        traci.close()
+                else:
+                    Reward = -1
+                    self.stateSpace[i]["Q_value"][j] = Reward
+        print(self.stateSpace)
         print("----------------------------------------")
 
-        if self.complete == False:
-            traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
-    
-    def get_state(self, action):
-        state = self.takeAction(action)
-        return state
-
-    def save_reward(self):
-        count = 0
-        self.complete = False
+    def Find_Q_Max(self):
         for i in range(len(self.stateSpace)):
-            if self.stateSpace[i][0] == self.state:
-                if self.stateSpace[i][1] == 0 or self.stateSpace[i][1] < self.reward:
-                    self.stateSpace[i][1] = self.reward  
+            Q_MAX = max(self.stateSpace[i]['Q_value'])
+            self.stateSpace[i]["Q_MAX"] = Q_MAX
 
-            if self.stateSpace[i][1] != 0:
-                count += 1
-            if count == len(self.stateSpace):
-                self.complete = True
+    def Find_Q_Sum(self):
+        for i in range(len(self.stateSpace)):
+            tempState = self.stateSpace[i]['state'].copy()
+            Q_SUM = 0.0
+            for j in range(MAX_ACTION):
+                if self.legalAction(j,tempState):
+                    # print("state : ", tempState,"Q_value : ", self.stateSpace[i]['Q_value'][j])
+                    Q_SUM += self.stateSpace[i]['Q_value'][j]
+                    self.stateSpace[i]['Q_SUM'] = Q_SUM
 
-        print(self.stateSpace)
-        print("Remaining state : ", len(self.stateSpace)-count)
-        
+    # def save_reward(self):
+    #     count = 0
+    #     self.complete = False
+    #     for i in range(len(self.stateSpace)):
+    #         if self.stateSpace[i][0] == self.state:
+    #             if self.stateSpace[i][1] == 0 or self.stateSpace[i][1] < self.reward:
+    #                 self.stateSpace[i][1] = self.reward
 
-    def Greedy_Al(self):
-        Q_Max = 0
-        Action_Max = 0
-        for i in range(MAX_ACTION):
-            action = self.legalAction(i)
-            if action:
-                tempState = self.takeAction(i)
-                print(tempState)
-                for j in range(len(self.stateSpace)):
-                    if self.stateSpace[j][0] == tempState:
-                        if self.stateSpace[j][1] > Q_Max:
-                            Q_Max = self.stateSpace[j][1]
-                            Action_Max = i
-        return Action_Max
-    
+    #         if self.stateSpace[i][1] != 0:
+    #             count += 1
+    #         if count == len(self.stateSpace):
+    #             self.complete = True
 
-    # def P_Greedy_Al(self):
-    #     randomNumber = random.uniform(0, 1)
-    #     if (EXPLORE_RATE > randomNumber):
-    #         return self.randomAction()
-    #     else:
-    #         action = self.randomAction()
-    #         for i in range(MAX_ACTION):
-    #             if legalAction(action):
-    #                 prob = 
-             
+    #     print(self.stateSpace)
+    #     print("Remaining state : ", len(self.stateSpace)-count)
 
+    # def Greedy_Al(self):
+    #     Q_Max = 0
+    #     Action_Max = 0
+    #     for i in range(MAX_ACTION):
+    #         action = self.legalAction(i)
+    #         if action:
+    #             tempState = self.takeAction(i)
+    #             print(tempState)
+    #             for j in range(len(self.stateSpace)):
+    #                 if self.stateSpace[j][0] == tempState:
+    #                     if self.stateSpace[j][1] > Q_Max:
+    #                         Q_Max = self.stateSpace[j][1]
+    #                         Action_Max = i
+    #     return Action_Max
 
+    def P_Greedy_Al(self):
+        randomNumber = random.uniform(0, 1)
+        if (EXPLORE_RATE > randomNumber):
+            return self.randomAction()
+        else:
+            action = self.randomAction()
+            for i in range(MAX_ACTION):
+                if self.legalAction(action,self.state):
+                    presentState = self.get_state()
+                    prob = presentState["Q_value"][action] / presentState["Q_SUM"]
+                    print(prob)
 
-
-    # def Get_TLS_Fuction(self):
-    #     # print(self.stateSpace)
-    #     while traci.simulation.getMinExpectedNumber() > 0:
-    #         self.Find_Q_Statespace()
-    #         traci.simulationStep()
-    #     traci.close()
-    #     sys.stdout.flush()
-
-
-# if __name__ == "__main__":
-#     options = get_options()
-#     if options.nogui:
-#         sumoBinary = checkBinary('sumo')
-#     else:
-#         sumoBinary = checkBinary('sumo-gui')
-#     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
-
-#     State = [15, 15, 15]
-#     TLS = TrafficLight(State)
-#     TLS.InitStateSpace()
-#     TLS.Get_TLS_Fuction()
-
-
-# State = [15, 15, 15]
-# TLS = TrafficLight(State)
-# test = TLS.randomAction()
-# print(test)
-# TLS.findMaxQ()
-# State = TLS.randomAction()
-
-
-# TLS.InitStateSpace()
-# print(test)
-# index = test.index([[15,15,30],0])
-# print(index)

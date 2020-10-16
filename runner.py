@@ -33,15 +33,13 @@ if __name__ == "__main__":
     else:
         sumoBinary = checkBinary('sumo-gui')
 
-
-    # temp = rl.P_Greedy_Al()
-    # print(temp)
-
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
     while traci.simulation.getMinExpectedNumber() > 0:
         rl.Find_Q_initState()
+        rl.Find_Q_Max()
+        rl.Find_Q_Sum()
+        rl.P_Greedy_Al()
         traci.simulationStep()
     traci.close()
+
     
-    # # temp = rl.Greedy_Al()
-    # # print(temp)

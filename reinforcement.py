@@ -5,7 +5,7 @@ import random
 import traci
 import api
 
-EXPLORE_RATE = 0.2
+EXPLORE_RATE = 0.3
 LEARNING_RATE = 0.6
 DISCOUNT_RATE = 0.5
 MAX_ACTION = 6
@@ -91,7 +91,7 @@ class TrafficLight:
     def randomAction(self):
         while True:
             action = random.randrange(0, MAX_ACTION)
-            if self.legalAction(action,self.state):
+            if self.legalAction(action, self.state):
                 break
         return action
 
@@ -144,7 +144,7 @@ class TrafficLight:
             tempState = self.stateSpace[i]['state'].copy()
             for j in range(MAX_ACTION):
                 if self.legalAction(j, tempState):
-                    takeActionState = self.get_nextState(j,tempState)
+                    takeActionState = self.get_nextState(j, tempState)
                     api.set_Trafficlight(takeActionState)
                     Reward = 1/api.get_waiting_time(self.lane)
                     self.stateSpace[i]["Q_value"][j] = Reward
@@ -169,51 +169,40 @@ class TrafficLight:
             tempState = self.stateSpace[i]['state'].copy()
             Q_SUM = 0.0
             for j in range(MAX_ACTION):
-                if self.legalAction(j,tempState):
+                if self.legalAction(j, tempState):
                     # print("state : ", tempState,"Q_value : ", self.stateSpace[i]['Q_value'][j])
                     Q_SUM += self.stateSpace[i]['Q_value'][j]
                     self.stateSpace[i]['Q_SUM'] = Q_SUM
+        return print(self.stateSpace)
 
-    # def save_reward(self):
-    #     count = 0
-    #     self.complete = False
-    #     for i in range(len(self.stateSpace)):
-    #         if self.stateSpace[i][0] == self.state:
-    #             if self.stateSpace[i][1] == 0 or self.stateSpace[i][1] < self.reward:
-    #                 self.stateSpace[i][1] = self.reward
-
-    #         if self.stateSpace[i][1] != 0:
-    #             count += 1
-    #         if count == len(self.stateSpace):
-    #             self.complete = True
-
-    #     print(self.stateSpace)
-    #     print("Remaining state : ", len(self.stateSpace)-count)
-
-    # def Greedy_Al(self):
-    #     Q_Max = 0
-    #     Action_Max = 0
-    #     for i in range(MAX_ACTION):
-    #         action = self.legalAction(i)
-    #         if action:
-    #             tempState = self.takeAction(i)
-    #             print(tempState)
-    #             for j in range(len(self.stateSpace)):
-    #                 if self.stateSpace[j][0] == tempState:
-    #                     if self.stateSpace[j][1] > Q_Max:
-    #                         Q_Max = self.stateSpace[j][1]
-    #                         Action_Max = i
-    #     return Action_Max
+    def Greedy_Al(self):
+        Action_QMax = 0
+        State = self.get_state()
+        for i in range(MAX_ACTION):
+            if State["Q_value"][i] == State["Q_MAX"]:
+                Action_QMax = i
+        return Action_QMax
 
     def P_Greedy_Al(self):
         randomNumber = random.uniform(0, 1)
         if (EXPLORE_RATE > randomNumber):
+            print("EXPLORE",EXPLORE_RATE,randomNumber)
             return self.randomAction()
         else:
             action = self.randomAction()
             for i in range(MAX_ACTION):
-                if self.legalAction(action,self.state):
+                # print("EXXXXXXXXXXx",action,self.state)
+                if self.legalAction(action, self.state):
                     presentState = self.get_state()
-                    prob = presentState["Q_value"][action] / presentState["Q_SUM"]
-                    print(prob)
-
+                    prob = (presentState["Q_value"][action] / presentState["Q_SUM"])
+                    randomProb = random.uniform(0, 1)
+                    if prob > randomProb:
+                        # print("EXPLOIT: ", prob,presentState["Q_value"][action],presentState["Q_SUM"],presentState["Q_value"])
+                        return action
+                # print("TIME", i, "ACTION", action)
+                action = action + 1
+                if action == MAX_ACTION:
+                    action = 0
+            if (i == MAX_ACTION):
+                # print("EXPLOIT RANDOM")
+                return self.randomAction()

@@ -1,6 +1,7 @@
 import traci
 
 def get_waiting_time(lane):
+
     wait_time = [0.0, 0.0, 0.0, 0.0, 0.0]
     keep = True
     count = 0
@@ -12,12 +13,16 @@ def get_waiting_time(lane):
                 lane[int(phase/2)][0]) + traci.lane.getWaitingTime(lane[int(phase/2)][1])) / 2
             wait_time[int(phase/2)] = temp
             # print(wait_time)
+            
             keep = False
             count += 1    
         elif phase % 2 == 1:
             keep = True 
+        print(traci.trafficlight.getPhaseDuration('gneJ7'))
+        if (count == 5):
+            set_Trafficlight([15,15,15])
         traci.simulationStep()
-    wait_time.pop(0)
+    wait_time.pop(1)
     return sum(wait_time) / len(wait_time)
 
 def set_Trafficlight(state):
@@ -44,6 +49,7 @@ def set_Trafficlight(state):
         traci.trafficlight.Phase(G4,  "rrrrrrrrGGGGrrrr", G4, G4))
     TrafficLightPhases.append(
         traci.trafficlight.Phase(3, "rrrrrrrryyyyrrrr", 0, 0))
-    logic = traci.trafficlight.Logic("0", 0, 0, TrafficLightPhases)
+    logic = traci.trafficlight.Logic("initState", 0, 0, TrafficLightPhases)
     # print("LOGIC : ", logic)
     traci.trafficlight.setProgramLogic('gneJ7', logic)
+    # print(traci.trafficlight.getCompleteRedYellowGreenDefinition('gneJ7'))

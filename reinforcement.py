@@ -51,17 +51,10 @@ class TrafficLight:
         self.stateSpace = []
         self.lane = lane
         self.complete = False
-        self.action = [
-            [self.state[0]+15, self.state[1], self.state[2]],
-            [self.state[0]-15, self.state[1], self.state[2]],
-            [self.state[0], self.state[1]+15, self.state[2]],
-            [self.state[0], self.state[1]-15, self.state[2]],
-            [self.state[0], self.state[1], self.state[2]+15],
-            [self.state[0], self.state[1], self.state[2]-15],
-        ]
-        self.maxQ = 0.0
+        self.action = 0
 
-    def legalAction(self, action, State):
+    def legalAction(self, action, inputState):
+        State = inputState.copy()
         if action == 0:
             State = [State[0]+15, State[1], State[2]]
         elif action == 1:
@@ -82,12 +75,6 @@ class TrafficLight:
         else:
             return True
 
-        # tot style
-        # for state_list in self.stateSpace:
-        #     if State == state_list[0]:
-        #         return True
-        # return False
-
     def randomAction(self):
         while True:
             action = random.randrange(0, MAX_ACTION)
@@ -99,14 +86,19 @@ class TrafficLight:
         state = self.takeAction(action, State)
         return state
 
-    def get_state(self):
+    def get_state(self, inputState):
+        State = inputState.copy()
         for i in range(len(self.stateSpace)):
-            if self.stateSpace[i]["state"] == self.state:
+            if self.stateSpace[i]["state"] == inputState:
                 state = self.stateSpace[i]
         return state
+    
+    def get_presentState(self):
+        return self.state
 
-    def takeAction(self, action, State):
-        # State = self.state.copy()
+
+    def takeAction(self, action, inputState):
+        State = inputState.copy()
         if action == 0:
             State = [State[0]+15, State[1], State[2]]
         elif action == 1:
@@ -136,28 +128,28 @@ class TrafficLight:
             if sum(State) <= 105:
                 self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
                                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
-        return print(self.stateSpace)
+        # return print(self.stateSpace)
 
-    def Find_Q_initState(self):
-        print("--------------- RUN TIME ---------------")
-        for i in range(len(self.stateSpace)):
-            tempState = self.stateSpace[i]['state'].copy()
-            for j in range(MAX_ACTION):
-                if self.legalAction(j, tempState):
-                    takeActionState = self.get_nextState(j, tempState)
-                    api.set_Trafficlight(takeActionState)
-                    Reward = 1/api.get_waiting_time(self.lane)
-                    self.stateSpace[i]["Q_value"][j] = Reward
+    # def Find_Q_initState(self):
+    #     print("--------------- RUN TIME ---------------")
+    #     for i in range(len(self.stateSpace)):
+    #         tempState = self.stateSpace[i]['state'].copy()
+    #         for j in range(MAX_ACTION):
+    #             if self.legalAction(j, tempState):
+    #                 takeActionState = self.get_nextState(j, tempState)
+    #                 api.set_Trafficlight(takeActionState)
+    #                 Reward = 1/api.get_waiting_time(self.lane)
+    #                 self.stateSpace[i]["Q_value"][j] = Reward
 
-                    if self.stateSpace[34]["Q_value"][5] == 0:
-                        traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
-                    else:
-                        traci.close()
-                else:
-                    Reward = -1
-                    self.stateSpace[i]["Q_value"][j] = Reward
-        print(self.stateSpace)
-        print("----------------------------------------")
+    #                 if self.stateSpace[34]["Q_value"][5] == 0:
+    #                     traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
+    #                 else:
+    #                     traci.close()
+    #             else:
+    #                 Reward = -1
+    #                 self.stateSpace[i]["Q_value"][j] = Reward
+    #     print(self.stateSpace)
+    #     print("----------------------------------------")
 
     def Find_Q_Max(self):
         for i in range(len(self.stateSpace)):
@@ -173,11 +165,12 @@ class TrafficLight:
                     # print("state : ", tempState,"Q_value : ", self.stateSpace[i]['Q_value'][j])
                     Q_SUM += self.stateSpace[i]['Q_value'][j]
                     self.stateSpace[i]['Q_SUM'] = Q_SUM
-        return print(self.stateSpace)
+        # return print(self.stateSpace)
 
     def Greedy_Al(self):
         Action_QMax = 0
-        State = self.get_state()
+        self.Find_Q_Max()
+        State = self.get_state(self.state)
         for i in range(MAX_ACTION):
             if State["Q_value"][i] == State["Q_MAX"]:
                 Action_QMax = i
@@ -185,24 +178,42 @@ class TrafficLight:
 
     def P_Greedy_Al(self):
         randomNumber = random.uniform(0, 1)
-        if (EXPLORE_RATE > randomNumber):
-            print("EXPLORE",EXPLORE_RATE,randomNumber)
-            return self.randomAction()
+        randomProb = random.uniform(0, 1)
+        presentState = self.get_state(self.state)
+        if (EXPLORE_RATE > randomNumber) or (presentState["Q_SUM"] == 0.0):
+            # print("EXPLORE", EXPLORE_RATE, randomNumber)
+            self.action = self.randomAction()
         else:
             action = self.randomAction()
             for i in range(MAX_ACTION):
-                # print("EXXXXXXXXXXx",action,self.state)
                 if self.legalAction(action, self.state):
-                    presentState = self.get_state()
-                    prob = (presentState["Q_value"][action] / presentState["Q_SUM"])
-                    randomProb = random.uniform(0, 1)
+                    prob = (presentState["Q_value"]
+                            [action] / presentState["Q_SUM"])
                     if prob > randomProb:
-                        # print("EXPLOIT: ", prob,presentState["Q_value"][action],presentState["Q_SUM"],presentState["Q_value"])
-                        return action
-                # print("TIME", i, "ACTION", action)
+                        self.action = action
                 action = action + 1
                 if action == MAX_ACTION:
                     action = 0
             if (i == MAX_ACTION):
-                # print("EXPLOIT RANDOM")
-                return self.randomAction()
+                self.action = self.randomAction()
+
+        return self.action
+
+    def updateFuction(self):
+        newState = self.takeAction(self.action, self.state)
+        presentState = self.get_state(self.state)
+        nextState = self.get_state(newState)
+        api.set_Trafficlight(nextState["state"])
+        reward = 1/api.get_waiting_time(self.lane)
+        self.Find_Q_Max()
+        presentState["Q_value"][self.action] += (LEARNING_RATE * (
+            reward+(DISCOUNT_RATE*nextState["Q_MAX"])-presentState["Q_value"][self.action]))
+        for i in range(len(self.stateSpace)):
+            if self.stateSpace[i]["state"] == presentState['state']:
+                self.stateSpace[i]["Q_value"][self.action] = presentState["Q_value"][self.action]
+        self.Find_Q_Sum()
+        return print(self.stateSpace)
+
+    def updateState(self):
+        print("STATE :",self.state,"ACTION :",self.action)
+        self.state = self.takeAction(self.action, self.state)

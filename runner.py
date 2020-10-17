@@ -21,11 +21,11 @@ def get_options():
     return options
 
 if __name__ == "__main__":
-    lane = [['gneE3_0', 'gneE3_1'], ['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
+    lane = [['gneE3_0', 'gneE3_1'],['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
             ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
     init = [15, 15, 15]  
+    MAX_EPOCHS = 1000
     rl = RL.TrafficLight(init,lane)
-    rl.InitStateSpace()
 
     options = get_options()
     if options.nogui:
@@ -34,11 +34,20 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
 
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
-    rl.Find_Q_initState()
-    rl.Find_Q_Max()
-    rl.Find_Q_Sum()
-    test = rl.P_Greedy_Al()
-    print(test)
+    # rl.Find_Q_initState()
+
+
+    # rl.Find_Q_Max()
+    # rl.Find_Q_Sum()
+
+    rl.InitStateSpace()
+    for i in range(MAX_EPOCHS):
+        print("EPOCHS: ",i)
+        rl.P_Greedy_Al()
+        rl.updateFuction()
+        print(traci.trafficlight.getCompleteRedYellowGreenDefinition('gneJ7'))
+        rl.updateState()
+        traci.simulationStep()
     sys.stdout.flush()
 
     

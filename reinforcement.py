@@ -82,9 +82,9 @@ class TrafficLight:
                 break
         return action
 
-    def get_nextState(self, action, State):
-        state = self.takeAction(action, State)
-        return state
+    # def get_nextState(self, action, State):
+    #     state = self.takeAction(action, State)
+    #     return state
 
     def get_state(self, inputState):
         State = inputState.copy()
@@ -196,15 +196,20 @@ class TrafficLight:
                     action = 0
             if (i == MAX_ACTION):
                 self.action = self.randomAction()
-
         return self.action
 
     def updateFuction(self):
         newState = self.takeAction(self.action, self.state)
         presentState = self.get_state(self.state)
         nextState = self.get_state(newState)
-        api.set_Trafficlight(nextState["state"])
-        reward = 1/api.get_waiting_time(self.lane)
+
+        
+
+        rewardResult = api.get_waiting_time(self.lane)
+        if rewardResult != 0:
+            reward = 1/rewardResult
+        else: reward = 0
+        
         self.Find_Q_Max()
         presentState["Q_value"][self.action] += (LEARNING_RATE * (
             reward+(DISCOUNT_RATE*nextState["Q_MAX"])-presentState["Q_value"][self.action]))

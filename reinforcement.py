@@ -5,7 +5,7 @@ import random
 import traci
 import api
 
-EXPLORE_RATE = 0.3
+EXPLORE_RATE = 0.5
 LEARNING_RATE = 0.6
 DISCOUNT_RATE = 0.5
 MAX_ACTION = 6
@@ -87,15 +87,11 @@ class TrafficLight:
     #     return state
 
     def get_state(self, inputState):
-        State = inputState.copy()
+        tempState = []
         for i in range(len(self.stateSpace)):
             if self.stateSpace[i]["state"] == inputState:
-                state = self.stateSpace[i]
-        return state
-    
-    def get_presentState(self):
-        return self.state
-
+                tempState = self.stateSpace[i]
+        return tempState
 
     def takeAction(self, action, inputState):
         State = inputState.copy()
@@ -130,26 +126,6 @@ class TrafficLight:
                                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
         # return print(self.stateSpace)
 
-    # def Find_Q_initState(self):
-    #     print("--------------- RUN TIME ---------------")
-    #     for i in range(len(self.stateSpace)):
-    #         tempState = self.stateSpace[i]['state'].copy()
-    #         for j in range(MAX_ACTION):
-    #             if self.legalAction(j, tempState):
-    #                 takeActionState = self.get_nextState(j, tempState)
-    #                 api.set_Trafficlight(takeActionState)
-    #                 Reward = 1/api.get_waiting_time(self.lane)
-    #                 self.stateSpace[i]["Q_value"][j] = Reward
-
-    #                 if self.stateSpace[34]["Q_value"][5] == 0:
-    #                     traci.load(["-c", "4cross_TLS/1_1Cross.sumocfg"])
-    #                 else:
-    #                     traci.close()
-    #             else:
-    #                 Reward = -1
-    #                 self.stateSpace[i]["Q_value"][j] = Reward
-    #     print(self.stateSpace)
-    #     print("----------------------------------------")
 
     def Find_Q_Max(self):
         for i in range(len(self.stateSpace)):
@@ -180,22 +156,28 @@ class TrafficLight:
         randomNumber = random.uniform(0, 1)
         randomProb = random.uniform(0, 1)
         presentState = self.get_state(self.state)
-        if (EXPLORE_RATE > randomNumber) or (presentState["Q_SUM"] == 0.0):
+        if ((EXPLORE_RATE > randomNumber) or (presentState["Q_SUM"] == 0.0)):
             # print("EXPLORE", EXPLORE_RATE, randomNumber)
             self.action = self.randomAction()
+            print("pg1")
         else:
+            print("ELSE")
             action = self.randomAction()
+            print("555",action)
             for i in range(MAX_ACTION):
                 if self.legalAction(action, self.state):
                     prob = (presentState["Q_value"]
                             [action] / presentState["Q_SUM"])
                     if prob > randomProb:
                         self.action = action
+                        print("pg2")
                 action = action + 1
                 if action == MAX_ACTION:
                     action = 0
             if (i == MAX_ACTION):
                 self.action = self.randomAction()
+                print("pg3")
+        print("ERROR")
         return self.action
 
     def updateFuction(self):
@@ -203,9 +185,10 @@ class TrafficLight:
         presentState = self.get_state(self.state)
         nextState = self.get_state(newState)
 
-        
-
-        rewardResult = api.get_waiting_time(self.lane)
+        # api.set_Trafficlight(newState)
+        print("ACTION",self.action)
+        print("TEST",newState)
+        rewardResult = api.get_waiting_time(self.lane,newState)
         if rewardResult != 0:
             reward = 1/rewardResult
         else: reward = 0
@@ -220,5 +203,6 @@ class TrafficLight:
         return print(self.stateSpace)
 
     def updateState(self):
-        print("STATE :",self.state,"ACTION :",self.action)
+        oldState = self.state.copy()
         self.state = self.takeAction(self.action, self.state)
+        print("OLDSTATE :",oldState,"NEWSTATE :",self.state,"ACTION :",self.action)

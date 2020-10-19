@@ -37,11 +37,11 @@ if __name__ == "__main__":
 
     rl.InitStateSpace()
     for i in range(MAX_EPOCHS):
-        print("EPOCHS: ",i)
+        print("----------------------------- EPOCHS: ",i,"-----------------------------")
         rl.P_Greedy_Al()
         rl.updateFuction()
-        # print(traci.trafficlight.getCompleteRedYellowGreenDefinition('gneJ7'))
         rl.updateState()
+        print("----------------------------------------------------------------------")
     sys.stdout.flush()
 
     

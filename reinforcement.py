@@ -68,7 +68,7 @@ class TrafficLight:
         else:
             State = [State[0], State[1], State[2]-15]
 
-        if State[0] == 0 or State[1] == 0 or State[2] == 0:
+        if (State[0] == 0 or State[1] == 0 or State[2] == 0):
             return False
         elif sum(State) > 105:
             return False
@@ -159,26 +159,26 @@ class TrafficLight:
         if ((EXPLORE_RATE > randomNumber) or (presentState["Q_SUM"] == 0.0)):
             # print("EXPLORE", EXPLORE_RATE, randomNumber)
             self.action = self.randomAction()
-            print("pg1")
+            return self.action
         else:
-            print("ELSE")
             action = self.randomAction()
-            print("555",action)
             for i in range(MAX_ACTION):
                 if self.legalAction(action, self.state):
+                    
                     prob = (presentState["Q_value"]
                             [action] / presentState["Q_SUM"])
                     if prob > randomProb:
                         self.action = action
-                        print("pg2")
+                        return self.action
                 action = action + 1
                 if action == MAX_ACTION:
                     action = 0
-            if (i == MAX_ACTION):
+            if (i == MAX_ACTION-1):
                 self.action = self.randomAction()
-                print("pg3")
-        print("ERROR")
-        return self.action
+                return self.action
+               
+           
+        
 
     def updateFuction(self):
         newState = self.takeAction(self.action, self.state)
@@ -186,8 +186,6 @@ class TrafficLight:
         nextState = self.get_state(newState)
 
         # api.set_Trafficlight(newState)
-        print("ACTION",self.action)
-        print("TEST",newState)
         rewardResult = api.get_waiting_time(self.lane,newState)
         if rewardResult != 0:
             reward = 1/rewardResult
@@ -205,4 +203,4 @@ class TrafficLight:
     def updateState(self):
         oldState = self.state.copy()
         self.state = self.takeAction(self.action, self.state)
-        print("OLDSTATE :",oldState,"NEWSTATE :",self.state,"ACTION :",self.action)
+        print("Present_STATE :",oldState,"Next_STATE :",self.state,"ACTION :",self.action,"Reward :",self.reward)

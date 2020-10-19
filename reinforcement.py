@@ -188,12 +188,12 @@ class TrafficLight:
         # api.set_Trafficlight(newState)
         rewardResult = api.get_waiting_time(self.lane,newState)
         if rewardResult != 0:
-            reward = 1/rewardResult
-        else: reward = 0
+            self.reward = 1/rewardResult
+        else: self.reward = 0
         
         self.Find_Q_Max()
         presentState["Q_value"][self.action] += (LEARNING_RATE * (
-            reward+(DISCOUNT_RATE*nextState["Q_MAX"])-presentState["Q_value"][self.action]))
+            self.reward+(DISCOUNT_RATE*nextState["Q_MAX"])-presentState["Q_value"][self.action]))
         for i in range(len(self.stateSpace)):
             if self.stateSpace[i]["state"] == presentState['state']:
                 self.stateSpace[i]["Q_value"][self.action] = presentState["Q_value"][self.action]

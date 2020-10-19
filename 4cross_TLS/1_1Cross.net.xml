@@ -203,16 +203,16 @@
     </edge>
 
     <tlLogic id="gneJ7" type="static" programID="0" offset="0">
-        <phase duration="7" state="rrrrrrrrrrrrGGGG"/>
-        <phase duration="3"  state="rrrrrrrrrrrryyyy"/>
-        <phase duration="7" state="rrrrGGGGrrrrrrrr"/>
-        <phase duration="3"  state="rrrryyyyrrrrrrrr"/>
-        <phase duration="7" state="GGGGrrrrrrrrrrrr"/>
-        <phase duration="3"  state="yyyyrrrrrrrrrrrr"/>
-        <phase duration="7" state="rrrrrrrrGGGGrrrr"/>
-        <phase duration="3"  state="rrrrrrrryyyyrrrr"/>
+        <phase duration="1"   state="rrrrrrrrrrrrGGGG"/>
+        <!-- <phase duration="3"   state="rrrrrrrrrrrryyyy"/>
+        <phase duration="15"   state="rrrrGGGGrrrrrrrr"/>
+        <phase duration="3"   state="rrrryyyyrrrrrrrr"/>
+        <phase duration="15"   state="GGGGrrrrrrrrrrrr"/>
+        <phase duration="3"   state="yyyyrrrrrrrrrrrr"/>
+        <phase duration="75"   state="rrrrrrrrGGGGrrrr"/>
+        <phase duration="3"   state="rrrrrrrryyyyrrrr"/> -->
     </tlLogic>
-
+    
     <junction id="gneJ13" type="priority" x="0.00" y="-280.00" incLanes="gneE35_0 gneE35_1 gneE10_0 gneE10_1" intLanes=":gneJ13_0_0 :gneJ13_0_1 :gneJ13_2_0 :gneJ13_2_1 :gneJ13_5_0" shape="-6.40,-280.00 6.40,-280.00 -6.40,-280.00">
         <request index="0" response="00000" foes="10000" cont="0"/>
         <request index="1" response="00000" foes="10000" cont="0"/>

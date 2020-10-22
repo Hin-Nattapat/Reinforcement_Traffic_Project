@@ -5,7 +5,7 @@ import random
 import traci
 import api
 
-EXPLORE_RATE = 0.5
+EXPLORE_RATE = 0.1
 LEARNING_RATE = 0.6
 DISCOUNT_RATE = 0.5
 MAX_ACTION = 6
@@ -204,3 +204,12 @@ class TrafficLight:
         oldState = self.state.copy()
         self.state = self.takeAction(self.action, self.state)
         print("Present_STATE :",oldState,"Next_STATE :",self.state,"ACTION :",self.action,"Reward :",self.reward)
+
+    # def showQMax(self):
+    #     qValueMax = 0
+    #     StateMax = 0
+    #     for i in range(len(self.stateSpace)):
+    #         if self.stateSpace[i]["Q_MAX"] > qValueMax:
+    #             qValueMax = self.stateSpace[i]["Q_MAX"]
+    #             StateMax = i
+    #     return print(self.stateSpace[StateMax])

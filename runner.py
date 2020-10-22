@@ -38,9 +38,10 @@ if __name__ == "__main__":
     rl.InitStateSpace()
     for i in range(MAX_EPOCHS):
         print("----------------------------- EPOCHS: ",i,"-----------------------------")
-        rl.P_Greedy_Al()
+        rl.P_Greedy_Al() 
         rl.updateFuction()
         rl.updateState()
+        # rl.showQMax()
         print("----------------------------------------------------------------------")
     sys.stdout.flush()
 

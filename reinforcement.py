@@ -198,7 +198,7 @@ class TrafficLight:
             if self.stateSpace[i]["state"] == presentState['state']:
                 self.stateSpace[i]["Q_value"][self.action] = presentState["Q_value"][self.action]
         self.Find_Q_Sum()
-        return print(self.stateSpace)
+        api.csv_data_stateSpace(self.stateSpace)
 
     def updateState(self):
         oldState = self.state.copy()

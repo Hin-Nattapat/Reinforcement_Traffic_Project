@@ -1,4 +1,5 @@
 import traci
+import pandas
 
 
 def get_waiting_time(lane,NextState):
@@ -55,3 +56,13 @@ def set_Trafficlight(state):
     # print("LOGIC : ", logic)
     traci.trafficlight.setProgramLogic('gneJ7', logic)
     # print(traci.trafficlight.getCompleteRedYellowGreenDefinition('gneJ7'))
+
+def csv_data_stateSpace(data):
+    list_data = [['State','Q_Value','Q_Max','Q_Sum']]
+    for item in data:
+        temp = []
+        temp.extend([item['state'],item['Q_value'],item['Q_MAX'],item['Q_SUM']])
+        list_data.append(temp)
+    dataframe = pandas.DataFrame(list_data)
+    dataframe.to_csv('stateSpace.csv', index=False, header=False, encoding = 'utf-8')
+    print(dataframe)

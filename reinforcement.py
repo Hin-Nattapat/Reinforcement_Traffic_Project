@@ -5,10 +5,10 @@ import random
 import traci
 import api
 
-EXPLORE_RATE = 0.1
-LEARNING_RATE = 0.6
-DISCOUNT_RATE = 0.5
-MAX_ACTION = 6
+EXPLORE_RATE = 0.3
+LEARNING_RATE = 0.1
+DISCOUNT_RATE = 0.9
+MAX_ACTION = 6   
 num_episodes = 5
 
 # State จะอยู่ในรูปแบบของ [G1,G2,G3] เวลาไฟเขียวแต่ละแยก

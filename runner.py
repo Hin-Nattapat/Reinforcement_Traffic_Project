@@ -3,14 +3,9 @@ import sys
 import optparse
 from sumolib import checkBinary
 import traci
-<<<<<<< HEAD
-import sumo_api as api
-import Reinforcement as RL
-=======
 import api
 import reinforcement as RL
 import random
->>>>>>> master
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -28,25 +23,15 @@ def get_options():
 if __name__ == "__main__":
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
             ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
-<<<<<<< HEAD
-    rl = RL.Reinforcement()
-=======
     initState = [15, 15, 15]  
     MAX_EPOCHS = 1000
     rl = RL.TrafficLight(initState,lane)
->>>>>>> master
 
     options = get_options()
     if options.nogui:
         sumoBinary = checkBinary('sumo')
     else:
         sumoBinary = checkBinary('sumo-gui')
-<<<<<<< HEAD
-    traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
-
-    # while traci.simulation.getMinExpectedNumber() > 0:
-        
-=======
 
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
@@ -62,4 +47,3 @@ if __name__ == "__main__":
 
     
     
->>>>>>> master

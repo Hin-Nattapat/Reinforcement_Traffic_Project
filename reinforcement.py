@@ -5,6 +5,7 @@ import random
 import traci
 import api
 
+a = api.API()
 EXPLORE_RATE = 0.1
 LEARNING_RATE = 0.6
 DISCOUNT_RATE = 0.5
@@ -177,19 +178,17 @@ class TrafficLight:
                 self.action = self.randomAction()
                 return self.action
                
-           
-        
-
     def updateFuction(self):
         newState = self.takeAction(self.action, self.state)
         presentState = self.get_state(self.state)
         nextState = self.get_state(newState)
 
         # api.set_Trafficlight(newState)
-        rewardResult = api.get_waiting_time(self.lane,newState)
+        rewardResult = a.get_obj(newState)['w_time']
         if rewardResult != 0:
             self.reward = 1/rewardResult
-        else: self.reward = 0
+        else: 
+            self.reward = 0
         
         self.Find_Q_Max()
         presentState["Q_value"][self.action] += (LEARNING_RATE * (

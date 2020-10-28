@@ -6,7 +6,7 @@ import traci
 import api
 
 EXPLORE_RATE = 0.3
-LEARNING_RATE = 0.1
+LEARNING_RATE = 0.3
 DISCOUNT_RATE = 0.9
 MAX_ACTION = 6   
 num_episodes = 5

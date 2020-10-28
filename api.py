@@ -57,32 +57,17 @@ def set_Trafficlight(state):
     traci.trafficlight.setProgramLogic('gneJ7', logic)
     # print(traci.trafficlight.getCompleteRedYellowGreenDefinition('gneJ7'))
 
+
 def csv_data_stateSpace(data):
-    list_data = [['State','Q_Value','Q_Max','Q_Sum']]
+    list_data = [['State', 'Q_Value', 'Q_Max', 'Q_Sum']]
     for item in data:
         temp = []
-        temp.extend([item['state'],item['Q_value'],item['Q_MAX'],item['Q_SUM']])
+        temp.extend([item['state'], item['Q_value'],
+                     item['Q_MAX'], item['Q_SUM']])
         list_data.append(temp)
     dataframe = pandas.DataFrame(list_data)
-    dataframe.to_csv('stateSpace.csv', index=False, header=False, encoding = 'utf-8')
+    dataframe.to_csv('stateSpace.csv', index=False,
+                     header=False, encoding='utf-8')
     print(dataframe)
 
-def add_routes():
-    traci.route.add("Route_1", ["gneE41 gneE7 gneE10 gneE34"])
-    traci.route.add("Route_2", ["gneE43", "gneE3","gneE12", "gneE13", "gneE8", "gneE42"])
-    traci.route.add("Route_3", ["gneE41 gneE7 gneE8 gneE42"])
-    traci.route.add("Route_4", ["gneE35 gneE11 gneE6 gneE40"])
-    traci.route.add("Route_5", ["gneE33 gneE13 gneE8 gneE42"])
-    traci.route.add("Route_6", ["gneE41 gneE7 gneE12 gneE32"])
-    traci.route.add("Route_7", ["gneE35 gneE11 gneE6 gneE7 gneE10 gneE34"])
-    traci.route.add("Route_8", ["gneE33 gneE13 gneE10 gneE34"])
-    traci.route.add("Route_9", ["gneE43 gneE3 gneE10 gneE34"])
-    traci.route.add("Route_10", ["gneE43 gneE3 gneE6 gneE40"])
-    traci.route.add("Route_11", ["gneE43 gneE3 gneE12 gneE32"])
-    traci.route.add("Route_12", ["gneE35 gneE11 gneE8 gneE42"])
-    traci.route.add("Route_13", ["gneE35 gneE11 gneE12 gneE32"])
-    traci.route.add("Route_14", ["gneE41 gneE7 gneE10 gneE11 gneE6 gneE40"])
-    traci.route.add("Route_15", ["gneE33 gneE13 gneE6 gneE40"])
 
-def random_vehicle(i):
-    traci.vehicle.add("TEST"+str(i+1), "Route_1",)

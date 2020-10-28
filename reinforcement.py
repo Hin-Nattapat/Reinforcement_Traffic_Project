@@ -8,7 +8,7 @@ import api
 EXPLORE_RATE = 0.3
 LEARNING_RATE = 0.3
 DISCOUNT_RATE = 0.9
-MAX_ACTION = 6   
+MAX_ACTION = 6
 num_episodes = 5
 
 # State จะอยู่ในรูปแบบของ [G1,G2,G3] เวลาไฟเขียวแต่ละแยก
@@ -126,7 +126,6 @@ class TrafficLight:
                                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
         # return print(self.stateSpace)
 
-
     def Find_Q_Max(self):
         for i in range(len(self.stateSpace)):
             Q_MAX = max(self.stateSpace[i]['Q_value'])
@@ -144,13 +143,24 @@ class TrafficLight:
         # return print(self.stateSpace)
 
     def Greedy_Al(self):
-        Action_QMax = 0
         self.Find_Q_Max()
         State = self.get_state(self.state)
         for i in range(MAX_ACTION):
             if State["Q_value"][i] == State["Q_MAX"]:
-                Action_QMax = i
-        return Action_QMax
+                self.action = i
+        return self.action
+
+    def E_Greedy_Al(self):
+        randomNumber = random.uniform(0, 1)
+        State = self.get_state(self.state)
+        if ((EXPLORE_RATE > randomNumber) or (State["Q_SUM"] == 0.0)):
+            self.action = self.randomAction()
+            return self.action
+        else:
+            for i in range(MAX_ACTION):
+                if State["Q_value"][i] == State["Q_MAX"]:
+                    self.action = i
+            return self.action
 
     def P_Greedy_Al(self):
         randomNumber = random.uniform(0, 1)

@@ -5,7 +5,10 @@ from sumolib import checkBinary
 import traci
 import api
 import reinforcement as RL
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 import random
+import threading
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -19,6 +22,12 @@ def get_options():
                          default=False, help="run the commandline version of sumo")
     options, args = optParser.parse_args()
     return options
+
+def plot_data(a):
+    ani = FuncAnimation(plt.gcf(), a.animation_trafficload)
+    plt.tight_layout()
+    plt.show()
+    thread_plot_data.join()
 
 if __name__ == "__main__":
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
@@ -36,11 +45,22 @@ if __name__ == "__main__":
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
     rl.InitStateSpace()
+    data = RL.Plotter()
+    data.init_trafficload()
+    global thread_plot_data
+    thread_plot_data = threading.Thread(target=plot_data,args=(data,))
     for i in range(MAX_EPOCHS):
         print("----------------------------- EPOCHS: ",i,"-----------------------------")
         rl.P_Greedy_Al()
         rl.updateFuction()
         rl.updateState()
+<<<<<<< Updated upstream
+=======
+        data.update_plot_trafficload(i,1,2,3,4)
+        if i == 0:
+            thread_plot_data.start()
+        # rl.showQMax()
+>>>>>>> Stashed changes
         print("----------------------------------------------------------------------")
     sys.stdout.flush()
 

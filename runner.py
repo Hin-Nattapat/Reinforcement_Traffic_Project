@@ -24,7 +24,7 @@ def get_options():
     return options
 
 def plot_data(a):
-    ani = FuncAnimation(plt.gcf(), a.animation_trafficload)
+    ani = FuncAnimation(plt.gcf(), a.animation_Qvalue)
     plt.tight_layout()
     plt.show()
     thread_plot_data.join()
@@ -46,15 +46,14 @@ if __name__ == "__main__":
 
     rl.InitStateSpace()
     data = RL.Plotter()
-    data.init_trafficload()
     global thread_plot_data
     thread_plot_data = threading.Thread(target=plot_data,args=(data,))
     for i in range(MAX_EPOCHS):
         print("----------------------------- EPOCHS: ",i,"-----------------------------")
         rl.P_Greedy_Al()
         rl.updateFuction()
+        data.update_plot_Qvalue(i,rl.Find_avg_Q())
         rl.updateState()
-        data.update_plot_trafficload(i,1,2,3,4)
         if i == 0:
             thread_plot_data.start()
         # rl.showQMax()

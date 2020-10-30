@@ -19,7 +19,7 @@ def get_waiting_time(lane,NextState):
             count += 1
         elif phase % 2 == 0:
             keep = True
-        print(traci.trafficlight.getPhaseDuration('gneJ7'))
+        #print(traci.trafficlight.getPhaseDuration('gneJ7'))
         # print(traci.trafficlight.getNextSwitch('gneJ7'))
         # print(traci.simulation.getTime())
         # if (traci.simulation.getTime() % 132 == 0 and traci.simulation.getTime() != 0):
@@ -65,4 +65,4 @@ def csv_data_stateSpace(data):
         list_data.append(temp)
     dataframe = pandas.DataFrame(list_data)
     dataframe.to_csv('stateSpace.csv', index=False, header=False, encoding = 'utf-8')
-    print(dataframe)
+    #print(dataframe)

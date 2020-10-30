@@ -6,11 +6,8 @@ import traci
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import api
-import runner
 
-
-
-EXPLORE_RATE = 0.1
+EXPLORE_RATE = 0.3
 LEARNING_RATE = 0.6
 DISCOUNT_RATE = 0.5
 MAX_ACTION = 6
@@ -62,11 +59,13 @@ class Plotter:
     
     def animation_Qvalue(self,frame):
         plt.cla()
+        plt.ylim(0,3)
+        plt.title("Average of Q-Value")
         plt.plot(self.x_value,self.y_value)
 
-    def animation_update(self):
+    def animation_update(self): #Not Use
         ani = FuncAnimation(plt.gcf(), Plotter.animation_trafficload, interval=10)
-        plt.tight_layout()
+        #plt.tight_layout()
         if self.init is True:
             plt.show()
             self.init = False
@@ -188,6 +187,17 @@ class TrafficLight:
                     self.stateSpace[i]['Q_SUM'] = Q_SUM
         # return print(self.stateSpace)
 
+    def Find_avg_Q(self):
+        count_Q = 0
+        Q_sum_all = 0
+        for item in self.stateSpace:
+            if item['Q_SUM'] != 0:
+                Q_sum_all += item['Q_SUM']
+                count_Q += 1
+        avg_Q = Q_sum_all/count_Q
+        return avg_Q         
+
+
     def Greedy_Al(self):
         Action_QMax = 0
         self.Find_Q_Max()
@@ -233,7 +243,7 @@ class TrafficLight:
         # api.set_Trafficlight(newState)
         rewardResult = api.get_waiting_time(self.lane,newState)
         if rewardResult != 0:
-            self.reward = 1/rewardResult
+            self.reward = (1/rewardResult) * 100
         else: self.reward = 0
         
         self.Find_Q_Max()
@@ -244,6 +254,7 @@ class TrafficLight:
                 self.stateSpace[i]["Q_value"][self.action] = presentState["Q_value"][self.action]
         self.Find_Q_Sum()
         api.csv_data_stateSpace(self.stateSpace)
+        
 
     def updateState(self):
         oldState = self.state.copy()

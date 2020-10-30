@@ -54,8 +54,6 @@ if __name__ == "__main__":
         rl.P_Greedy_Al()
         rl.updateFuction()
         rl.updateState()
-<<<<<<< Updated upstream
-=======
         data.update_plot_trafficload(i,1,2,3,4)
         if i == 0:
             thread_plot_data.start()

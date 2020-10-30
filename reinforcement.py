@@ -6,10 +6,11 @@ import traci
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import api
+import runner
+
 
 
 EXPLORE_RATE = 0.1
->>>>>>> Stashed changes
 LEARNING_RATE = 0.6
 DISCOUNT_RATE = 0.5
 MAX_ACTION = 6
@@ -54,6 +55,14 @@ class Plotter:
         plt.plot(self.x_value,self.y2_value)
         plt.plot(self.x_value,self.y3_value)
         plt.plot(self.x_value,self.y4_value)
+
+    def update_plot_Qvalue(self,epochs,avg_Q):
+        self.x_value.append(epochs)
+        self.y_value.append(avg_Q)
+    
+    def animation_Qvalue(self,frame):
+        plt.cla()
+        plt.plot(self.x_value,self.y_value)
 
     def animation_update(self):
         ani = FuncAnimation(plt.gcf(), Plotter.animation_trafficload, interval=10)
@@ -220,22 +229,32 @@ class TrafficLight:
         newState = self.takeAction(self.action, self.state)
         presentState = self.get_state(self.state)
         nextState = self.get_state(newState)
+
         # api.set_Trafficlight(newState)
         rewardResult = api.get_waiting_time(self.lane,newState)
         if rewardResult != 0:
-            reward = 1/rewardResult
-        else: reward = 0
+            self.reward = 1/rewardResult
+        else: self.reward = 0
         
         self.Find_Q_Max()
         presentState["Q_value"][self.action] += (LEARNING_RATE * (
-            reward+(DISCOUNT_RATE*nextState["Q_MAX"])-presentState["Q_value"][self.action]))
+            self.reward+(DISCOUNT_RATE*nextState["Q_MAX"])-presentState["Q_value"][self.action]))
         for i in range(len(self.stateSpace)):
             if self.stateSpace[i]["state"] == presentState['state']:
                 self.stateSpace[i]["Q_value"][self.action] = presentState["Q_value"][self.action]
         self.Find_Q_Sum()
-        return print(self.stateSpace)
+        api.csv_data_stateSpace(self.stateSpace)
 
     def updateState(self):
         oldState = self.state.copy()
         self.state = self.takeAction(self.action, self.state)
         print("Present_STATE :",oldState,"Next_STATE :",self.state,"ACTION :",self.action,"Reward :",self.reward)
+
+    # def showQMax(self):
+    #     qValueMax = 0
+    #     StateMax = 0
+    #     for i in range(len(self.stateSpace)):
+    #         if self.stateSpace[i]["Q_MAX"] > qValueMax:
+    #             qValueMax = self.stateSpace[i]["Q_MAX"]
+    #             StateMax = i
+    #     return print(self.stateSpace[StateMax])

@@ -60,7 +60,6 @@ if __name__ == "__main__":
         if i == 0:
             thread_plot_data.start()
         # rl.showQMax()
->>>>>>> Stashed changes
         print("----------------------------------------------------------------------")
     sys.stdout.flush()
 

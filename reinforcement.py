@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import api
 
-<<<<<<< Updated upstream
-EXPLORE_RATE = 0.5
-=======
 
 EXPLORE_RATE = 0.1
 >>>>>>> Stashed changes

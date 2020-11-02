@@ -38,18 +38,18 @@ if __name__ == "__main__":
     else:
         sumoBinary = checkBinary('sumo-gui')
 
-    # traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
+    traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
     
     rl.InitStateSpace()
     
-    os.chdir("./4cross_TLS")
-    os.system('python randomTrips.py --net-file=1_1Cross.net.xml --route-file=1_1Cross.rou.xml --weights-prefix=1_1Cross --end='+str(TIME)+' --fringe-factor=10 --period=2.5 --trip-attributes="departLane=\'best\' departSpeed=\'max\' departPos=\'random\'"  -l --validate --fringe-factor 10  --max-distance 2000')
+    # os.chdir("./4cross_TLS")
+    # os.system('python randomTrips.py --net-file=1_1Cross.net.xml --route-file=1_1Cross.rou.xml --weights-prefix=1_1Cross --end='+str(TIME)+' --fringe-factor=10 --period=2.5 --trip-attributes="departLane=\'best\' departSpeed=\'max\' departPos=\'random\'"  -l --validate --fringe-factor 10  --max-distance 2000')
     
-    # for i in range(MAX_EPOCHS):
-    #     print("----------------------------- EPOCHS: ",i, "-----------------------------")
-    #     # api.random_vehicle(i)
-    #     rl.P_Greedy_Al()
-    #     rl.updateFuction()
-    #     rl.updateState()
-    #     print("----------------------------------------------------------------------")
+    for i in range(MAX_EPOCHS):
+        print("----------------------------- EPOCHS: ",i, "-----------------------------")
+        # api.random_vehicle(i)
+        rl.P_Greedy_Al()
+        rl.updateFuction()
+        rl.updateState()
+        print("----------------------------------------------------------------------")
 sys.stdout.flush()

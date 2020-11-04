@@ -183,8 +183,9 @@ class TrafficLight:
         presentState = self.get_state(self.state)
         nextState = self.get_state(newState)
 
+        result = a.get_obj(newState)    #continue simulate
         # api.set_Trafficlight(newState)
-        rewardResult = a.get_obj(newState)['w_time']
+        rewardResult = result['w_time']
         if rewardResult != 0:
             self.reward = 1/rewardResult
         else: 

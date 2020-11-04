@@ -26,7 +26,7 @@ if __name__ == "__main__":
     initState = [15, 15, 15]  
     MAX_EPOCHS = 1000
     rl = RL.TrafficLight(initState,lane)
-
+    aa = api.API()
     options = get_options()
     if options.nogui:
         sumoBinary = checkBinary('sumo')
@@ -34,15 +34,22 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
 
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
+    # traci.simulationStep()
+    while traci.simulation.getMinExpectedNumber() > 0 :
+        result = aa.get_obj([30,30,30])
+        print(result)
+        # traci.simulationStep()
+        
 
-    rl.InitStateSpace()
-    for i in range(MAX_EPOCHS):
-        print("----------------------------- EPOCHS: ",i,"-----------------------------")
-        rl.P_Greedy_Al() 
-        rl.updateFuction()
-        rl.updateState()
-        # rl.showQMax()
-        print("----------------------------------------------------------------------")
+    # rl.InitStateSpace()
+    # for i in range(MAX_EPOCHS):
+    #     print("----------------------------- EPOCHS: ",i,"-----------------------------")
+    #     rl.P_Greedy_Al() 
+    #     rl.updateFuction()
+    #     rl.updateState()
+    #     # rl.showQMax()
+    #     print("----------------------------------------------------------------------")
+
     sys.stdout.flush()
 
     

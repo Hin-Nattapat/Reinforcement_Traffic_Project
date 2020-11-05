@@ -19,7 +19,7 @@ def get_waiting_time(lane,NextState):
             count += 1
         elif phase % 2 == 0:
             keep = True
-        print(traci.trafficlight.getPhaseDuration('gneJ7'))
+        #print(traci.trafficlight.getPhaseDuration('gneJ7'))
         # print(traci.trafficlight.getNextSwitch('gneJ7'))
         # print(traci.simulation.getTime())
         # if (traci.simulation.getTime() % 132 == 0 and traci.simulation.getTime() != 0):

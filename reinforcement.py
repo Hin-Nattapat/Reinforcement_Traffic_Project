@@ -214,7 +214,7 @@ class TrafficLight:
         oldState = self.state.copy()
         self.state = self.takeAction(self.action, self.state)
         print("Present_STATE :",oldState,"Next_STATE :",self.state,"ACTION :",self.action,"Reward :",self.reward)
-
+        
     # def showQMax(self):
     #     qValueMax = 0
     #     StateMax = 0

@@ -71,3 +71,8 @@ def csv_data_stateSpace(data):
     print(dataframe)
 
 
+def random_Vehicle():
+    traci.route.add("rou_1",["gneE43", "gneE3", "gneE12","gneE32"])
+    
+    for i in range(100):
+        traci.vehicle.add(str(i+1),"rou_1")

@@ -5,8 +5,10 @@ from sumolib import checkBinary
 import traci
 import api
 import reinforcement as RL
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 import random
-import randomTrips
+import threading
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -22,6 +24,11 @@ def get_options():
     options, args = optParser.parse_args()
     return options
 
+def plot_data(a):
+    ani = FuncAnimation(plt.gcf(), a.animation_Qvalue)
+    plt.tight_layout()
+    plt.show()
+    thread_plot_data.join()
 
 if __name__ == "__main__":
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
@@ -47,11 +54,17 @@ if __name__ == "__main__":
     # os.system('python randomTrips.py --net-file=1_1Cross.net.xml --route-file=1_1Cross.rou.xml --weights-prefix=1_1Cross --end='+str(TIME)+' --fringe-factor=10 --period=2.5 --trip-attributes="departLane=\'best\' departSpeed=\'max\' departPos=\'random\'"  -l --validate --fringe-factor 10  --max-distance 2000')
 
     # for i in range(MAX_EPOCHS):
+    data = RL.Plotter()
+    global thread_plot_data
+    thread_plot_data = threading.Thread(target=plot_data,args=(data,))
     while True:
         print("----------------------------- EPOCHS: ",EPOCHS, "-----------------------------")
         rl.P_Greedy_Al()
         rl.updateFuction()
+        data.update_plot_Qvalue(EPOCHS,rl.Find_avg_Q())
         rl.updateState()
+        if EPOCHS == 0:
+            thread_plot_data.start()
         EPOCHS = EPOCHS+1
         print("----------------------------------------------------------------------")
 sys.stdout.flush()

@@ -61,10 +61,8 @@ def csv_data_stateSpace(data):
                      item['Q_MAX'], item['Q_SUM']])
         list_data.append(temp)
     dataframe = pandas.DataFrame(list_data)
-    dataframe.to_csv('stateSpace.csv', index=False,
-                     header=False, encoding='utf-8')
+    dataframe.to_csv('stateSpace.csv', index=False,header=False, encoding='utf-8')
     print(dataframe)
-
 
 def add_Route():
     traci.route.add("rou_1", ["gneE43", "gneE3", "gneE6", "gneE40"])
@@ -125,3 +123,4 @@ def random_Vehicle():
         index = random.randint(0, count-1)
         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="desired",)
         traci.vehicle.setMaxSpeed("vehicle_"+str(i), 25.0)
+    

@@ -20,8 +20,6 @@ class API():
             "f_rate" : None
         }
 
-
-    
     def get_obj(self, nextState):
         self.wait_time = [0.0, 0.0, 0.0, 0.0]
         self.avg_spd = [0.0, 0.0, 0.0, 0.0]

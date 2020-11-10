@@ -125,6 +125,7 @@ class TrafficLight:
             if sum(State) <= 105:
                 self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
                                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
+        print(self.stateSpace)
         # return print(self.stateSpace)
 
 

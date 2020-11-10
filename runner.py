@@ -34,14 +34,13 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
 
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
-    # traci.simulationStep()
     while traci.simulation.getMinExpectedNumber() > 0 :
         result = aa.get_obj([30,30,30])
         print(result)
         # traci.simulationStep()
         
 
-    # rl.InitStateSpace()
+    #rl.InitStateSpace()
     # for i in range(MAX_EPOCHS):
     #     print("----------------------------- EPOCHS: ",i,"-----------------------------")
     #     rl.P_Greedy_Al() 

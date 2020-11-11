@@ -29,46 +29,33 @@ num_episodes = 5
 
 class Plotter:
     def __init__(self):
-        self.x_value = []
-        self.y_value = []
-        self.init = True
-
-    def init_trafficload(self):
-        self.y2_value = []
-        self.y3_value = []
-        self.y4_value = []
-
-    def update_plot_trafficload(self,epochs,lane1,lane2,lane3,lane4):
-        self.x_value.append(epochs)
-        self.y_value.append(lane1)
-        self.y2_value.append(lane2)
-        self.y3_value.append(lane3)
-        self.y4_value.append(lane4)
-        
-
-    def animation_trafficload(self,frame):
-        plt.cla()
-        plt.plot(self.x_value,self.y_value)
-        plt.plot(self.x_value,self.y2_value)
-        plt.plot(self.x_value,self.y3_value)
-        plt.plot(self.x_value,self.y4_value)
+        self.fig , (self.ax1,self.ax2) = plt.subplots(2,1)
+        self.ax1.set_title("Average of Q_Value")
+        self.ax2.set_title("Average of Q_Value2")
+        self.line1, = self.ax1.plot([], [], lw=2)
+        self.line2, = self.ax2.plot([], [], lw=2, color='r')
+        for ax in [self.ax1, self.ax2]:
+            ax.set_ylim(0, 20)
+            ax.set_xlim(0, 10)
+            ax.grid()
+        self.line = [self.line1, self.line2]
+        self.epochs_value = []
+        self.avg_Q_value = []
 
     def update_plot_Qvalue(self,epochs,avg_Q):
-        self.x_value.append(epochs)
-        self.y_value.append(avg_Q)
+        self.epochs_value.append(epochs)
+        self.avg_Q_value.append(avg_Q)
     
-    def animation_Qvalue(self,frame):
-        plt.cla()
-        # plt.ylim(0,5)
-        plt.title("Average of Q-Value")
-        plt.plot(self.x_value,self.y_value)
-
-    def animation_update(self): #Not Use
-        ani = FuncAnimation(plt.gcf(), Plotter.animation_trafficload, interval=10)
-        #plt.tight_layout()
-        if self.init is True:
-            plt.show()
-            self.init = False
+    def animation(self,frame):
+        self.line[0].set_data(self.epochs_value, self.avg_Q_value)
+        self.line[1].set_data(self.epochs_value, self.avg_Q_value)
+        for ax in [self.ax1, self.ax2]:
+            xmin, xmax = ax.get_xlim()
+            if self.epochs_value != []:
+                if self.epochs_value[-1] >= xmax:
+                    ax.set_xlim(xmin, 2*xmax)
+                    ax.figure.canvas.draw()
+        return self.line
 
 class StateAction:
     def __init__(self, state):
@@ -269,6 +256,7 @@ class TrafficLight:
         oldState = self.state.copy()
         self.state = self.takeAction(self.action, self.state)
         print("Present_STATE :",oldState,"Next_STATE :",self.state,"ACTION :",self.action,"Reward :",self.reward)
+        return self.state
         
     # def showQMax(self):
     #     qValueMax = 0

@@ -24,11 +24,17 @@ def get_options():
     options, args = optParser.parse_args()
     return options
 
-def plot_data(a):
-    ani = FuncAnimation(plt.gcf(), a.animation_Qvalue)
-    plt.tight_layout()
-    plt.show()
-    thread_plot_data.join()
+
+
+def main_program(epochs,rl_data,plot_data,traci_data):
+    while True:
+        print("----------------------------- EPOCHS: ",epochs, "-----------------------------")
+        rl_data.P_Greedy_Al()
+        rl_data.updateFuction()
+        plot_data.update_plot_Qvalue(epochs,rl_data.Find_avg_Q())
+        epochs = epochs+1
+        #กูใส่ traci_data เข้ามาละ 
+        print("----------------------------------------------------------------------")
 
 if __name__ == "__main__":
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
@@ -55,16 +61,11 @@ if __name__ == "__main__":
 
     # for i in range(MAX_EPOCHS):
     data = RL.Plotter()
-    global thread_plot_data
-    thread_plot_data = threading.Thread(target=plot_data,args=(data,))
-    while True:
-        print("----------------------------- EPOCHS: ",EPOCHS, "-----------------------------")
-        rl.P_Greedy_Al()
-        rl.updateFuction()
-        data.update_plot_Qvalue(EPOCHS,rl.Find_avg_Q())
-        rl.updateState()
-        if EPOCHS == 0:
-            thread_plot_data.start()
-        EPOCHS = EPOCHS+1
-        print("----------------------------------------------------------------------")
+    traci_data = api.API()
+    global thread_main_data
+    thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
+    thread_main_data.start()
+    ani = FuncAnimation(data.fig,data.animation)
+    plt.tight_layout()
+    plt.show()
 sys.stdout.flush()

@@ -2,7 +2,7 @@ import traci
 
 class API():
     def __init__(self):
-        self.wait_time = []
+        self.wait_time = {}
         self.avg_spd = []
         self.dens = None
         self.flow = 0
@@ -19,38 +19,38 @@ class API():
             "avg_spd" : None,
             "f_rate" : None
         }
-
-
     
     def get_obj(self, nextState):
         self.wait_time = [0.0, 0.0, 0.0, 0.0]
         self.avg_spd = [0.0, 0.0, 0.0, 0.0]
         self.dens = [0.0, 0.0, 0.0, 0.0]
         self.keep = True
+        self.flow = 0
         #traci.simulationStep()
         ctime = traci.simulation.getTime()
-        print(ctime)
+        #print(ctime)
         self.set_Trafficlight(nextState)
         while traci.simulation.getTime() - ctime <= 132:
             traci.simulationStep()
             phase = traci.trafficlight.getPhase('gneJ7')
             #self.get_waiting_time(phase)
-            self.get_flow(phase)
-            self.avg_spd.append(self.get_avg_spd())
-            self.dens.append(self.get_dens())
-        print('previous : ' ,self.pre_id)
-        print('current : ' ,self.cur_id)
-        for i in self.pre_id:
-            index = self.pre_id.index(i)
-            duplicate = (list(self.pre_id[index].intersection(self.cur_id[index])))
-            self.flow += len(duplicate)
-            print(duplicate ,self.flow)
+            # self.get_flow(phase)
+            # self.avg_spd.append(self.get_avg_spd())
+            # self.dens.append(self.get_dens())
+            self.waiting()
+        # print('previous : ' ,self.pre_id)
+        # print('current : ' ,self.cur_id)
+        # for i in self.pre_id:
+        #     index = self.pre_id.index(i)
+        #     duplicate = (list(self.pre_id[index].intersection(self.cur_id[index])))
+        #     self.flow += len(list(self.pre_id[index]))len(duplicate)
+        #     print(duplicate ,self.flow)
 
         #collect all result
         #self.result['w_time'] = sum(self.wait_time) / len(self.wait_time)
-        self.result['avg_spd'] = sum(self.avg_spd) / len(self.avg_spd)
-        self.result['dens'] = sum(self.dens) / len(self.dens)
-        self.result['f_rate'] = self.flow
+        # self.result['avg_spd'] = sum(self.avg_spd) / len(self.avg_spd)
+        # self.result['dens'] = sum(self.dens) / len(self.dens)
+        # self.result['f_rate'] = self.flow
     
         return self.result
 
@@ -66,10 +66,12 @@ class API():
             self.keep = True
 
     def waiting(self):
-        for edge in self.edge:
-            print('edge :' ,end=' ')
-            print()
-    
+        veh = traci.vehicle.getIDList()
+        print('')
+        if len(veh) > 0:
+            for car in veh:
+                print('car : ' ,car, ' : wait -> ' ,traci.vehicle.getWaitingTime(car))
+
     def get_avg_spd(self): #complete
         spd = []
         veh_id = traci.vehicle.getIDList()
@@ -92,7 +94,7 @@ class API():
             self.keep_2 = True
 
     def set_Trafficlight(self, state):
-        print(state)
+        #print(state)
         TrafficLightPhases = []
         G4 = 120 - state[0] - state[1] - state[2]
         TrafficLightPhases.append(

@@ -3,4 +3,10 @@
     <vehicle id="0" depart="0.00" departLane="best" departPos="random" departSpeed="max">
         <route edges="gneE43 gneE3 gneE12 gneE13 gneE8 gneE42"/>
     </vehicle>
+    <vehicle id="1" depart="2.50" departLane="best" departPos="random" departSpeed="max">
+        <route edges="gneE41 gneE7 gneE10 gneE34"/>
+    </vehicle>
+    <vehicle id="2" depart="5.00" departLane="best" departPos="random" departSpeed="max">
+        <route edges="gneE41 gneE7 gneE10 gneE34"/>
+    </vehicle>
 </routes>

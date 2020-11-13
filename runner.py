@@ -25,6 +25,12 @@ def get_options():
     return options
 
 
+def main_program_fixed(epochs,rl_data,plot_data):
+    while True:
+        print("----------------------------- EPOCHS: ",epochs, "-----------------------------")
+        rl_data.updateFuction_fixed()
+        epochs = epochs+1
+        print("----------------------------------------------------------------------")
 
 def main_program(epochs,rl_data,plot_data,traci_data):
     while True:
@@ -37,9 +43,13 @@ def main_program(epochs,rl_data,plot_data,traci_data):
         print("----------------------------------------------------------------------")
 
 if __name__ == "__main__":
+    fix_traffic = True
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
             ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
-    initState = [15, 15, 15]
+    if fix_traffic is True:
+        initState = [30, 30, 30]
+    else:
+        initState = [15, 15, 15]
     MAX_EPOCHS = 1000
     EPOCHS = 0
     CYCLE = 132
@@ -63,7 +73,10 @@ if __name__ == "__main__":
     data = RL.Plotter()
     traci_data = api.API()
     global thread_main_data
-    thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
+    if fix_traffic is True:
+        thread_main_data = threading.Thread(target=main_program_fixed,args=(EPOCHS,rl,data,))
+    else:
+        thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
     thread_main_data.start()
     ani = FuncAnimation(data.fig,data.animation)
     plt.tight_layout()

@@ -121,6 +121,7 @@ def get_waiting_time(lane, NextState):
     keep = True
     count = 0
     # print("TEST : "," : ",traci.trafficlight.getCompleteRedYellowGreenDefinition('gneJ7'))
+    print(NextState)
     set_Trafficlight(NextState)
     traci.simulationStep()
     while traci.simulation.getTime() % 132 != 0:

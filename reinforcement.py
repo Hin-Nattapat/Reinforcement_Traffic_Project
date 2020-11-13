@@ -230,7 +230,9 @@ class TrafficLight:
                 return self.action
                
            
-        
+    def updateFuction_fixed(self):
+        state = [30,30,30]
+        api.get_waiting_time(self.lane,state)
 
     def updateFuction(self):
         newState = self.takeAction(self.action, self.state)

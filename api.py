@@ -27,25 +27,27 @@ class API():
         self.avg_spd = [0.0, 0.0, 0.0, 0.0]
         self.dens = [0.0, 0.0, 0.0, 0.0]
         self.keep = True
-        #traci.simulationStep()
-        ctime = traci.simulation.getTime()
-        # print(ctime)
+
         self.set_Trafficlight(nextState)
-        while traci.simulation.getTime() - ctime <= 132:
-            random_Vehicle()
+        ctime = traci.simulation.getTime()
+        print(ctime)
+        
+        while traci.simulation.getTime() - ctime < 132:
             traci.simulationStep()
             phase = traci.trafficlight.getPhase('gneJ7')
             self.get_waiting(phase)
             self.get_flow(phase)
             self.avg_spd.append(self.get_avg_spd())
             self.dens.append(self.get_dens())
+            #print(traci.trafficlight.getNextSwitch('gneJ7'))
+            #print(traci.trafficlight.getPhaseDuration('gneJ7'))
         # print('previous : ' ,self.pre_id)
         # print('current : ' ,self.cur_id)
         for i in self.pre_id:
             index = self.pre_id.index(i)
             duplicate = (list(self.pre_id[index].intersection(self.cur_id[index])))
             self.flow += (len(list(self.pre_id)) - len(duplicate))
-            print(duplicate ,self.flow)
+            # print(duplicate ,self.flow)
 
         #collect all result
         self.result['w_time'] = sum(self.wait_time) / len(self.wait_time)
@@ -57,12 +59,12 @@ class API():
 
     def get_waiting(self, phase):        
         if phase % 2 == 1 and self.keep:
-            print('phase : ' ,phase)
+            #print('phase : ' ,phase)
             temp = (traci.lane.getWaitingTime(self.lane[int((phase-1)/2)][0]) 
                     + traci.lane.getWaitingTime(self.lane[int((phase-1)/2)][1])) / 2.0           
             self.wait_time[int((phase-1)/2)] = temp
             # print(self.wait_time)
-            print(temp)
+            #print(temp)
             self.keep = False
         elif phase % 2 == 0:
             self.keep = True
@@ -94,7 +96,7 @@ class API():
             self.keep_2 = True
 
     def set_Trafficlight(self, state):
-        # print(state)
+        print(state)
         TrafficLightPhases = []
         G4 = 120 - state[0] - state[1] - state[2]
         TrafficLightPhases.append(

@@ -32,17 +32,22 @@ def main_program_fixed(epochs,rl_data,plot_data):
         print("----------------------------------------------------------------------")
 
 def main_program(epochs,rl_data,plot_data,traci_data):
+    call_api = api.API()
     while True:
         print("----------------------------- EPOCHS: ",epochs, "-----------------------------")
-        rl_data.P_Greedy_Al()
-        rl_data.updateFuction()
+        current_state = rl_data.state
+        action = rl_data.P_Greedy_Al()
+        new_state = rl_data.takeAction(action, current_state)
+        result = call_api.get_obj(new_state)
+        rl_data.updateFuction(result['w_time'])
+        rl_data.updateState()
         plot_data.update_plot_Qvalue(epochs,rl_data.Find_avg_Q())
         epochs = epochs+1
         #กูใส่ traci_data เข้ามาละ 
         print("----------------------------------------------------------------------")
 
 if __name__ == "__main__":
-    fix_traffic = True
+    fix_traffic = False
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
             ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
     if fix_traffic is True:
@@ -60,28 +65,31 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo')
     else:
         sumoBinary = checkBinary('sumo-gui')
-    aa = api.API()
+
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
+
+    rl.InitStateSpace()
     api.add_Route()
-    while traci.simulation.getMinExpectedNumber() > 0 :
-        result = aa.get_obj([30,30,30])
-        print(result)
-    # rl.InitStateSpace()
+
+    # while traci.simulation.getMinExpectedNumber() > 0 :
+    #     result = aa.get_obj([30,30,30])
+    #     print(result)
+    
 
     
     # # os.chdir("./4cross_TLS")
     # # os.system('python randomTrips.py --net-file=1_1Cross.net.xml --route-file=1_1Cross.rou.xml --weights-prefix=1_1Cross --end='+str(TIME)+' --fringe-factor=10 --period=2.5 --trip-attributes="departLane=\'best\' departSpeed=\'max\' departPos=\'random\'"  -l --validate --fringe-factor 10  --max-distance 2000')
 
     # # for i in range(MAX_EPOCHS):
-    # data = RL.Plotter()
-    # traci_data = api.API()
-    # global thread_main_data
-    # if fix_traffic is True:
-    #     thread_main_data = threading.Thread(target=main_program_fixed,args=(EPOCHS,rl,data,))
-    # else:
-    #     thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
-    # thread_main_data.start()
-    # ani = FuncAnimation(data.fig,data.animation)
-    # plt.tight_layout()
-    # plt.show()
+    data = RL.Plotter()
+    traci_data = api.API()
+    global thread_main_data
+    if fix_traffic is True:
+        thread_main_data = threading.Thread(target=main_program_fixed,args=(EPOCHS,rl,data,))
+    else:
+        thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
+    thread_main_data.start()
+    ani = FuncAnimation(data.fig,data.animation)
+    plt.tight_layout()
+    plt.show()
 sys.stdout.flush()

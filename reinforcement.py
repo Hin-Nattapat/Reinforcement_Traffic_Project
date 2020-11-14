@@ -234,13 +234,13 @@ class TrafficLight:
         state = [30,30,30]
         api.get_waiting_time(self.lane,state)
 
-    def updateFuction(self):
+    def updateFuction(self, waiting_time):
         newState = self.takeAction(self.action, self.state)
         presentState = self.get_state(self.state)
         nextState = self.get_state(newState)
         #continue simulate
         # api.set_Trafficlight(newState)
-        rewardResult = api.get_waiting_time(self.lane, newState)
+        rewardResult = waiting_time
         if rewardResult != 0:
             self.reward = (1/rewardResult) * 100
         else: self.reward = 0

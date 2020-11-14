@@ -203,7 +203,7 @@
     </edge>
 
     <tlLogic id="gneJ7" type="static" programID="0" offset="0">
-        <phase duration="1"  state="rrrrrrrrrrrrGGGG"/>
+        <phase duration="1"  state="rrrrrrrrrrrrrrrr"/>
     </tlLogic>
 
     <junction id="gneJ13" type="priority" x="0.00" y="-280.00" incLanes="gneE35_0 gneE35_1 gneE10_0 gneE10_1" intLanes=":gneJ13_0_0 :gneJ13_0_1 :gneJ13_2_0 :gneJ13_2_1 :gneJ13_5_0" shape="-6.40,-280.00 6.40,-280.00 -6.40,-280.00">

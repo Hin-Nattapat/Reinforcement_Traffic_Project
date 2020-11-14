@@ -180,8 +180,10 @@ class TrafficLight:
         for item in self.stateSpace:
             if item['Q_SUM'] != 0:
                 Q_sum_all += item['Q_SUM']
-                count_Q += 1
-        avg_Q = Q_sum_all/count_Q
+            count_Q += 1
+        avg_Q = Q_sum_all / count_Q
+        if count_Q == 0:
+            return 0
         return avg_Q         
 
 

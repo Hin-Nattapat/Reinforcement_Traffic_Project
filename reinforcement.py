@@ -3,8 +3,6 @@ import sys
 import optparse
 import random
 import traci
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 import api
 
 EXPLORE_RATE = 0.2
@@ -26,36 +24,6 @@ num_episodes = 5
 #         else:
 #             self.sumo_binary = checkBinary('sumo')
 #         traci.start([self.sumo_binary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
-
-class Plotter:
-    def __init__(self):
-        self.fig , (self.ax1,self.ax2) = plt.subplots(2,1)
-        self.ax1.set_title("Average of Q_Value")
-        self.ax2.set_title("Average of Q_Value2")
-        self.line1, = self.ax1.plot([], [], lw=2)
-        self.line2, = self.ax2.plot([], [], lw=2, color='r')
-        for ax in [self.ax1, self.ax2]:
-            ax.set_ylim(0, 20)
-            ax.set_xlim(0, 10)
-            ax.grid()
-        self.line = [self.line1, self.line2]
-        self.epochs_value = []
-        self.avg_Q_value = []
-
-    def update_plot_Qvalue(self,epochs,avg_Q):
-        self.epochs_value.append(epochs)
-        self.avg_Q_value.append(avg_Q)
-    
-    def animation(self,frame):
-        self.line[0].set_data(self.epochs_value, self.avg_Q_value)
-        self.line[1].set_data(self.epochs_value, self.avg_Q_value)
-        for ax in [self.ax1, self.ax2]:
-            xmin, xmax = ax.get_xlim()
-            if self.epochs_value != []:
-                if self.epochs_value[-1] >= xmax:
-                    ax.set_xlim(xmin, 2*xmax)
-                    ax.figure.canvas.draw()
-        return self.line
 
 class StateAction:
     def __init__(self, state):

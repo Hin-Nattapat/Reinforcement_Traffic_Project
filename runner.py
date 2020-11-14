@@ -4,6 +4,7 @@ import optparse
 from sumolib import checkBinary
 import traci
 import api
+import plotter
 import reinforcement as RL
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -41,7 +42,7 @@ def main_program(epochs,rl_data,plot_data,traci_data):
         result = call_api.get_obj(new_state)
         rl_data.updateFuction(result['w_time'])
         rl_data.updateState()
-        plot_data.update_plot_Qvalue(epochs,rl_data.Find_avg_Q())
+        plot_data.update_plot(epochs,result['w_time'],result['dens'],result['avg_spd'],result['f_rate'])
         epochs = epochs+1
         #กูใส่ traci_data เข้ามาละ 
         print("----------------------------------------------------------------------")
@@ -81,7 +82,7 @@ if __name__ == "__main__":
     # # os.system('python randomTrips.py --net-file=1_1Cross.net.xml --route-file=1_1Cross.rou.xml --weights-prefix=1_1Cross --end='+str(TIME)+' --fringe-factor=10 --period=2.5 --trip-attributes="departLane=\'best\' departSpeed=\'max\' departPos=\'random\'"  -l --validate --fringe-factor 10  --max-distance 2000')
 
     # # for i in range(MAX_EPOCHS):
-    data = RL.Plotter()
+    data = plotter.Plotter()
     traci_data = api.API()
     global thread_main_data
     if fix_traffic is True:

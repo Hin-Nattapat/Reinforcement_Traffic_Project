@@ -60,24 +60,28 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo')
     else:
         sumoBinary = checkBinary('sumo-gui')
-
+    aa = api.API()
     traci.start([sumoBinary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
-    rl.InitStateSpace()
-
     api.add_Route()
-    # os.chdir("./4cross_TLS")
-    # os.system('python randomTrips.py --net-file=1_1Cross.net.xml --route-file=1_1Cross.rou.xml --weights-prefix=1_1Cross --end='+str(TIME)+' --fringe-factor=10 --period=2.5 --trip-attributes="departLane=\'best\' departSpeed=\'max\' departPos=\'random\'"  -l --validate --fringe-factor 10  --max-distance 2000')
+    while traci.simulation.getMinExpectedNumber() > 0 :
+        result = aa.get_obj([30,30,30])
+        print(result)
+    # rl.InitStateSpace()
 
-    # for i in range(MAX_EPOCHS):
-    data = RL.Plotter()
-    traci_data = api.API()
-    global thread_main_data
-    if fix_traffic is True:
-        thread_main_data = threading.Thread(target=main_program_fixed,args=(EPOCHS,rl,data,))
-    else:
-        thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
-    thread_main_data.start()
-    ani = FuncAnimation(data.fig,data.animation)
-    plt.tight_layout()
-    plt.show()
+    
+    # # os.chdir("./4cross_TLS")
+    # # os.system('python randomTrips.py --net-file=1_1Cross.net.xml --route-file=1_1Cross.rou.xml --weights-prefix=1_1Cross --end='+str(TIME)+' --fringe-factor=10 --period=2.5 --trip-attributes="departLane=\'best\' departSpeed=\'max\' departPos=\'random\'"  -l --validate --fringe-factor 10  --max-distance 2000')
+
+    # # for i in range(MAX_EPOCHS):
+    # data = RL.Plotter()
+    # traci_data = api.API()
+    # global thread_main_data
+    # if fix_traffic is True:
+    #     thread_main_data = threading.Thread(target=main_program_fixed,args=(EPOCHS,rl,data,))
+    # else:
+    #     thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
+    # thread_main_data.start()
+    # ani = FuncAnimation(data.fig,data.animation)
+    # plt.tight_layout()
+    # plt.show()
 sys.stdout.flush()

@@ -3,12 +3,13 @@ import sys
 import optparse
 import random
 import traci
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 import api
 
-a = api.API()
-EXPLORE_RATE = 0.1
-LEARNING_RATE = 0.6
-DISCOUNT_RATE = 0.5
+EXPLORE_RATE = 0.2
+LEARNING_RATE = 0.5
+DISCOUNT_RATE = 0.9
 MAX_ACTION = 6
 num_episodes = 5
 
@@ -26,6 +27,35 @@ num_episodes = 5
 #             self.sumo_binary = checkBinary('sumo')
 #         traci.start([self.sumo_binary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
 
+class Plotter:
+    def __init__(self):
+        self.fig , (self.ax1,self.ax2) = plt.subplots(2,1)
+        self.ax1.set_title("Average of Q_Value")
+        self.ax2.set_title("Average of Q_Value2")
+        self.line1, = self.ax1.plot([], [], lw=2)
+        self.line2, = self.ax2.plot([], [], lw=2, color='r')
+        for ax in [self.ax1, self.ax2]:
+            ax.set_ylim(0, 20)
+            ax.set_xlim(0, 10)
+            ax.grid()
+        self.line = [self.line1, self.line2]
+        self.epochs_value = []
+        self.avg_Q_value = []
+
+    def update_plot_Qvalue(self,epochs,avg_Q):
+        self.epochs_value.append(epochs)
+        self.avg_Q_value.append(avg_Q)
+    
+    def animation(self,frame):
+        self.line[0].set_data(self.epochs_value, self.avg_Q_value)
+        self.line[1].set_data(self.epochs_value, self.avg_Q_value)
+        for ax in [self.ax1, self.ax2]:
+            xmin, xmax = ax.get_xlim()
+            if self.epochs_value != []:
+                if self.epochs_value[-1] >= xmax:
+                    ax.set_xlim(xmin, 2*xmax)
+                    ax.figure.canvas.draw()
+        return self.line
 
 class StateAction:
     def __init__(self, state):
@@ -128,7 +158,6 @@ class TrafficLight:
         print(self.stateSpace)
         # return print(self.stateSpace)
 
-
     def Find_Q_Max(self):
         for i in range(len(self.stateSpace)):
             Q_MAX = max(self.stateSpace[i]['Q_value'])
@@ -145,14 +174,36 @@ class TrafficLight:
                     self.stateSpace[i]['Q_SUM'] = Q_SUM
         # return print(self.stateSpace)
 
+    def Find_avg_Q(self):
+        count_Q = 0
+        Q_sum_all = 0
+        for item in self.stateSpace:
+            if item['Q_SUM'] != 0:
+                Q_sum_all += item['Q_SUM']
+                count_Q += 1
+        avg_Q = Q_sum_all/count_Q
+        return avg_Q         
+
+
     def Greedy_Al(self):
-        Action_QMax = 0
         self.Find_Q_Max()
         State = self.get_state(self.state)
         for i in range(MAX_ACTION):
             if State["Q_value"][i] == State["Q_MAX"]:
-                Action_QMax = i
-        return Action_QMax
+                self.action = i
+        return self.action
+
+    def E_Greedy_Al(self):
+        randomNumber = random.uniform(0, 1)
+        State = self.get_state(self.state)
+        if ((EXPLORE_RATE > randomNumber) or (State["Q_SUM"] == 0.0)):
+            self.action = self.randomAction()
+            return self.action
+        else:
+            for i in range(MAX_ACTION):
+                if State["Q_value"][i] == State["Q_MAX"]:
+                    self.action = i
+            return self.action
 
     def P_Greedy_Al(self):
         randomNumber = random.uniform(0, 1)
@@ -179,6 +230,10 @@ class TrafficLight:
                 self.action = self.randomAction()
                 return self.action
                
+    def updateFuction_fixed(self):
+        state = [30,30,30]
+        api.get_waiting_time(self.lane,state)
+
     def updateFuction(self):
         newState = self.takeAction(self.action, self.state)
         presentState = self.get_state(self.state)
@@ -188,9 +243,8 @@ class TrafficLight:
         # api.set_Trafficlight(newState)
         rewardResult = result['w_time']
         if rewardResult != 0:
-            self.reward = 1/rewardResult
-        else: 
-            self.reward = 0
+            self.reward = (1/rewardResult) * 100
+        else: self.reward = 0
         
         self.Find_Q_Max()
         presentState["Q_value"][self.action] += (LEARNING_RATE * (
@@ -199,13 +253,14 @@ class TrafficLight:
             if self.stateSpace[i]["state"] == presentState['state']:
                 self.stateSpace[i]["Q_value"][self.action] = presentState["Q_value"][self.action]
         self.Find_Q_Sum()
-        return print(self.stateSpace)
+        api.csv_data_stateSpace(self.stateSpace)
 
     def updateState(self):
         oldState = self.state.copy()
         self.state = self.takeAction(self.action, self.state)
         print("Present_STATE :",oldState,"Next_STATE :",self.state,"ACTION :",self.action,"Reward :",self.reward)
-
+        return self.state
+        
     # def showQMax(self):
     #     qValueMax = 0
     #     StateMax = 0

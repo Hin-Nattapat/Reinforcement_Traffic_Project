@@ -33,6 +33,7 @@ class API():
         print(ctime)
         
         while traci.simulation.getTime() - ctime < 132:
+            random_Vehicle()
             traci.simulationStep()
             phase = traci.trafficlight.getPhase('gneJ7')
             self.get_waiting(phase)

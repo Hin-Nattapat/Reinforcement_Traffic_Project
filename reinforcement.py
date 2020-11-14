@@ -155,6 +155,7 @@ class TrafficLight:
             if sum(State) <= 105:
                 self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
                                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
+        print(self.stateSpace)
         # return print(self.stateSpace)
 
     def Find_Q_Max(self):
@@ -179,8 +180,10 @@ class TrafficLight:
         for item in self.stateSpace:
             if item['Q_SUM'] != 0:
                 Q_sum_all += item['Q_SUM']
-                count_Q += 1
-        avg_Q = Q_sum_all/count_Q
+            count_Q += 1
+        avg_Q = Q_sum_all / count_Q
+        if count_Q == 0:
+            return 0
         return avg_Q         
 
 
@@ -229,18 +232,17 @@ class TrafficLight:
                 self.action = self.randomAction()
                 return self.action
                
-           
     def updateFuction_fixed(self):
         state = [30,30,30]
         api.get_waiting_time(self.lane,state)
 
-    def updateFuction(self):
+    def updateFuction(self, waiting_time):
         newState = self.takeAction(self.action, self.state)
         presentState = self.get_state(self.state)
         nextState = self.get_state(newState)
-
+        #continue simulate
         # api.set_Trafficlight(newState)
-        rewardResult = api.get_waiting_time(self.lane,newState)
+        rewardResult = waiting_time
         if rewardResult != 0:
             self.reward = (1/rewardResult) * 100
         else: self.reward = 0

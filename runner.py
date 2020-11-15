@@ -43,7 +43,7 @@ def main_program(epochs,rl_data,plot_data,traci_data):
         rl_data.updateFuction(result['w_time'])
         rl_data.updateState()
         plot_data.update_plot(epochs,result['w_time'],result['dens'],result['avg_spd'],result['f_rate'])
-        if epochs == 10: #ที่ 10 ครั้งจะทำการ plot
+        if epochs == 20: #ที่ 10 ครั้งจะทำการ plot
             plot_data.line_plot()
             plot_data.scatter_plot()
             thread_main_data.join()
@@ -51,7 +51,7 @@ def main_program(epochs,rl_data,plot_data,traci_data):
         print("----------------------------------------------------------------------")
 
 if __name__ == "__main__":
-    fix_traffic = True
+    fix_traffic = False
     global initState
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
             ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]

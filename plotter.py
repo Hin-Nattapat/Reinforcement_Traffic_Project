@@ -22,8 +22,8 @@ class Plotter:
         self.line3, = self.ax[0,2].plot([], [], lw=2, color='g')
         self.line4, = self.ax[0,3].plot([], [], lw=2, color='y')
         for ax in [self.ax[0,0], self.ax[0,1], self.ax[0,2], self.ax[0,3], self.ax[1,0], self.ax[1,1], self.ax[1,2]]:
-            ax.set_ylim(0, 100)
-            ax.set_xlim(0, 100)
+            ax.set_ylim(0, 1)
+            ax.set_xlim(0, 1)
             ax.grid()
         self.line = [self.line1, self.line2, self.line3, self.line4]
         self.epochs_value = []
@@ -56,6 +56,12 @@ class Plotter:
         self.ax[1,0].scatter(self.dens_value,self.avg_spd_value,color = 'cyan')
         self.ax[1,1].scatter(self.f_rate_value,self.avg_spd_value,color = 'orange')
         self.ax[1,2].scatter(self.dens_value,self.f_rate_value,color = 'deeppink')
+        self.ax[1,0].set_xlim(0,self.ymax[1] + (self.ymax[1]*0.1))
+        self.ax[1,0].set_ylim(0,self.ymax[2] + (self.ymax[2]*0.1))
+        self.ax[1,1].set_xlim(0,self.ymax[3] + (self.ymax[3]*0.1))
+        self.ax[1,1].set_ylim(0,self.ymax[2] + (self.ymax[2]*0.1))
+        self.ax[1,2].set_xlim(0,self.ymax[1] + (self.ymax[1]*0.1))
+        self.ax[1,2].set_ylim(0,self.ymax[3] + (self.ymax[3]*0.1))
 
     def line_plot(self):
         self.line[0].set_data(self.epochs_value, self.w_time_value)

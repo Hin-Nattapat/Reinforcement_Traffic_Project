@@ -43,10 +43,13 @@ def main_program(epochs,rl_data,plot_data,traci_data):
         rl_data.updateFuction(result['w_time'])
         rl_data.updateState()
         plot_data.update_plot(epochs,result['w_time'],result['dens'],result['avg_spd'],result['f_rate'])
-        if epochs == 20: #ที่ 10 ครั้งจะทำการ plot
+        plot_data.scatter_plot()
+        if epochs == 100:
+            thread_main_data.join()
+        '''if epochs == 20: #ที่ 10 ครั้งจะทำการ plot
             plot_data.line_plot()
             plot_data.scatter_plot()
-            thread_main_data.join()
+            thread_main_data.join()'''
         epochs = epochs+1
         print("----------------------------------------------------------------------")
 
@@ -89,7 +92,7 @@ if __name__ == "__main__":
     else:
         thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
     thread_main_data.start()
-    #ani = FuncAnimation(data.fig,data.animation)
+    ani = FuncAnimation(data.fig,data.animation)
     plt.tight_layout()
     plt.show()
 sys.stdout.flush()

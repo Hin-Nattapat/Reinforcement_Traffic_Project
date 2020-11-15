@@ -243,37 +243,23 @@ def random_Vehicle(epochs):
     RouteID = traci.route.getIDList()
     count = traci.route.getIDCount()
     # rand_num = random.randint(1,3)
-    if epochs <= 5:
+    if epochs <= 20:
         if i % 16 == 0 :
             index = random.randint(0, count-1)
             traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random") 
-    elif epochs <= 10:
+    elif epochs <= 40:
         if i % 8 == 0 :
             index = random.randint(0, count-1)
             traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
-    elif epochs <= 15:
+    elif epochs <= 60:
         if i % 4 == 0 :
             index = random.randint(0, count-1)
             traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
-    elif epochs <= 20:
+    elif epochs <= 80:
         if i % 2 == 0 :
             index = random.randint(0, count-1)
             traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
-    elif epochs <= 25:
+    elif epochs <= 100:
         if i % 1 == 0 :
             index = random.randint(0, count-1)
             traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
-    elif epochs <= 30:
-        if i % 1 == 0 :
-            index = random.randint(0, count-1)
-            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random",)
-            index = random.randint(0, count-1)
-            traci.vehicle.add("vehicle_"+str(i+0.02),RouteID[index], departSpeed="random",)       
-    else:
-        if i % 1 == 0 :
-            index = random.randint(0, count-1)
-            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random",)
-            index = random.randint(0, count-1)
-            traci.vehicle.add("vehicle_"+str(i+0.02),RouteID[index], departSpeed="random",)
-            index = random.randint(0, count-1)
-            traci.vehicle.add("vehicle_"+str(i+0.03),RouteID[index], departSpeed="random",)

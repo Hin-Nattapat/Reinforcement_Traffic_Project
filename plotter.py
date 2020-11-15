@@ -78,9 +78,9 @@ class Plotter:
         self.ax[0,3].set_ylim(0,self.ymax[3] + (self.ymax[3]*0.1))
 
     def animation(self,frame):
-        # self.line[0].set_data(self.epochs_value, self.w_time_value)
-        # self.line[1].set_data(self.epochs_value, self.dens_value)
-        # self.line[2].set_data(self.epochs_value, self.avg_spd_value)
+        self.line[0].set_data(self.epochs_value, self.w_time_value)
+        self.line[1].set_data(self.epochs_value, self.dens_value)
+        self.line[2].set_data(self.epochs_value, self.avg_spd_value)
         self.line[3].set_data(self.epochs_value, self.f_rate_value)
         for ax in [self.ax[0,0], self.ax[0,1], self.ax[0,2], self.ax[0,3]]:
             xmin, xmax = ax.get_xlim()
@@ -107,32 +107,32 @@ class Plotter:
                 self.ax[1,2].set_xlim(xmin, self.dens_value[-1] + (self.dens_value[-1]*0.2))
                 self.ax[1,2].figure.canvas.draw()
 
-        # ymin, ymax = self.ax[0,0].get_ylim()
-        # if self.w_time_value != []:
-        #     if self.w_time_value[-1] >= ymax:
-        #         self.ax[0,0].set_ylim(ymin, self.w_time_value[-1]+ (self.w_time_value[-1]*0.2))
-        #         self.ax[0,0].figure.canvas.draw()
-        #     elif self.w_time_value[-1] <= ymin:
-        #         self.ax[0,0].set_ylim(self.w_time_value[-1]+ (self.w_time_value[-1]*0.2), ymax)
-        #         self.ax[0,0].figure.canvas.draw()
+        ymin, ymax = self.ax[0,0].get_ylim()
+        if self.w_time_value != []:
+            if self.w_time_value[-1] >= ymax:
+                self.ax[0,0].set_ylim(ymin, self.w_time_value[-1]+ (self.w_time_value[-1]*0.2))
+                self.ax[0,0].figure.canvas.draw()
+            elif self.w_time_value[-1] <= ymin:
+                self.ax[0,0].set_ylim(self.w_time_value[-1]+ (self.w_time_value[-1]*0.2), ymax)
+                self.ax[0,0].figure.canvas.draw()
 
-        # ymin, ymax = self.ax[0,1].get_ylim()
-        # if self.dens_value != []:
-        #     if self.dens_value[-1] >= ymax:
-        #         self.ax[0,1].set_ylim(ymin, self.dens_value[-1]+ (self.dens_value[-1]*0.2))
-        #         self.ax[0,1].figure.canvas.draw()
-        #     elif self.dens_value[-1] <= ymin:
-        #         self.ax[0,1].set_ylim(self.dens_value[-1]+ (self.dens_value[-1]*0.2), ymax)
-        #         self.ax[0,1].figure.canvas.draw()
+        ymin, ymax = self.ax[0,1].get_ylim()
+        if self.dens_value != []:
+            if self.dens_value[-1] >= ymax:
+                self.ax[0,1].set_ylim(ymin, self.dens_value[-1]+ (self.dens_value[-1]*0.2))
+                self.ax[0,1].figure.canvas.draw()
+            elif self.dens_value[-1] <= ymin:
+                self.ax[0,1].set_ylim(self.dens_value[-1]+ (self.dens_value[-1]*0.2), ymax)
+                self.ax[0,1].figure.canvas.draw()
 
-        # ymin, ymax = self.ax[0,2].get_ylim()
-        # if self.avg_spd_value != []:
-        #     if self.avg_spd_value[-1] >= ymax:
-        #         self.ax[0,2].set_ylim(ymin, self.avg_spd_value[-1]+ (self.avg_spd_value[-1]*0.2))
-        #         self.ax[0,2].figure.canvas.draw()
-        #     elif self.avg_spd_value[-1] <= ymin:
-        #         self.ax[0,2].set_ylim(self.avg_spd_value[-1]+ (self.avg_spd_value[-1]*0.2), ymax)
-        #         self.ax[0,2].figure.canvas.draw()
+        ymin, ymax = self.ax[0,2].get_ylim()
+        if self.avg_spd_value != []:
+            if self.avg_spd_value[-1] >= ymax:
+                self.ax[0,2].set_ylim(ymin, self.avg_spd_value[-1]+ (self.avg_spd_value[-1]*0.2))
+                self.ax[0,2].figure.canvas.draw()
+            elif self.avg_spd_value[-1] <= ymin:
+                self.ax[0,2].set_ylim(self.avg_spd_value[-1]+ (self.avg_spd_value[-1]*0.2), ymax)
+                self.ax[0,2].figure.canvas.draw()
 
         ymin, ymax = self.ax[0,3].get_ylim()
         if self.f_rate_value != []:

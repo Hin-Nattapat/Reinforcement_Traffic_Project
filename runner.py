@@ -54,7 +54,7 @@ if __name__ == "__main__":
     if fix_traffic is True:
         initState = [30, 30, 30]
     else:
-        initState = [15, 15, 15]
+        initState = [30, 30, 30]
     MAX_EPOCHS = 1000
     EPOCHS = 0
     CYCLE = 132
@@ -72,16 +72,9 @@ if __name__ == "__main__":
     rl.InitStateSpace()
     api.add_Route()
 
-    # while traci.simulation.getMinExpectedNumber() > 0 :
-    #     result = aa.get_obj([30,30,30])
-    #     print(result)
-    
-
-    
     # # os.chdir("./4cross_TLS")
     # # os.system('python randomTrips.py --net-file=1_1Cross.net.xml --route-file=1_1Cross.rou.xml --weights-prefix=1_1Cross --end='+str(TIME)+' --fringe-factor=10 --period=2.5 --trip-attributes="departLane=\'best\' departSpeed=\'max\' departPos=\'random\'"  -l --validate --fringe-factor 10  --max-distance 2000')
 
-    # # for i in range(MAX_EPOCHS):
     data = plotter.Plotter()
     traci_data = api.API()
     global thread_main_data

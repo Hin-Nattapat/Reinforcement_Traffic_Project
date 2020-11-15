@@ -26,6 +26,7 @@ class API():
         self.wait_time = [0.0, 0.0, 0.0, 0.0]
         self.avg_spd = [0.0, 0.0, 0.0, 0.0]
         self.dens = [0.0, 0.0, 0.0, 0.0]
+        self.flow = 0
         self.keep = True
 
         self.set_Trafficlight(nextState)
@@ -42,13 +43,13 @@ class API():
             self.dens.append(self.get_dens())
             #print(traci.trafficlight.getNextSwitch('gneJ7'))
             #print(traci.trafficlight.getPhaseDuration('gneJ7'))
-        # print('previous : ' ,self.pre_id)
+        # print('previous : ' ,self.pre_id , "SUM",len(list(self.pre_id)))
         # print('current : ' ,self.cur_id)
         for i in self.pre_id:
             index = self.pre_id.index(i)
             duplicate = (list(self.pre_id[index].intersection(self.cur_id[index])))
-            self.flow += (len(list(self.pre_id)) - len(duplicate))
-            # print(duplicate ,self.flow)
+            self.flow += (len(list(self.pre_id[index])) - len(duplicate))
+        # print("FLOW RATE",duplicate ,self.flow)
 
         #collect all result
         self.result['w_time'] = sum(self.wait_time) / len(self.wait_time)

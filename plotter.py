@@ -32,6 +32,7 @@ class Plotter:
         self.dens_value = []
         self.avg_spd_value = []
         self.f_rate_value = []
+        self.ymax = [0,0,0,0]
 
     def update_plot(self,epochs,w_time,dens,avg_spd,f_rate):
         self.epochs_value.append(epochs)
@@ -39,12 +40,36 @@ class Plotter:
         self.dens_value.append(dens)
         self.avg_spd_value.append(avg_spd)
         self.f_rate_value.append(f_rate)
-        self.scatter_plot()
+        self.get_ymax_value()
+
+    def get_ymax_value(self):
+        if self.w_time_value != [] and self.w_time_value[-1] > self.ymax[0]:
+            self.ymax[0] = self.w_time_value[-1]
+        if self.dens_value != [] and self.dens_value[-1] > self.ymax[1]:
+            self.ymax[1] = self.dens_value[-1]
+        if self.avg_spd_value != [] and self.avg_spd_value[-1] > self.ymax[2]:
+            self.ymax[2] = self.avg_spd_value[-1]
+        if self.f_rate_value != [] and self.f_rate_value[-1] > self.ymax[3]:
+            self.ymax[3] = self.f_rate_value[-1]
 
     def scatter_plot(self):
         self.ax[1,0].scatter(self.avg_spd_value,self.dens_value,color = 'cyan')
         self.ax[1,1].scatter(self.f_rate_value,self.avg_spd_value,color = 'orange')
         self.ax[1,2].scatter(self.dens_value,self.f_rate_value,color = 'deeppink')
+
+    def line_plot(self):
+        self.line[0].set_data(self.epochs_value, self.w_time_value)
+        self.line[1].set_data(self.epochs_value, self.dens_value)
+        self.line[2].set_data(self.epochs_value, self.avg_spd_value)
+        self.line[3].set_data(self.epochs_value, self.f_rate_value)
+        self.ax[0,0].set_xlim(0,self.epochs_value[-1])
+        self.ax[0,0].set_ylim(0,self.ymax[0] + (self.ymax[0]*0.1))
+        self.ax[0,1].set_xlim(0,self.epochs_value[-1])
+        self.ax[0,1].set_ylim(0,self.ymax[1] + (self.ymax[1]*0.1))
+        self.ax[0,2].set_xlim(0,self.epochs_value[-1])
+        self.ax[0,2].set_ylim(0,self.ymax[2] + (self.ymax[2]*0.1))
+        self.ax[0,3].set_xlim(0,self.epochs_value[-1])
+        self.ax[0,3].set_ylim(0,self.ymax[3] + (self.ymax[3]*0.1))
 
     def animation(self,frame):
         self.line[0].set_data(self.epochs_value, self.w_time_value)

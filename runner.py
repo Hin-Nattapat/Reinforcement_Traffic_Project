@@ -46,8 +46,10 @@ def main_program(epochs,rl_data,plot_data,traci_data):
         rl_data.updateFuction(result['w_time'])
         rl_data.updateState()
         plot_data.update_plot(epochs,result['w_time'],result['dens'],result['avg_spd'],result['f_rate'])
-        if epochs == 100: #ที่ 10 ครั้งจะทำการ plot
-            return thread_main_data.join()
+        if epochs == 10: #ที่ 10 ครั้งจะทำการ plot
+            plot_data.line_plot()
+            plot_data.scatter_plot()
+            thread_main_data.join()
         epochs = epochs+1
         print("----------------------------------------------------------------------")
 

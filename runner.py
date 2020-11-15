@@ -39,7 +39,7 @@ def main_program(epochs,rl_data,plot_data,traci_data):
         current_state = rl_data.state
         action = rl_data.P_Greedy_Al()
         new_state = rl_data.takeAction(action, current_state)
-        result = call_api.get_obj(new_state)
+        result = call_api.get_obj(new_state,epochs)
         rl_data.updateFuction(result['w_time'])
         rl_data.updateState()
         plot_data.update_plot(epochs,result['w_time'],result['dens'],result['avg_spd'],result['f_rate'])

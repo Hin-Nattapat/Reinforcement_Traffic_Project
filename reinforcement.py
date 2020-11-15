@@ -231,11 +231,3 @@ class TrafficLight:
         print("Present_STATE :",oldState,"Next_STATE :",self.state,"ACTION :",self.action,"Reward :",self.reward)
         return self.state
         
-    # def showQMax(self):
-    #     qValueMax = 0
-    #     StateMax = 0
-    #     for i in range(len(self.stateSpace)):
-    #         if self.stateSpace[i]["Q_MAX"] > qValueMax:
-    #             qValueMax = self.stateSpace[i]["Q_MAX"]
-    #             StateMax = i
-    #     return print(self.stateSpace[StateMax])

@@ -109,7 +109,7 @@ class TrafficLight:
         return State
 
     def InitStateSpace(self):
-        State = self.state.copy()
+        State = [15,15,15]
         self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
                                0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
         while State != [75, 75, 75]:
@@ -230,11 +230,3 @@ class TrafficLight:
         print("Present_STATE :",oldState,"Next_STATE :",self.state,"ACTION :",self.action,"Reward :",self.reward)
         return self.state
         
-    # def showQMax(self):
-    #     qValueMax = 0
-    #     StateMax = 0
-    #     for i in range(len(self.stateSpace)):
-    #         if self.stateSpace[i]["Q_MAX"] > qValueMax:
-    #             qValueMax = self.stateSpace[i]["Q_MAX"]
-    #             StateMax = i
-    #     return print(self.stateSpace[StateMax])

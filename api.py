@@ -22,7 +22,7 @@ class API():
             "f_rate" : None
         }
 
-    def get_obj(self, nextState):
+    def get_obj(self, nextState, epochs):
         self.wait_time = [0.0, 0.0, 0.0, 0.0]
         self.avg_spd = [0.0, 0.0, 0.0, 0.0]
         self.dens = [0.0, 0.0, 0.0, 0.0]
@@ -34,7 +34,7 @@ class API():
         print(ctime)
         
         while traci.simulation.getTime() - ctime < 132:
-            random_Vehicle()
+            random_Vehicle(epochs)
             traci.simulationStep()
             phase = traci.trafficlight.getPhase('gneJ7')
             self.get_waiting(phase)
@@ -49,7 +49,8 @@ class API():
             index = self.pre_id.index(i)
             duplicate = (list(self.pre_id[index].intersection(self.cur_id[index])))
             self.flow += (len(list(self.pre_id[index])) - len(duplicate))
-        # print("FLOW RATE",duplicate ,self.flow)
+
+        # print("FLOW RATE",self.flow)
 
         #collect all result
         self.result['w_time'] = sum(self.wait_time) / len(self.wait_time)
@@ -198,6 +199,7 @@ def add_Route():
     traci.route.add("rou_10", ["gneE33", "gneE13", "gneE8", "gneE42"])
     traci.route.add("rou_11", ["gneE33", "gneE13", "gneE6", "gneE40"])
     traci.route.add("rou_12", ["gneE33", "gneE13", "gneE10", "gneE34"])
+    
     # traci.route.add("rou_10", ["gneE43", "gneE3", "gneE6", "gneE7", "gneE12", "gneE32"])
     # traci.route.add("rou_11", ["gneE43", "gneE3", "gneE6", "gneE7", "gneE10", "gneE34"])
     # traci.route.add("rou_12", ["gneE43", "gneE3", "gneE6", "gneE7", "gneE8", "gneE42"])
@@ -236,13 +238,42 @@ def add_Route():
     # traci.route.add("rou_45", ["gneE35", "gneE11", "gneE12", "gneE13", "gneE8", "gneE42"])
 
 
-def random_Vehicle():
+def random_Vehicle(epochs):
     i = traci.simulation.getTime()
-    rand_num = random.randint(1,3)
-    if i % rand_num == 0 :
-        RouteID = traci.route.getIDList()
-        count = traci.route.getIDCount()
-        index = random.randint(0, count-1)
-        traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="desired",)
-        traci.vehicle.setMaxSpeed("vehicle_"+str(i), 25.0)
-    
+    RouteID = traci.route.getIDList()
+    count = traci.route.getIDCount()
+    # rand_num = random.randint(1,3)
+    if epochs <= 5:
+        if i % 16 == 0 :
+            index = random.randint(0, count-1)
+            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random") 
+    elif epochs <= 10:
+        if i % 8 == 0 :
+            index = random.randint(0, count-1)
+            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+    elif epochs <= 15:
+        if i % 4 == 0 :
+            index = random.randint(0, count-1)
+            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+    elif epochs <= 20:
+        if i % 2 == 0 :
+            index = random.randint(0, count-1)
+            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+    elif epochs <= 25:
+        if i % 1 == 0 :
+            index = random.randint(0, count-1)
+            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+    elif epochs <= 30:
+        if i % 1 == 0 :
+            index = random.randint(0, count-1)
+            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random",)
+            index = random.randint(0, count-1)
+            traci.vehicle.add("vehicle_"+str(i+0.02),RouteID[index], departSpeed="random",)       
+    else:
+        if i % 1 == 0 :
+            index = random.randint(0, count-1)
+            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random",)
+            index = random.randint(0, count-1)
+            traci.vehicle.add("vehicle_"+str(i+0.02),RouteID[index], departSpeed="random",)
+            index = random.randint(0, count-1)
+            traci.vehicle.add("vehicle_"+str(i+0.03),RouteID[index], departSpeed="random",)

@@ -271,12 +271,14 @@ def setFlow_Rate(i,w,e,n,s):
 def random_Vehicle(epochs):
     i = traci.simulation.getTime()
     if epochs <= 20:
-        setFlow_Rate(i,4,8,4,8)
+        setFlow_Rate(i,8,8,8,8)
     elif epochs <= 40:
-        setFlow_Rate(i,4,2,8,4)
+        setFlow_Rate(i,8,4,8,8)
     elif epochs <= 60:
-        setFlow_Rate(i,8,4,4,2)
+        setFlow_Rate(i,4,16,8,8)
     elif epochs <= 80:
-        setFlow_Rate(i,2,8,2,8)
+        setFlow_Rate(i,16,8,8,4)
+    elif epochs <= 100:
+        setFlow_Rate(i,8,8,4,16)    
            
 

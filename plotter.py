@@ -22,8 +22,8 @@ class Plotter:
         self.line3, = self.ax[0,2].plot([], [], lw=2, color='g')
         self.line4, = self.ax[0,3].plot([], [], lw=2, color='y')
         for ax in [self.ax[0,0], self.ax[0,1], self.ax[0,2], self.ax[0,3], self.ax[1,0], self.ax[1,1], self.ax[1,2]]:
-            ax.set_ylim(0, 1)
-            ax.set_xlim(0, 1)
+            ax.set_ylim(0, 100)
+            ax.set_xlim(0, 100)
             ax.grid()
         self.line = [self.line1, self.line2, self.line3, self.line4]
         self.epochs_value = []

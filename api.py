@@ -238,8 +238,7 @@ def add_Route():
 
 def random_Vehicle():
     i = traci.simulation.getTime()
-    rand_num = random.randint(1,3)
-    if i % rand_num == 0 :
+    if i % 2 == 0 :
         RouteID = traci.route.getIDList()
         count = traci.route.getIDCount()
         index = random.randint(0, count-1)

@@ -90,6 +90,7 @@ class TrafficLight:
         for i in range(len(self.stateSpace)):
             if self.stateSpace[i]["state"] == inputState:
                 tempState = self.stateSpace[i]
+                break
         return tempState
 
     def takeAction(self, action, inputState):
@@ -109,7 +110,7 @@ class TrafficLight:
         return State
 
     def InitStateSpace(self):
-        State = self.state.copy()
+        State = [15,15,15]
         self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
                                0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
         while State != [75, 75, 75]:

@@ -54,7 +54,7 @@ def main_program(epochs,rl_data,plot_data,traci_data):
         print("----------------------------------------------------------------------")
 
 if __name__ == "__main__":
-    fix_traffic = False
+    fix_traffic = True
     global initState
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
             ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]

@@ -187,28 +187,38 @@ def csv_data_stateSpace(data):
     print(dataframe)
 
 def add_Route():
-    traci.route.add("rou_1", ["gneE43", "gneE3", "gneE6", "gneE40"])
-    traci.route.add("rou_2", ["gneE43", "gneE3", "gneE12", "gneE32"])
-    traci.route.add("rou_3", ["gneE43", "gneE3", "gneE10", "gneE34"])
-    traci.route.add("rou_4", ["gneE41", "gneE7", "gneE8", "gneE42"])
-    traci.route.add("rou_5", ["gneE41", "gneE7", "gneE12", "gneE32"])
-    traci.route.add("rou_6", ["gneE41", "gneE7", "gneE10", "gneE34"])
-    traci.route.add("rou_7", ["gneE35", "gneE11", "gneE8", "gneE42"])
-    traci.route.add("rou_8", ["gneE35", "gneE11", "gneE6", "gneE40"])
-    traci.route.add("rou_9", ["gneE35", "gneE11", "gneE12", "gneE32"])
-    traci.route.add("rou_10", ["gneE33", "gneE13", "gneE8", "gneE42"])
-    traci.route.add("rou_11", ["gneE33", "gneE13", "gneE6", "gneE40"])
-    traci.route.add("rou_12", ["gneE33", "gneE13", "gneE10", "gneE34"])
+    traci.route.add("rou_W1", ["gneE43", "gneE3", "gneE6", "gneE40"])
+    traci.route.add("rou_W2", ["gneE43", "gneE3", "gneE12", "gneE32"])
+    traci.route.add("rou_W3", ["gneE43", "gneE3", "gneE10", "gneE34"])
+
+    traci.route.add("rou_E1", ["gneE33", "gneE13", "gneE8", "gneE42"])
+    traci.route.add("rou_E2", ["gneE33", "gneE13", "gneE6", "gneE40"])
+    traci.route.add("rou_E3", ["gneE33", "gneE13", "gneE10", "gneE34"])
+
+    traci.route.add("rou_N1", ["gneE41", "gneE7", "gneE8", "gneE42"])
+    traci.route.add("rou_N2", ["gneE41", "gneE7", "gneE12", "gneE32"])
+    traci.route.add("rou_N3", ["gneE41", "gneE7", "gneE10", "gneE34"])
+
+    traci.route.add("rou_S1", ["gneE35", "gneE11", "gneE8", "gneE42"])
+    traci.route.add("rou_S2", ["gneE35", "gneE11", "gneE6", "gneE40"])
+    traci.route.add("rou_S3", ["gneE35", "gneE11", "gneE12", "gneE32"])
+
     
-    # traci.route.add("rou_10", ["gneE43", "gneE3", "gneE6", "gneE7", "gneE12", "gneE32"])
+    
+    # traci.route.add("rou_13", ["gneE43", "gneE3", "gneE6", "gneE7", "gneE12", "gneE32"])
+    # traci.route.add("rou_14", ["gneE43", "gneE3", "gneE12", "gneE13", "gneE6", "gneE40"])
+    # traci.route.add("rou_15", ["gneE43", "gneE3", "gneE10", "gneE11", "gneE8", "gneE42"])
+
     # traci.route.add("rou_11", ["gneE43", "gneE3", "gneE6", "gneE7", "gneE10", "gneE34"])
     # traci.route.add("rou_12", ["gneE43", "gneE3", "gneE6", "gneE7", "gneE8", "gneE42"])
-    # traci.route.add("rou_13", ["gneE43", "gneE3", "gneE12", "gneE13", "gneE6", "gneE40"])
     # traci.route.add("rou_14", ["gneE43", "gneE3", "gneE12", "gneE13", "gneE10", "gneE34"])
     # traci.route.add("rou_15", ["gneE43", "gneE3", "gneE12", "gneE13", "gneE8", "gneE42"])
     # traci.route.add("rou_16", ["gneE43", "gneE3", "gneE10", "gneE11", "gneE12", "gneE32"])
     # traci.route.add("rou_17", ["gneE43", "gneE3", "gneE10", "gneE11", "gneE6", "gneE40"])
-    # traci.route.add("rou_18", ["gneE43", "gneE3", "gneE10", "gneE11", "gneE8", "gneE42"])
+
+    # traci.route.add("rou_16", ["gneE41", "gneE7", "gneE8", "gneE3", "gneE12", "gneE32"])
+    # traci.route.add("rou_17", ["gneE41", "gneE7", "gneE12", "gneE13", "gneE6", "gneE40"])
+    # traci.route.add("rou_18", ["gneE41", "gneE7", "gneE10", "gneE11", "gneE8", "gneE42"])
     # traci.route.add("rou_19", ["gneE41", "gneE7", "gneE8", "gneE3", "gneE12", "gneE32"])
     # traci.route.add("rou_20", ["gneE41", "gneE7", "gneE8", "gneE3", "gneE10", "gneE34"])
     # traci.route.add("rou_21", ["gneE41", "gneE7", "gneE8", "gneE3", "gneE6", "gneE40"])
@@ -218,48 +228,79 @@ def add_Route():
     # traci.route.add("rou_25", ["gneE41", "gneE7", "gneE10", "gneE11", "gneE12", "gneE32"])
     # traci.route.add("rou_26", ["gneE41", "gneE7", "gneE10", "gneE11", "gneE6", "gneE40"])
     # traci.route.add("rou_27", ["gneE41", "gneE7", "gneE10", "gneE11", "gneE8", "gneE42"])
-    # traci.route.add("rou_28", ["gneE33", "gneE13", "gneE8", "gneE3", "gneE12", "gneE32"])
+
+    # traci.route.add("rou_19", ["gneE33", "gneE13", "gneE8", "gneE3", "gneE12", "gneE32"])
+    # traci.route.add("rou_20", ["gneE33", "gneE13", "gneE6", "gneE7", "gneE12", "gneE32"])
+    # traci.route.add("rou_21", ["gneE33", "gneE13", "gneE10", "gneE11", "gneE6", "gneE40"])
     # traci.route.add("rou_29", ["gneE33", "gneE13", "gneE8", "gneE3", "gneE10", "gneE34"])
     # traci.route.add("rou_30", ["gneE33", "gneE13", "gneE8", "gneE3", "gneE6", "gneE40"])
-    # traci.route.add("rou_31", ["gneE33", "gneE13", "gneE6", "gneE7", "gneE12", "gneE32"])
     # traci.route.add("rou_32", ["gneE33", "gneE13", "gneE6", "gneE7", "gneE10", "gneE34"])
     # traci.route.add("rou_33", ["gneE33", "gneE13", "gneE6", "gneE7", "gneE8", "gneE42"])
     # traci.route.add("rou_34", ["gneE33", "gneE13", "gneE10", "gneE11", "gneE12", "gneE32"])
-    # traci.route.add("rou_35", ["gneE33", "gneE13", "gneE10", "gneE11", "gneE6", "gneE40"])
     # traci.route.add("rou_36", ["gneE33", "gneE13", "gneE10", "gneE11", "gneE8", "gneE42"])
+
+    # traci.route.add("rou_22", ["gneE35", "gneE11", "gneE8", "gneE3", "gneE10", "gneE34"])
+    # traci.route.add("rou_23", ["gneE35", "gneE11", "gneE6", "gneE7", "gneE10", "gneE34"])
+    # traci.route.add("rou_24", ["gneE35", "gneE11", "gneE12", "gneE13", "gneE6", "gneE40"])
     # traci.route.add("rou_37", ["gneE35", "gneE11", "gneE8", "gneE3", "gneE12", "gneE32"])
-    # traci.route.add("rou_38", ["gneE35", "gneE11", "gneE8", "gneE3", "gneE10", "gneE34"])
     # traci.route.add("rou_39", ["gneE35", "gneE11", "gneE8", "gneE3", "gneE6", "gneE40"])
     # traci.route.add("rou_40", ["gneE35", "gneE11", "gneE6", "gneE7", "gneE12", "gneE32"])
-    # traci.route.add("rou_41", ["gneE35", "gneE11", "gneE6", "gneE7", "gneE10", "gneE34"])
     # traci.route.add("rou_42", ["gneE35", "gneE11", "gneE6", "gneE7", "gneE8", "gneE42"])
     # traci.route.add("rou_43", ["gneE35", "gneE11", "gneE12", "gneE13", "gneE10", "gneE34"])
-    # traci.route.add("rou_44", ["gneE35", "gneE11", "gneE12", "gneE13", "gneE6", "gneE40"])
     # traci.route.add("rou_45", ["gneE35", "gneE11", "gneE12", "gneE13", "gneE8", "gneE42"])
+
+
+
+def setFlow_Rate(i,w,e,n,s):
+    RouteID = traci.route.getIDList()
+    count = traci.route.getIDCount()
+
+
+    if i % w == 0 :
+        index = random.randint(9, 11)
+        traci.vehicle.add("vehicle_"+str(i)+"w",RouteID[index], departSpeed="random")
+    if i % e == 0 : 
+        index = random.randint(0, 2)
+        traci.vehicle.add("vehicle_"+str(i)+"e",RouteID[index], departSpeed="random")
+    if i % n == 0 : 
+        index = random.randint(3, 5)
+        traci.vehicle.add("vehicle_"+str(i)+"n",RouteID[index], departSpeed="random")
+    if i % s == 0 :
+        index = random.randint(6, 8)
+        traci.vehicle.add("vehicle_"+str(i)+"s",RouteID[index], departSpeed="random")
 
 
 def random_Vehicle(epochs):
     i = traci.simulation.getTime()
-    RouteID = traci.route.getIDList()
-    count = traci.route.getIDCount()
-    # rand_num = random.randint(1,3)
     if epochs <= 20:
-        if i % 16 == 0 :
-            index = random.randint(0, count-1)
-            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random") 
+        setFlow_Rate(i,8,8,8,8)
     elif epochs <= 40:
-        if i % 8 == 0 :
-            index = random.randint(0, count-1)
-            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+        setFlow_Rate(i,8,4,8,8)
     elif epochs <= 60:
-        if i % 4 == 0 :
-            index = random.randint(0, count-1)
-            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+        setFlow_Rate(i,4,16,8,8)
     elif epochs <= 80:
-        if i % 2 == 0 :
-            index = random.randint(0, count-1)
-            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+        setFlow_Rate(i,16,8,8,4)
     elif epochs <= 100:
-        if i % 1 == 0 :
-            index = random.randint(0, count-1)
-            traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+        setFlow_Rate(i,8,8,4,16)    
+        
+    # if epochs <= 20:
+    #     if i % 16 == 0 :
+    #         index = random.randint(0, count-1)
+    #         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random") 
+    # elif epochs <= 40:
+    #     if i % 8 == 0 :
+    #         index = random.randint(0, count-1)
+    #         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+    # elif epochs <= 60:
+    #     if i % 4 == 0 :
+    #         index = random.randint(0, count-1)
+    #         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+    # elif epochs <= 80:
+    #     if i % 2 == 0 :
+    #         index = random.randint(0, count-1)
+    #         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+    # elif epochs <= 100:
+    #     if i % 1 == 0 :
+    #         index = random.randint(0, count-1)
+    #         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
+

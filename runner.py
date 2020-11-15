@@ -29,11 +29,14 @@ def main_program_fixed(epochs,rl_data,plot_data):
     while True:
         print("----------------------------- EPOCHS: ",epochs, "-----------------------------")
         rl_data.updateFuction_fixed()
+        result = call_api.get_obj(initState)
+        rl_data.updateFuction(result['w_time'])
+        rl_data.updateState()
+        plot_data.update_plot(epochs,result['w_time'],result['dens'],result['avg_spd'],result['f_rate'])
         epochs = epochs+1
         print("----------------------------------------------------------------------")
 
 def main_program(epochs,rl_data,plot_data,traci_data):
-    call_api = api.API()
     while True:
         print("----------------------------- EPOCHS: ",epochs, "-----------------------------")
         current_state = rl_data.state
@@ -49,6 +52,7 @@ def main_program(epochs,rl_data,plot_data,traci_data):
 
 if __name__ == "__main__":
     fix_traffic = False
+    global initState
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
             ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
     if fix_traffic is True:
@@ -82,6 +86,7 @@ if __name__ == "__main__":
     # # os.system('python randomTrips.py --net-file=1_1Cross.net.xml --route-file=1_1Cross.rou.xml --weights-prefix=1_1Cross --end='+str(TIME)+' --fringe-factor=10 --period=2.5 --trip-attributes="departLane=\'best\' departSpeed=\'max\' departPos=\'random\'"  -l --validate --fringe-factor 10  --max-distance 2000')
 
     # # for i in range(MAX_EPOCHS):
+    call_api = api.API()
     data = plotter.Plotter()
     traci_data = api.API()
     global thread_main_data

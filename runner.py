@@ -25,13 +25,10 @@ def get_options():
     return options
 
 
-def main_program_fixed(epochs,rl_data,plot_data):
+def main_program_fixed(epochs,plot_data):
     while True:
         print("----------------------------- EPOCHS: ",epochs, "-----------------------------")
-        rl_data.updateFuction_fixed()
-        result = call_api.get_obj(initState)
-        rl_data.updateFuction(result['w_time'])
-        rl_data.updateState()
+        result = call_api.get_obj(initState,epochs)
         plot_data.update_plot(epochs,result['w_time'],result['dens'],result['avg_spd'],result['f_rate'])
         epochs = epochs+1
         print("----------------------------------------------------------------------")
@@ -54,7 +51,7 @@ def main_program(epochs,rl_data,plot_data,traci_data):
         print("----------------------------------------------------------------------")
 
 if __name__ == "__main__":
-    fix_traffic = False
+    fix_traffic = True
     global initState
     lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
             ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
@@ -88,7 +85,7 @@ if __name__ == "__main__":
     traci_data = api.API()
     global thread_main_data
     if fix_traffic is True:
-        thread_main_data = threading.Thread(target=main_program_fixed,args=(EPOCHS,rl,data,))
+        thread_main_data = threading.Thread(target=main_program_fixed,args=(EPOCHS,data,))
     else:
         thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
     thread_main_data.start()

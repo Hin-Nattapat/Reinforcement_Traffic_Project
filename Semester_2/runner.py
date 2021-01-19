@@ -56,8 +56,7 @@ def main_program(epochs,rl_data,plot_data,traci_data):
 if __name__ == "__main__":
     # fix_traffic = True
     # global initState
-    # lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
-    #         ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
+    
     # if fix_traffic is True:
     #     initState = [30, 30, 30]
     # else:
@@ -68,6 +67,14 @@ if __name__ == "__main__":
     # TIME = MAX_EPOCHS*CYCLE
     # rl = RL.TrafficLight(initState, lane)
 
+    global initState
+    initState = "S1"
+    lane = [['InB_W_2_0', 'InB_W_2_1'], ['InB_N_2_0', 'InB_N_2_0'],
+        ['InB_E_2_0', 'InB_E_2_0'], ['InB_S_2_0', 'InB_S_2_0']]
+
+    RL_Algor = RL.TrafficLight(initState, lane)
+    # RL_Algor.StateTransition()
+    RL_Algor.takeAction()
     options = get_options()
     if options.nogui:
         sumoBinary = checkBinary('sumo')
@@ -75,9 +82,11 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
 
     Path_4Cross = os.path.abspath('Map\\4cross_TLS\\1_1Cross.sumocfg')
-    traci.start([sumoBinary, "-c", Path_4Cross])
-    while True:
-        traci.simulationStep()
+
+    # traci.start([sumoBinary, "-c", Path_4Cross])
+    # while True:
+    #     traci.simulationStep()
+
     # rl.InitStateSpace()
     # api.add_Route()
     # # os.chdir("./4cross_TLS")

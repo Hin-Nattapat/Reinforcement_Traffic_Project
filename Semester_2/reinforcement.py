@@ -11,46 +11,116 @@ DISCOUNT_RATE = 0.9
 MAX_ACTION = 6
 num_episodes = 5
 
-# State จะอยู่ในรูปแบบของ [G1,G2,G3] เวลาไฟเขียวแต่ละแยก
-# 1 Cycle = 120 วินาที ดังนั้น G4 = 120-G1-G2-G3
-
-# class SumoEnv:
-#     def __init__(self, net_file="test", rou_file="test", use_gui=False,):
-#         self.net_file = net_file
-#         self.rou_file = rou_file
-#         self.use_gui = use_gui
-#         if self.use_gui:
-#             self.sumo_binary = checkBinary('sumo-gui')
-#         else:
-#             self.sumo_binary = checkBinary('sumo')
-#         traci.start([self.sumo_binary, "-c", "4cross_TLS/1_1Cross.sumocfg"])
-
-class StateAction:
-    def __init__(self, state):
-        self.state_value = state
-        self.q_value = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-
-    def __str__(self):
-        return "state" + str(self.state_value)
-
-    def get_QMax(self):
-        self.q_Max = max(self.q_value)
-        return self.q_Max
-
-    def get_QSum(self):
-        self.q_Sum = sum(self.q_value)
-        return self.q_Sum
-
 
 class TrafficLight:
     def __init__(self, state, lane):
-        # self.phases = phases
-        self.reward = 0.0
         self.state = state
-        self.stateSpace = []
         self.lane = lane
-        self.complete = False
-        self.action = 0
+        self.stateTransition = [
+            {
+                "State": "S1", 
+                "Action": {"A1" : {"S3","S4","S5","S6","S7","S8"},"A2" : {"S2","S3","S4","S6","S7","S8"}}
+            },
+            {
+                "State": "S2", 
+                "Action": {"A1" : {"S3","S4","S5","S6","S7","S8"},"A3" : {"S1","S3","S4","S5","S7","S8"}}
+            },
+            {
+                "State": "S3", 
+                "Action": {"A1" : {"S1","S2","S5","S6","S7","S8"},"A2" : {"S1","S2","S4","S5","S6","S8"}}
+            },
+            {
+                "State": "S4", 
+                "Action": {"A1" : {"S1","S2","S5","S6","S7","S8"},"A3" : {"S1","S2","S3","S5","S6","S7"}}
+            },
+            {
+                "State": "S5", 
+                "Action": {"A1" : {"S1","S2","S3","S4","S7","S8"},"A2" : {"S2","S3","S4","S6","S7","S8"}}
+            },
+            {
+                "State": "S6", 
+                "Action": {"A1" : {"S1","S2","S3","S4","S7","S8"},"A3" : {"S1","S3","S4","S5","S7","S8"}}
+            },
+            {
+                "State": "S7", 
+                "Action": {"A1" : {"S1","S2","S3","S4","S5","S6"},"A2" : {"S1","S2","S4","S5","S6","S8"}}
+            },
+            {
+                "State": "S8", 
+                "Action": {"A1" : {"S1","S2","S3","S4","S5","S6"},"A3" : {"S1","S2","S3","S5","S6","S7"}}
+            }
+        ]
+        self.action = [
+            {
+                "action":{"A1":"GGrrrrrr","A2":"GrrrGrrr"}
+            },
+            {
+                "Action":{"A1":"GGrrrrrr","A3":"rGrrrGrr"}
+            },
+            {
+                "Action":{"A1":"rrGGrrrr","A2":"rrGrrrGr"}
+            },
+            {
+                "Action":{"A1":"rrGGrrrr","A3":"rrrGrrrG"}
+            },
+            {
+                "Action":{"A1":"rrrrGGrr","A2":"GrrrGrrr"}
+            },
+            {
+                "Action":{"A1":"rrrrGGrr","A3":"rGrrrGrr"}
+            },
+            {
+                "Action":{"A1":"rrrrrrGG","A2":"rrGrrrGr"}
+            },
+            {
+                "Action":{"A1":"rrrrrrGG","A3":"rrrGrrrG"}
+            },
+            
+        ]
+        # self.reward = 0.0
+        # self.stateSpace = []
+        # self.complete = False
+        # self.action = 0
+
+
+    def StateTransition(self):
+        #วิธ๊ใช้ self.stateTransition ตามด้วย Array[] ของ State เรียกหา Dict ของ State นั้นๆ
+        #Search หาข้อมูลต่อด้วย key State Action 
+        #ตัวอย่างหา nextState ของ state8 action2 ==>> self.stateTransition[7]["Action"]["A2"]
+        print("state ->",self.stateTransition)
+
+    def takeAction(self):
+        #วิธ๊ใช้ self.action ตามด้วย Array[] ของ State - 1 เรียกหา Dict ของ action ณ State นั้นๆ
+        #Search หาข้อมูลต่อด้วย key Action 
+        #ตัวอย่างหา action A3 ของ state8 ==>> self.action[7]["Action"]["A3"]
+        print("action ->",self.action[7]["Action"]["A3"])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def legalAction(self, action, inputState):
         State = inputState.copy()
@@ -94,21 +164,7 @@ class TrafficLight:
                 break
         return tempState
 
-    def takeAction(self, action, inputState):
-        State = inputState.copy()
-        if action == 0:
-            State = [State[0]+15, State[1], State[2]]
-        elif action == 1:
-            State = [State[0]-15, State[1], State[2]]
-        elif action == 2:
-            State = [State[0], State[1]+15, State[2]]
-        elif action == 3:
-            State = [State[0], State[1]-15, State[2]]
-        elif action == 4:
-            State = [State[0], State[1], State[2]+15]
-        else:
-            State = [State[0], State[1], State[2]-15]
-        return State
+    
 
     def InitStateSpace(self):
         State = [15,15,15]

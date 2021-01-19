@@ -54,19 +54,19 @@ def main_program(epochs,rl_data,plot_data,traci_data):
         print("----------------------------------------------------------------------")
 
 if __name__ == "__main__":
-    fix_traffic = True
-    global initState
-    lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
-            ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
-    if fix_traffic is True:
-        initState = [30, 30, 30]
-    else:
-        initState = [30, 30, 30]
-    MAX_EPOCHS = 1000
-    EPOCHS = 0
-    CYCLE = 132
-    TIME = MAX_EPOCHS*CYCLE
-    rl = RL.TrafficLight(initState, lane)
+    # fix_traffic = True
+    # global initState
+    # lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
+    #         ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
+    # if fix_traffic is True:
+    #     initState = [30, 30, 30]
+    # else:
+    #     initState = [30, 30, 30]
+    # MAX_EPOCHS = 1000
+    # EPOCHS = 0
+    # CYCLE = 132
+    # TIME = MAX_EPOCHS*CYCLE
+    # rl = RL.TrafficLight(initState, lane)
 
     options = get_options()
     if options.nogui:
@@ -74,25 +74,25 @@ if __name__ == "__main__":
     else:
         sumoBinary = checkBinary('sumo-gui')
 
-    traci.start([sumoBinary, "-c", "Map/16cross_TLS/2_2Cross.sumocfg"])
-
-    rl.InitStateSpace()
-    api.add_Route()
-
+    Path_4Cross = os.path.abspath('Map\\4cross_TLS\\1_1Cross.sumocfg')
+    traci.start([sumoBinary, "-c", Path_4Cross])
+    while True:
+        traci.simulationStep()
+    # rl.InitStateSpace()
+    # api.add_Route()
     # # os.chdir("./4cross_TLS")
     # # os.system('python randomTrips.py --net-file=1_1Cross.net.xml --route-file=1_1Cross.rou.xml --weights-prefix=1_1Cross --end='+str(TIME)+' --fringe-factor=10 --period=2.5 --trip-attributes="departLane=\'best\' departSpeed=\'max\' departPos=\'random\'"  -l --validate --fringe-factor 10  --max-distance 2000')
-
     # # for i in range(MAX_EPOCHS):
-    call_api = api.API()
-    data = plotter.Plotter()
-    traci_data = api.API()
-    global thread_main_data
-    if fix_traffic is True:
-        thread_main_data = threading.Thread(target=main_program_fixed,args=(EPOCHS,data,))
-    else:
-        thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
-    thread_main_data.start()
-    ani = FuncAnimation(data.fig,data.animation)
-    plt.tight_layout()
-    plt.show()
+    # call_api = api.API()
+    # data = plotter.Plotter()
+    # traci_data = api.API()
+    # global thread_main_data
+    # if fix_traffic is True:
+    #     thread_main_data = threading.Thread(target=main_program_fixed,args=(EPOCHS,data,))
+    # else:
+    #     thread_main_data = threading.Thread(target=main_program,args=(EPOCHS,rl,data,traci_data,))
+    # thread_main_data.start()
+    # ani = FuncAnimation(data.fig,data.animation)
+    # plt.tight_layout()
+    # plt.show()
 sys.stdout.flush()

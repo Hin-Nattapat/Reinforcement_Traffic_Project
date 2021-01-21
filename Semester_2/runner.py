@@ -69,24 +69,37 @@ if __name__ == "__main__":
 
     global initState
     initState = "S1"
-    lane = [['InB_W_2_0', 'InB_W_2_1'], ['InB_N_2_0', 'InB_N_2_0'],
-        ['InB_E_2_0', 'InB_E_2_0'], ['InB_S_2_0', 'InB_S_2_0']]
+    lane = ['InB_S_2_0', 'InB_S_2_1', 'InB_E_2_0', 'InB_E_2_1',
+        'InB_N_2_0', 'InB_N_2_1', 'InB_W_2_0', 'InB_W_2_1']
+
+    Nextlane = ['InB_E_2_0', 'InB_E_2_1','InB_N_2_0', 'InB_N_2_1', 'InB_W_2_0', 'InB_W_2_1']
 
     RL_Algor = RL.TrafficLight(initState, lane)
     # RL_Algor.StateTransition()
-    RL_Algor.takeAction()
+    # RL_Algor.takeAction()
+    # RL_Algor.InitStateSpace(8)
+
     options = get_options()
     if options.nogui:
         sumoBinary = checkBinary('sumo')
     else:
         sumoBinary = checkBinary('sumo-gui')
 
-    Path_4Cross = os.path.abspath('Map\\4cross_TLS\\1_1Cross.sumocfg')
+    Path_4Cross = os.path.abspath('Semester_2\\Map\\4cross_TLS\\1_1Cross.sumocfg')
+    traci.start([sumoBinary, "-c", Path_4Cross])
+    
 
-    # traci.start([sumoBinary, "-c", Path_4Cross])
-    # while True:
-    #     traci.simulationStep()
+    while True:
+        if traci.simulation.getTime() == 40:
+            TFL_state = RL_Algor.takeAction(1,"A3")
+            api.set_Trafficlight(TFL_state,40)
+            
+            # print(TFL_state[0])
+        if traci.simulation.getTime() == 20: 
+            api.getCountLane(Nextlane)
 
+        traci.simulationStep()
+        
     # rl.InitStateSpace()
     # api.add_Route()
     # # os.chdir("./4cross_TLS")

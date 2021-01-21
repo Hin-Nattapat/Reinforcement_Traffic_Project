@@ -19,7 +19,7 @@ class TrafficLight:
         self.stateTransition = [
             {
                 "State": "S1", 
-                "Action": {"A1" : {"S3","S4","S5","S6","S7","S8"},"A2" : {"S2","S3","S4","S6","S7","S8"}}
+                "Action": {"A1" : ["S3","S4","S5","S6","S7","S8"],"A2" : ["S2","S3","S4","S6","S7","S8"]}
             },
             {
                 "State": "S2", 
@@ -52,31 +52,33 @@ class TrafficLight:
         ]
         self.action = [
             {
-                "action":{"A1":"GGrrrrrr","A2":"GrrrGrrr"}
+                "Action":{"A1":["GGrrrrrr","yyrrrrrr"],"A2":["GrrrGrrr","yrrryrrr"]}
             },
             {
-                "Action":{"A1":"GGrrrrrr","A3":"rGrrrGrr"}
+                "Action":{"A1":["GGrrrrrr","yyrrrrrr"],"A3":["rGrrrGrr","ryrrryrr"]}
             },
             {
-                "Action":{"A1":"rrGGrrrr","A2":"rrGrrrGr"}
+                "Action":{"A1":["rrGGrrrr","rryyrrrr"],"A2":["rrGrrrGr","rryrrryr"]}
             },
             {
-                "Action":{"A1":"rrGGrrrr","A3":"rrrGrrrG"}
+                "Action":{"A1":["rrGGrrrr","rryyrrrr"],"A3":["rrrGrrrG","rrryrrry"]}
             },
             {
-                "Action":{"A1":"rrrrGGrr","A2":"GrrrGrrr"}
+                "Action":{"A1":["rrrrGGrr","rrrryyrr"],"A2":["GrrrGrrr","yrrryrrr"]}
             },
             {
-                "Action":{"A1":"rrrrGGrr","A3":"rGrrrGrr"}
+                "Action":{"A1":["rrrrGGrr","rrrryyrr"],"A3":["rGrrrGrr","ryrrryrr"]}
             },
             {
-                "Action":{"A1":"rrrrrrGG","A2":"rrGrrrGr"}
+                "Action":{"A1":["rrrrrrGG","rrrrrryy"],"A2":["rrGrrrGr","rryrrryr"]}
             },
             {
-                "Action":{"A1":"rrrrrrGG","A3":"rrrGrrrG"}
+                "Action":{"A1":["rrrrrrGG","rrrrrryy"],"A3":["rrrGrrrG","rrryrrry"]}
             },
-            
         ]
+
+        self.stateSpace = []
+
         # self.reward = 0.0
         # self.stateSpace = []
         # self.complete = False
@@ -89,18 +91,27 @@ class TrafficLight:
         #ตัวอย่างหา nextState ของ state8 action2 ==>> self.stateTransition[7]["Action"]["A2"]
         print("state ->",self.stateTransition)
 
-    def takeAction(self):
+    def takeAction(self,currentState,action):
         #วิธ๊ใช้ self.action ตามด้วย Array[] ของ State - 1 เรียกหา Dict ของ action ณ State นั้นๆ
         #Search หาข้อมูลต่อด้วย key Action 
         #ตัวอย่างหา action A3 ของ state8 ==>> self.action[7]["Action"]["A3"]
-        print("action ->",self.action[7]["Action"]["A3"])
+        # print("action ->",self.action[7]["Action"]["A3"])
+        return self.action[currentState]["Action"][action]
 
+    def InitStateSpace(self,countState):
+        #สร้าง Table เก็บค่าของ Q-value เอาไว้
+        for i in range(0,countState):
+            self.stateSpace.append({"Q-Value":[0.0,0.0],"Q-Max":0.0,"Q-Sum":i})
+        print(self.stateSpace[5]["Q-Sum"])
 
+    def getTrafficState(self,currentState,action):
+        return self.stateTransition[currentState]["Action"][action]
+        
+    def randomAction(self):
+        action = random.randrange(0, 2)
+        return print(action)
 
-
-
-
-
+        
 
 
 
@@ -145,13 +156,7 @@ class TrafficLight:
         else:
             return True
 
-    def randomAction(self):
-        while True:
-            action = random.randrange(0, MAX_ACTION)
-            if self.legalAction(action, self.state):
-                break
-        return action
-
+    
     # def get_nextState(self, action, State):
     #     state = self.takeAction(action, State)
     #     return state
@@ -166,23 +171,23 @@ class TrafficLight:
 
     
 
-    def InitStateSpace(self):
-        State = [15,15,15]
-        self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
-                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
-        while State != [75, 75, 75]:
-            State[2] += 15
-            if State[2] == 90:
-                State[2] = 15
-                State[1] += 15
-                if State[1] == 90:
-                    State[1] = 15
-                    State[0] += 15
-            if sum(State) <= 105:
-                self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
-                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
-        print(self.stateSpace)
-        # return print(self.stateSpace)
+    # def InitStateSpace(self):
+    #     State = [15,15,15]
+    #     self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
+    #                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
+    #     while State != [75, 75, 75]:
+    #         State[2] += 15
+    #         if State[2] == 90:
+    #             State[2] = 15
+    #             State[1] += 15
+    #             if State[1] == 90:
+    #                 State[1] = 15
+    #                 State[0] += 15
+    #         if sum(State) <= 105:
+    #             self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
+    #                                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
+    #     print(self.stateSpace)
+    #     # return print(self.stateSpace)
 
     def Find_Q_Max(self):
         for i in range(len(self.stateSpace)):

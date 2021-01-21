@@ -122,58 +122,26 @@ class API():
             traci.trafficlight.Phase(3, "rrrrrrrryyyyrrrr", 3, 3))
         logic = traci.trafficlight.Logic("0", 0, 0, TrafficLightPhases)
         traci.trafficlight.setProgramLogic('gneJ7', logic)
-
-def get_waiting_time(lane, NextState):
-    wait_time = [0.0, 0.0, 0.0, 0.0]
-    keep = True
-    count = 0
-    # print("TEST : "," : ",traci.trafficlight.getCompleteRedYellowGreenDefinition('gneJ7'))
-    print(NextState)
-    set_Trafficlight(NextState)
-    traci.simulationStep()
-    while traci.simulation.getTime() % 132 != 0:
-        phase = traci.trafficlight.getPhase('gneJ7')
-        if phase % 2 == 1 and keep:
-            temp = (traci.lane.getWaitingTime(
-                lane[int((phase-1)/2)][0]) + traci.lane.getWaitingTime(lane[int((phase-1)/2)][1])) / 2
-            wait_time[int((phase-1)/2)] = temp
-            keep = False
-            count += 1
-        elif phase % 2 == 0:
-            keep = True
-        random_Vehicle()
-        traci.simulationStep()
-    return sum(wait_time) / len(wait_time)
-
-
-def set_Trafficlight(state):
-    # print(traci.trafficlight.getCompleteRedYellowGreenDefinition('gneJ7'))
-    # print(state)
+  
+def set_Trafficlight(state,duration):
     TrafficLightPhases = []
-    G4 = 120 - state[0] - state[1] - state[2]
     TrafficLightPhases.append(
         traci.trafficlight.Phase(0, "rrrrrrrrrrrrrrrr", 0, 0))
-    TrafficLightPhases.append(traci.trafficlight.Phase(
-        state[0], "rrrrrrrrrrrrGGGG", state[0], state[0]))
     TrafficLightPhases.append(
-        traci.trafficlight.Phase(3, "rrrrrrrrrrrryyyy", 3, 3))
-    TrafficLightPhases.append(traci.trafficlight.Phase(
-        state[1], "rrrrGGGGrrrrrrrr", state[1], state[1]))
+        traci.trafficlight.Phase(duration, state[0], duration, duration))
     TrafficLightPhases.append(
-        traci.trafficlight.Phase(3, "rrrryyyyrrrrrrrr", 3, 3))
-    TrafficLightPhases.append(traci.trafficlight.Phase(
-        state[2], "GGGGrrrrrrrrrrrr", state[2], state[2]))
-    TrafficLightPhases.append(
-        traci.trafficlight.Phase(3, "yyyyrrrrrrrrrrrr", 3, 3))
-    TrafficLightPhases.append(
-        traci.trafficlight.Phase(G4,  "rrrrrrrrGGGGrrrr", G4, G4))
-    TrafficLightPhases.append(
-        traci.trafficlight.Phase(3, "rrrrrrrryyyyrrrr", 3, 3))
-    logic = traci.trafficlight.Logic("0", 0, 0, TrafficLightPhases)
-    # print("LOGIC : ", logic)
-    traci.trafficlight.setProgramLogic('gneJ7', logic)
-    # print(traci.trafficlight.getCompleteRedYellowGreenDefinition('gneJ7'))
+        traci.trafficlight.Phase(3, state[1], 3, 3))
+    Trafficlogic = traci.trafficlight.Logic("0", 0, 0, TrafficLightPhases)
+    traci.trafficlight.setProgramLogic('TFL_C', Trafficlogic)
 
+def getCountLane(lane):
+    # test = traci.lane.getLastStepVehicleNumber("InB_S_2_1")
+    laneObject = [0,0,0,0,0,0]
+    for i in range(len(lane)):
+        laneObject[i] = traci.lane.getLastStepVehicleNumber(lane[i])
+    MaxValue = max(laneObject)
+    Index = laneObject.index(MaxValue) 
+    return lane[Index]
 
 def csv_data_stateSpace(data):
     list_data = [['State', 'Q_Value', 'Q_Max', 'Q_Sum']]
@@ -203,8 +171,6 @@ def add_Route():
     traci.route.add("rou_S2", ["gneE35", "gneE11", "gneE6", "gneE40"])
     traci.route.add("rou_S3", ["gneE35", "gneE11", "gneE12", "gneE32"])
 
-
-
 def setFlow_Rate(i,w,e,n,s):
     RouteID = traci.route.getIDList()
     count = traci.route.getIDCount()
@@ -223,7 +189,6 @@ def setFlow_Rate(i,w,e,n,s):
         index = random.randint(6, 8)
         traci.vehicle.add("vehicle_"+str(i)+"s",RouteID[index], departSpeed="random")
 
-
 def random_Vehicle(epochs):
     i = traci.simulation.getTime()
     if epochs <= 20:
@@ -236,25 +201,4 @@ def random_Vehicle(epochs):
         setFlow_Rate(i,16,8,8,4)
     elif epochs <= 100:
         setFlow_Rate(i,8,8,4,16)    
-        
-    # if epochs <= 20:
-    #     if i % 16 == 0 :
-    #         index = random.randint(0, count-1)
-    #         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random") 
-    # elif epochs <= 40:
-    #     if i % 8 == 0 :
-    #         index = random.randint(0, count-1)
-    #         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
-    # elif epochs <= 60:
-    #     if i % 4 == 0 :
-    #         index = random.randint(0, count-1)
-    #         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
-    # elif epochs <= 80:
-    #     if i % 2 == 0 :
-    #         index = random.randint(0, count-1)
-    #         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
-    # elif epochs <= 100:
-    #     if i % 1 == 0 :
-    #         index = random.randint(0, count-1)
-    #         traci.vehicle.add("vehicle_"+str(i),RouteID[index], departSpeed="random")
-
+    

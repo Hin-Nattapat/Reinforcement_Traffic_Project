@@ -4,99 +4,57 @@ import random
 
 class API():
     def __init__(self):
-        self.wait_time = []
-        self.avg_spd = []
-        self.dens = None
-        self.flow = 0
-        self.pre_id = [set(), set(), set(), set()]
-        self.cur_id= [set(), set(), set(), set()]
-        self.keep = True
-        self.keep_2 = True
-        self.lane = [['gneE3_0', 'gneE3_1'], ['gneE13_0', 'gneE13_1'],
-            ['gneE11_0', 'gneE11_1'], ['gneE7_0', 'gneE7_1']]
-        self.edge = ['gneE3','gneE13','gneE11','gneE7']
-        self.result = {
-            "w_time" : None,
-            "dens" : None,
-            "avg_spd" : None,
-            "f_rate" : None
-        }
+        self.edge = ['gneE8', 'gneE10', 'gneE12', 'gneE14']
+        self.lane = [['gneE8_0', 'gneE8_1'], ['gneE10_0', 'gneE10_1'], 
+                    ['gneE12_0', 'gneE12_1'], ['gneE14_0', 'gneE14_1']]
+        #self.acc_waiting_time = []
+        self.oldId = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]]
+        self.carPass = [0, 0, 0, 0]
+        self.length = 489.6
 
-    def get_obj(self, nextState, epochs):
-        self.wait_time = [0.0, 0.0, 0.0, 0.0]
-        self.avg_spd = [0.0, 0.0, 0.0, 0.0]
-        self.dens = [0.0, 0.0, 0.0, 0.0]
-        self.flow = 0
-        self.keep = True
-
-        self.set_Trafficlight(nextState)
-        ctime = traci.simulation.getTime()
-        print(ctime)
-        
-        while traci.simulation.getTime() - ctime < 132:
-            random_Vehicle(epochs)
-            traci.simulationStep()
-            phase = traci.trafficlight.getPhase('gneJ7')
-            self.get_waiting(phase)
-            self.get_flow(phase)
-            self.avg_spd.append(self.get_avg_spd())
-            self.dens.append(self.get_dens())
-            #print(traci.trafficlight.getNextSwitch('gneJ7'))
-            #print(traci.trafficlight.getPhaseDuration('gneJ7'))
-        # print('previous : ' ,self.pre_id , "SUM",len(list(self.pre_id)))
-        # print('current : ' ,self.cur_id)
-        for i in self.pre_id:
-            index = self.pre_id.index(i)
-            duplicate = (list(self.pre_id[index].intersection(self.cur_id[index])))
-            self.flow += (len(list(self.pre_id[index])) - len(duplicate))
-
-        # print("FLOW RATE",self.flow)
-
-        #collect all result
-        self.result['w_time'] = sum(self.wait_time) / len(self.wait_time)
-        self.result['avg_spd'] = sum(self.avg_spd) / len(self.avg_spd)
-        self.result['dens'] = sum(self.dens) / len(self.dens)
-        self.result['f_rate'] = self.flow
-    
-        return self.result
-
-    def get_waiting(self, phase):        
-        if phase % 2 == 1 and self.keep:
-            #print('phase : ' ,phase)
-            temp = (traci.lane.getWaitingTime(self.lane[int((phase-1)/2)][0]) 
-                    + traci.lane.getWaitingTime(self.lane[int((phase-1)/2)][1])) / 2.0           
-            self.wait_time[int((phase-1)/2)] = temp
-            # print(self.wait_time)
-            #print(temp)
-            self.keep = False
-        elif phase % 2 == 0:
-            self.keep = True
-
-    def waiting(self):
+    def get_avg_speed(self):
+        avg_spd = []
         for edge in self.edge:
-            print('edge :' ,end=' ')
-            print()
-    
-    def get_avg_spd(self): #complete
-        spd = []
-        veh_id = traci.vehicle.getIDList()
-        for i in veh_id:
-            spd.append(traci.vehicle.getSpeed(i))
-        return sum(spd) / len(spd)
-    
-    def get_dens(self): #complete
-        amount = 0
-        for i in range(0,4):
-            amount += traci.edge.getLastStepVehicleNumber(self.edge[i])
-        return 1000 * amount / ( traci.lane.getLength(self.lane[0][0]) * 4 )
+            if traci.edge.getLastStepVehicleNumber(edge) > 0:
+                avg_spd.append(traci.edge.getLastStepMeanSpeed(edge))
+            else:
+                avg_spd.append(0)
+        
+        return avg_spd
 
-    def get_flow(self, phase): #complete
-        if phase % 2 and self.keep_2:
-            self.pre_id[int((phase-1)/2)] = set(traci.edge.getLastStepVehicleIDs(self.edge[int((phase-1)/2)]))
-            self.keep_2 = False
-        elif phase % 2 == 0 and phase > 0 :
-            self.cur_id[int((phase-1)/2)] = set(traci.edge.getLastStepVehicleIDs(self.edge[int((phase-1)/2)]))
-            self.keep_2 = True
+    def get_flow_rate(self):
+        flow_rate = []
+        for edge in range(0, 4):
+            for lane in range(0, 2):
+                num = traci.inductionloop.getLastStepVehicleNumber('e1_'+self.lane[edge][lane])
+                curID = traci.inductionloop.getLastStepVehicleIDs('e1_'+self.lane[edge][lane])
+                if num > 0 and curID != self.oldId[edge][lane]:
+                    self.oldId[edge][lane] = curID
+                    self.carPass[edge] += 1
+            flow_rate.append(self.carPass[edge] / traci.simulation.getCurrentTime() * 1000 * 3600)        
+        
+        return flow_rate
+
+    def get_density(self):
+        dens = []
+        for edge in self.edge:
+            num = traci.edge.getLastStepVehicleNumber(edge)
+            dens.append(num*1000 / self.length)
+
+        return dens
+
+    def get_waiting_time(self):
+        w_time = []
+        for edge in self.edge:
+            total_time = 0
+            vehs = traci.edge.getLastStepVehicleIDs(edge)
+            if len(vehs > 0):
+                for vid in vehs:
+                    total_time += traci.vehicle.getAccumulatedWaitingTime(vid)
+                w_time.append(total_time / len(vehs))
+            else:
+                w_time.append(0)
+        return w_time
 
     def set_Trafficlight(self, state):
         print(state)

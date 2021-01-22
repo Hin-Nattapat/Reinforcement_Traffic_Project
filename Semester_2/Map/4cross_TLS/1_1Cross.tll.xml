@@ -1,0 +1,13 @@
+<additionals>
+    <tlLogic id="TFL_C" type="static" programID="0" offset="0">
+        <phase duration="40" state="GGrrrrrr"/>
+        <phase duration="3"  state="yyrrrrrr"/>
+        <phase duration="40" state="rrrrrrGG"/>
+        <phase duration="3"  state="rrrrrryy"/>
+        <phase duration="40" state="rrrrGGrr"/>
+        <phase duration="3"  state="rrrryyrr"/>
+        <phase duration="40" state="rrGGrrrr"/>
+        <phase duration="3"  state="rryyrrrr"/>
+    </tlLogic>
+
+</additionals>

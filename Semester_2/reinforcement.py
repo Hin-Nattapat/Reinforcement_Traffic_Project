@@ -16,66 +16,100 @@ class TrafficLight:
     def __init__(self, state, lane):
         self.state = state
         self.lane = lane
-        self.stateTransition = [
-            {
-                "State": "S1", 
-                "Action": {"A1" : ["S3","S4","S5","S6","S7","S8"],"A2" : ["S2","S3","S4","S6","S7","S8"]}
+        self.totalState = ["S1","S2","S3","S4","S5","S6","S7","S8"]
+        self.Nextlane = []
+        self.stateTransition = {
+            "S1":{
+                "Index": 0, 
+                "State": "S1",
+                "Lane": "InB_S_2_0",
+                # "ActionNumber": {"A1" : [3,4,5,6,7,8],"A2" : [2,3,4,6,7,8]},
+                "Action": {"A1" : ["S3","S4","S5","S6","S7","S8"],"A2" : ["S2","S3","S4","S6","S7","S8"]}     
             },
-            {
-                "State": "S2", 
-                "Action": {"A1" : {"S3","S4","S5","S6","S7","S8"},"A3" : {"S1","S3","S4","S5","S7","S8"}}
+            "S2":{
+                "Index": 1, 
+                "State": "S2",
+                "Lane": "InB_S_2_1",
+                "ActionNumber": {"A1" : [3,4,5,6,7,8],"A2" : [1,3,4,5,7,8]},
+                "Action": {"A1" : ["S3","S4","S5","S6","S7","S8"],"A3" : ["S1","S3","S4","S5","S7","S8"]}
             },
-            {
-                "State": "S3", 
-                "Action": {"A1" : {"S1","S2","S5","S6","S7","S8"},"A2" : {"S1","S2","S4","S5","S6","S8"}}
+            "S3":{
+                "Index": 2, 
+                "State": "S3",
+                "Lane": "InB_E_2_0",
+                "ActionNumber": {"A1" : [1,2,5,6,7,8],"A2" : [1,2,4,5,6,8]},
+                "Action": {"A1" : ["S1","S2","S5","S6","S7","S8"],"A2" : ["S1","S2","S4","S5","S6","S8"]}
             },
-            {
-                "State": "S4", 
-                "Action": {"A1" : {"S1","S2","S5","S6","S7","S8"},"A3" : {"S1","S2","S3","S5","S6","S7"}}
+            "S4":{
+                "Index": 3, 
+                "State": "S4",
+                "Lane": "InB_E_2_1",
+                "ActionNumber": {"A1" : [1,2,5,6,7,8],"A2" : [1,2,3,5,6,7]},
+                "Action": {"A1" : ["S1","S2","S5","S6","S7","S8"],"A3" : ["S1","S2","S3","S5","S6","S7"]}
             },
-            {
-                "State": "S5", 
-                "Action": {"A1" : {"S1","S2","S3","S4","S7","S8"},"A2" : {"S2","S3","S4","S6","S7","S8"}}
+            "S5":{
+                "Index": 4, 
+                "State": "S5",
+                "Lane": "InB_N_2_0",
+                "ActionNumber": {"A1" : [1,2,3,4,7,8],"A2" : [2,3,4,6,7,8]},
+                "Action": {"A1" : ["S1","S2","S3","S4","S7","S8"],"A2" : ["S2","S3","S4","S6","S7","S8"]}
             },
-            {
-                "State": "S6", 
-                "Action": {"A1" : {"S1","S2","S3","S4","S7","S8"},"A3" : {"S1","S3","S4","S5","S7","S8"}}
+            "S6":{
+                "Index": 5, 
+                "State": "S6",
+                "Lane": "InB_N_2_1",
+                "ActionNumber": {"A1" : [1,2,3,4,7,8],"A2" :[1,3,4,5,7,8]},
+                "Action": {"A1" : ["S1","S2","S3","S4","S7","S8"],"A3" : ["S1","S3","S4","S5","S7","S8"]}
             },
-            {
-                "State": "S7", 
-                "Action": {"A1" : {"S1","S2","S3","S4","S5","S6"},"A2" : {"S1","S2","S4","S5","S6","S8"}}
+            "S7":{
+                "Index": 6, 
+                "State": "S7",
+                "Lane": "InB_W_2_0",
+                "ActionNumber": {"A1" : [1,2,3,4,5,6],"A2" :[1,2,4,5,6,8]},
+                "Action": {"A1" : ["S1","S2","S3","S4","S5","S6"],"A2" : ["S1","S2","S4","S5","S6","S8"]}
             },
-            {
-                "State": "S8", 
-                "Action": {"A1" : {"S1","S2","S3","S4","S5","S6"},"A3" : {"S1","S2","S3","S5","S6","S7"}}
+            "S8":{
+                "Index": 7, 
+                "State": "S8",
+                "Lane": "InB_W_2_0",
+                "ActionNumber": {"A1" : [1,2,3,4,5,6],"A2" :[1,2,3,5,6,7]},
+                "Action": {"A1" : ["S1","S2","S3","S4","S5","S6"],"A3" : ["S1","S2","S3","S5","S6","S7"]}
             }
-        ]
-        self.action = [
-            {
+        }
+        self.action = {
+            "S1":{
+                "LegalAction":["A1","A2"],
                 "Action":{"A1":["GGrrrrrr","yyrrrrrr"],"A2":["GrrrGrrr","yrrryrrr"]}
             },
-            {
+            "S2":{
+                "LegalAction":["A1","A3"],
                 "Action":{"A1":["GGrrrrrr","yyrrrrrr"],"A3":["rGrrrGrr","ryrrryrr"]}
             },
-            {
+            "S3":{
+                "LegalAction":["A1","A2"],
                 "Action":{"A1":["rrGGrrrr","rryyrrrr"],"A2":["rrGrrrGr","rryrrryr"]}
             },
-            {
+            "S4":{
+                "LegalAction":["A1","A3"],
                 "Action":{"A1":["rrGGrrrr","rryyrrrr"],"A3":["rrrGrrrG","rrryrrry"]}
             },
-            {
+            "S5":{
+                "LegalAction":["A1","A2"],
                 "Action":{"A1":["rrrrGGrr","rrrryyrr"],"A2":["GrrrGrrr","yrrryrrr"]}
             },
-            {
+            "S6":{
+                "LegalAction":["A1","A3"],
                 "Action":{"A1":["rrrrGGrr","rrrryyrr"],"A3":["rGrrrGrr","ryrrryrr"]}
             },
-            {
+            "S7":{
+                "LegalAction":["A1","A2"],
                 "Action":{"A1":["rrrrrrGG","rrrrrryy"],"A2":["rrGrrrGr","rryrrryr"]}
             },
-            {
+            "S8":{
+                "LegalAction":["A1","A3"],
                 "Action":{"A1":["rrrrrrGG","rrrrrryy"],"A3":["rrrGrrrG","rrryrrry"]}
             },
-        ]
+        }
 
         self.stateSpace = []
 
@@ -91,12 +125,12 @@ class TrafficLight:
         #ตัวอย่างหา nextState ของ state8 action2 ==>> self.stateTransition[7]["Action"]["A2"]
         print("state ->",self.stateTransition)
 
-    def takeAction(self,currentState,action):
+    def takeAction(self,action):
         #วิธ๊ใช้ self.action ตามด้วย Array[] ของ State - 1 เรียกหา Dict ของ action ณ State นั้นๆ
         #Search หาข้อมูลต่อด้วย key Action 
         #ตัวอย่างหา action A3 ของ state8 ==>> self.action[7]["Action"]["A3"]
         # print("action ->",self.action[7]["Action"]["A3"])
-        return self.action[currentState]["Action"][action]
+        # return self.action[self.state]["Action"][action]
 
     def InitStateSpace(self,countState):
         #สร้าง Table เก็บค่าของ Q-value เอาไว้
@@ -108,32 +142,45 @@ class TrafficLight:
         return self.stateTransition[currentState]["Action"][action]
         
     def randomAction(self):
-        action = random.randrange(0, 2)
-        return print(action)
+        index = random.randrange(0, 2)
+        print(self.action[self.state]["LegalAction"][index])
+        return self.action[self.state]["LegalAction"][index]
 
-        
+    def changeState(self,NextLane):
+        for i in self.totalState:
+            if NextLane == self.stateTransition[i]["Lane"]:
+                self.state = self.stateTransition[i]["State"]
+        print("CurrentState => ",self.state)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def fineCandidateLane(self,action):
+        nextState = self.stateTransition["S1"]["Action"][action]
+        for i in nextState:
+            self.Nextlane.append(self.stateTransition[i]["Lane"])
+        print(nextState)
+        print(self.Nextlane)
+        return self.Nextlane
 
 
 
 
 
 
-    def legalAction(self, action, inputState):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def LegalAction(self, action, inputState):
         State = inputState.copy()
         
         if action == 0:
@@ -199,7 +246,7 @@ class TrafficLight:
             tempState = self.stateSpace[i]['state'].copy()
             Q_SUM = 0.0
             for j in range(MAX_ACTION):
-                if self.legalAction(j, tempState):
+                if self.LegalAction(j, tempState):
                     # print("state : ", tempState,"Q_value : ", self.stateSpace[i]['Q_value'][j])
                     Q_SUM += self.stateSpace[i]['Q_value'][j]
                     self.stateSpace[i]['Q_SUM'] = Q_SUM
@@ -249,7 +296,7 @@ class TrafficLight:
         else:
             action = self.randomAction()
             for i in range(MAX_ACTION):
-                if self.legalAction(action, self.state):
+                if self.LegalAction(action, self.state):
                     
                     prob = (presentState["Q_value"]
                             [action] / presentState["Q_SUM"])

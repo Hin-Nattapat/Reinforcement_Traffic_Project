@@ -134,13 +134,18 @@ def set_Trafficlight(state,duration):
     Trafficlogic = traci.trafficlight.Logic("0", 0, 0, TrafficLightPhases)
     traci.trafficlight.setProgramLogic('TFL_C', Trafficlogic)
 
-def getCountLane(lane):
+def checkNextLane(lane):
     # test = traci.lane.getLastStepVehicleNumber("InB_S_2_1")
     laneObject = [0,0,0,0,0,0]
     for i in range(len(lane)):
         laneObject[i] = traci.lane.getLastStepVehicleNumber(lane[i])
     MaxValue = max(laneObject)
     Index = laneObject.index(MaxValue) 
+    print("---------------- Checker ----------------")
+    print("Candidate : ",lane)
+    print("CountVahicle : ",laneObject)
+    print("NextLane : ",lane[Index])
+    print("-----------------------------------------")
     return lane[Index]
 
 def csv_data_stateSpace(data):

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 02/04/21 01:15:49 by Eclipse SUMO GUI Version 1.6.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="map/4-way/4-way.net.xml"/>
+        <route-files value="map/4-way/4-way.rou.xml"/>
+        <additional-files value="map/4-way/4-way.add.xml"/>
+    </input>
+
+    <time>
+        <begin value="0"/>
+        <end value="500"/>
+    </time>
+
+    <traci_server>
+        <remote-port value="57169"/>
+    </traci_server>
+
+    <gui_only>
+        <gui-settings-file value="map/4-way/4-way.settings.xml"/>
+        <quit-on-end value="true"/>
+        <start value="true"/>
+    </gui_only>
+
+</configuration>
+-->
+
+<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e1_file.xsd">
+    <interval begin="0.00" end="590.00" id="e1_gneE10_0" nVehContrib="55" flow="335.59" occupancy="3.38" speed="13.14" harmonicMeanSpeed="12.97" length="4.70" nVehEntered="55"/>
+    <interval begin="0.00" end="590.00" id="e1_gneE10_1" nVehContrib="23" flow="140.34" occupancy="1.42" speed="13.05" harmonicMeanSpeed="12.88" length="4.70" nVehEntered="23"/>
+    <interval begin="0.00" end="590.00" id="e1_gneE12_0" nVehContrib="51" flow="311.19" occupancy="3.28" speed="12.74" harmonicMeanSpeed="12.52" length="4.70" nVehEntered="52"/>
+    <interval begin="0.00" end="590.00" id="e1_gneE12_1" nVehContrib="27" flow="164.75" occupancy="1.65" speed="13.09" harmonicMeanSpeed="13.01" length="4.70" nVehEntered="27"/>
+    <interval begin="0.00" end="590.00" id="e1_gneE14_0" nVehContrib="35" flow="213.56" occupancy="2.17" speed="13.06" harmonicMeanSpeed="12.87" length="4.70" nVehEntered="35"/>
+    <interval begin="0.00" end="590.00" id="e1_gneE14_1" nVehContrib="27" flow="164.75" occupancy="1.64" speed="13.29" harmonicMeanSpeed="13.14" length="4.70" nVehEntered="27"/>
+    <interval begin="0.00" end="590.00" id="e1_gneE8_0" nVehContrib="47" flow="286.78" occupancy="2.97" speed="12.72" harmonicMeanSpeed="12.60" length="4.70" nVehEntered="47"/>
+    <interval begin="0.00" end="590.00" id="e1_gneE8_1" nVehContrib="28" flow="170.85" occupancy="1.73" speed="13.04" harmonicMeanSpeed="12.87" length="4.70" nVehEntered="28"/>
+</detector>

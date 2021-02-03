@@ -35,7 +35,8 @@ if __name__ == "__main__":
     else:
         sumoBinary = checkBinary('sumo-gui')
 
-    traci.start([sumoBinary, "-c", "map/4-way/4-way.sumocfg"])
+    path_4Cross = os.path.abspath('fluk\\map\\4-way\\4-way.sumocfg')
+    traci.start([sumoBinary, "-c", path_4Cross])
     
     traci.simulationStep()
     while traci.simulation.getMinExpectedNumber() > 0:

@@ -21,6 +21,9 @@
     <simulation>
         <start value = "1" />
         <quit-on-end value = "1"/>
-    </simulation> 
+    </simulation>
+    <processing>
+        <time-to-teleport value="320"/>
+    </processing>
 
 </configuration>

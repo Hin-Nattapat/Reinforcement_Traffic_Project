@@ -128,7 +128,7 @@ class Reinforcement():
         state = self.stateSpace[self.current_state]
         next_state = self.stateSpace[nextState]
 
-        state["q_value"][action - 1] += (self.LEARNING_RATE * (reward + (self.DISCOUNT_RATE * next_state["maxQ"])) - state["q_value"][action - 1])
+        state["q_value"][action - 1] += round((self.LEARNING_RATE * (reward + (self.DISCOUNT_RATE * next_state["maxQ"])) - state["q_value"][action - 1]), 5)
 
         self.set_sumQ()
         self.current_state = nextState

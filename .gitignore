@@ -177,14 +177,25 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/python,windows,vscode
-Semester_2/Map/16cross_TLS/trips.trips.xml
-Semester_2/Map/4cross_TLS/trips.trips.xml
-fluk/map/4-way/trips.trips.xml
-fluk/map/4-way/4-way.rou.alt.xml
-fluk/map/4-way/4-way.rou.xml
-4cross_TLS/trips.trips.xml
-16cross_TLS/trips.trips.xml
-36cross_TLS/trips.trips.xml
-64cross_TLS/trips.trips.xml
+Semester_1/4cross_TLS/trips.trips.xml
+Semester_1/4cross_TLS/1_1Cross.rou.xml
+Semester_1/4cross_TLS/1_1Cross.rou.alt.xml
+
+Semester_1/16cross_TLS/trips.trips.xml
+Semester_1/16cross_TLS/2_2Cross.rou.xml
+Semester_1/16cross_TLS/2_2Cross.rou.alt.xml
+
+Semester_1/36cross_TLS/trips.trips.xml
+Semester_1/36cross_TLS/3_3Cross.rou.xml
+Semester_1/36cross_TLS/3_3Cross.rou.alt.xml
+
+Semester_1/64cross_TLS/trips.trips.xml
+Semester_1/64cross_TLS/4_4Cross.rou.xml
+Semester_1/64cross_TLS/4_4Cross.rou.alt.xml
+
+Semester_2/map/4-way/Rou_File/Period_1/trips.trips.xml
+Semester_2/map/4-way/Rou_File/Period_1/Period_1.rou.xml
+Semester_2/map/4-way/Rou_File/Period_1/Period_1.rou.alt.xml
+
 
 

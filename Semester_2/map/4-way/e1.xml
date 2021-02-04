@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 02/04/21 23:22:01 by Eclipse SUMO GUI Version 1.6.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="D:\Picasso\kmitl_ce4\Project\Reinforcement_traffic_control\Semester_2\map\4-way\4-way.net.xml"/>
+        <route-files value="D:\Picasso\kmitl_ce4\Project\Reinforcement_traffic_control\Semester_2\map\4-way\./Rou_File/Period_1/Period_1.rou.xml"/>
+        <additional-files value="D:\Picasso\kmitl_ce4\Project\Reinforcement_traffic_control\Semester_2\map\4-way\4-way.add.xml"/>
+    </input>
+
+    <time>
+        <begin value="0"/>
+        <end value="500"/>
+    </time>
+
+    <processing>
+        <time-to-teleport value="320"/>
+    </processing>
+
+    <traci_server>
+        <remote-port value="58215"/>
+    </traci_server>
+
+    <gui_only>
+        <gui-settings-file value="D:\Picasso\kmitl_ce4\Project\Reinforcement_traffic_control\Semester_2\map\4-way\4-way.settings.xml"/>
+        <quit-on-end value="true"/>
+        <start value="true"/>
+    </gui_only>
+
+</configuration>
+-->
+
+<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e1_file.xsd">
+    <interval begin="0.00" end="807.00" id="e1_gneE10_0" nVehContrib="95" flow="423.79" occupancy="4.40" speed="12.73" harmonicMeanSpeed="12.58" length="4.70" nVehEntered="95"/>
+    <interval begin="0.00" end="807.00" id="e1_gneE10_1" nVehContrib="39" flow="173.98" occupancy="1.77" speed="12.99" harmonicMeanSpeed="12.84" length="4.70" nVehEntered="39"/>
+    <interval begin="0.00" end="807.00" id="e1_gneE12_0" nVehContrib="98" flow="437.17" occupancy="4.45" speed="12.95" harmonicMeanSpeed="12.83" length="4.70" nVehEntered="98"/>
+    <interval begin="0.00" end="807.00" id="e1_gneE12_1" nVehContrib="55" flow="245.35" occupancy="2.46" speed="13.15" harmonicMeanSpeed="13.03" length="4.70" nVehEntered="55"/>
+    <interval begin="0.00" end="807.00" id="e1_gneE14_0" nVehContrib="111" flow="495.17" occupancy="7.99" speed="12.05" harmonicMeanSpeed="8.09" length="4.70" nVehEntered="111"/>
+    <interval begin="0.00" end="807.00" id="e1_gneE14_1" nVehContrib="54" flow="240.89" occupancy="2.37" speed="13.41" harmonicMeanSpeed="13.27" length="4.70" nVehEntered="54"/>
+    <interval begin="0.00" end="807.00" id="e1_gneE8_0" nVehContrib="85" flow="379.18" occupancy="11.46" speed="11.99" harmonicMeanSpeed="4.35" length="4.70" nVehEntered="86"/>
+    <interval begin="0.00" end="807.00" id="e1_gneE8_1" nVehContrib="48" flow="214.13" occupancy="4.30" speed="12.10" harmonicMeanSpeed="6.50" length="4.70" nVehEntered="48"/>
+</detector>

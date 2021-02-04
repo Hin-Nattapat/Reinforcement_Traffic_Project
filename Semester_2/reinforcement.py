@@ -1,342 +1,158 @@
-import os
-import sys
-import optparse
 import random
-import traci
-import api
+import math
+import statistics as st
 
-EXPLORE_RATE = 0.2
-LEARNING_RATE = 0.5
-DISCOUNT_RATE = 0.9
-MAX_ACTION = 6
-num_episodes = 5
-
-
-class TrafficLight:
-    def __init__(self, state, lane):
-        self.state = state
+class Reinforcement():
+    def __init__(self, initState, lane, max_actions):
+        self.EXPLORE_RATE = 0.5
+        self.LEARNING_RATE = 0.1
+        self.DISCOUNT_RATE = 0.9
+        self.MAX_ACTIONS = max_actions
+        self.TAU = 0.1
+        self.DELTA = 0.5
         self.lane = lane
-        self.totalState = ["S1","S2","S3","S4","S5","S6","S7","S8"]
-        self.Nextlane = []
-        self.stateTransition = {
-            "S1":{
-                "Index": 0, 
-                "State": "S1",
-                "Lane": "InB_S_2_0",
-                # "ActionNumber": {"A1" : [3,4,5,6,7,8],"A2" : [2,3,4,6,7,8]},
-                "Action": {"A1" : ["S3","S4","S5","S6","S7","S8"],"A2" : ["S2","S3","S4","S6","S7","S8"]}     
-            },
-            "S2":{
-                "Index": 1, 
-                "State": "S2",
-                "Lane": "InB_S_2_1",
-                "ActionNumber": {"A1" : [3,4,5,6,7,8],"A2" : [1,3,4,5,7,8]},
-                "Action": {"A1" : ["S3","S4","S5","S6","S7","S8"],"A3" : ["S1","S3","S4","S5","S7","S8"]}
-            },
-            "S3":{
-                "Index": 2, 
-                "State": "S3",
-                "Lane": "InB_E_2_0",
-                "ActionNumber": {"A1" : [1,2,5,6,7,8],"A2" : [1,2,4,5,6,8]},
-                "Action": {"A1" : ["S1","S2","S5","S6","S7","S8"],"A2" : ["S1","S2","S4","S5","S6","S8"]}
-            },
-            "S4":{
-                "Index": 3, 
-                "State": "S4",
-                "Lane": "InB_E_2_1",
-                "ActionNumber": {"A1" : [1,2,5,6,7,8],"A2" : [1,2,3,5,6,7]},
-                "Action": {"A1" : ["S1","S2","S5","S6","S7","S8"],"A3" : ["S1","S2","S3","S5","S6","S7"]}
-            },
-            "S5":{
-                "Index": 4, 
-                "State": "S5",
-                "Lane": "InB_N_2_0",
-                "ActionNumber": {"A1" : [1,2,3,4,7,8],"A2" : [2,3,4,6,7,8]},
-                "Action": {"A1" : ["S1","S2","S3","S4","S7","S8"],"A2" : ["S2","S3","S4","S6","S7","S8"]}
-            },
-            "S6":{
-                "Index": 5, 
-                "State": "S6",
-                "Lane": "InB_N_2_1",
-                "ActionNumber": {"A1" : [1,2,3,4,7,8],"A2" :[1,3,4,5,7,8]},
-                "Action": {"A1" : ["S1","S2","S3","S4","S7","S8"],"A3" : ["S1","S3","S4","S5","S7","S8"]}
-            },
-            "S7":{
-                "Index": 6, 
-                "State": "S7",
-                "Lane": "InB_W_2_0",
-                "ActionNumber": {"A1" : [1,2,3,4,5,6],"A2" :[1,2,4,5,6,8]},
-                "Action": {"A1" : ["S1","S2","S3","S4","S5","S6"],"A2" : ["S1","S2","S4","S5","S6","S8"]}
-            },
-            "S8":{
-                "Index": 7, 
-                "State": "S8",
-                "Lane": "InB_W_2_0",
-                "ActionNumber": {"A1" : [1,2,3,4,5,6],"A2" :[1,2,3,5,6,7]},
-                "Action": {"A1" : ["S1","S2","S3","S4","S5","S6"],"A3" : ["S1","S2","S3","S5","S6","S7"]}
+        self.current_state = initState
+        self.stateSpace = {}
+        self.moveState = None
+        self.init_stateSpace(initState)
+
+    def init_stateSpace(self, initState):
+        for i in range(len(self.lane)):
+            temp = {
+                "q_value" : [0.0]*self.MAX_ACTIONS,
+                "sumQ" : 0.0,
+                "maxQ" : 0.0
             }
-        }
-        self.action = {
-            "S1":{
-                "LegalAction":["A1","A2"],
-                "Action":{"A1":["GGrrrrrr","yyrrrrrr"],"A2":["GrrrGrrr","yrrryrrr"]}
-            },
-            "S2":{
-                "LegalAction":["A1","A3"],
-                "Action":{"A1":["GGrrrrrr","yyrrrrrr"],"A3":["rGrrrGrr","ryrrryrr"]}
-            },
-            "S3":{
-                "LegalAction":["A1","A2"],
-                "Action":{"A1":["rrGGrrrr","rryyrrrr"],"A2":["rrGrrrGr","rryrrryr"]}
-            },
-            "S4":{
-                "LegalAction":["A1","A3"],
-                "Action":{"A1":["rrGGrrrr","rryyrrrr"],"A3":["rrrGrrrG","rrryrrry"]}
-            },
-            "S5":{
-                "LegalAction":["A1","A2"],
-                "Action":{"A1":["rrrrGGrr","rrrryyrr"],"A2":["GrrrGrrr","yrrryrrr"]}
-            },
-            "S6":{
-                "LegalAction":["A1","A3"],
-                "Action":{"A1":["rrrrGGrr","rrrryyrr"],"A3":["rGrrrGrr","ryrrryrr"]}
-            },
-            "S7":{
-                "LegalAction":["A1","A2"],
-                "Action":{"A1":["rrrrrrGG","rrrrrryy"],"A2":["rrGrrrGr","rryrrryr"]}
-            },
-            "S8":{
-                "LegalAction":["A1","A3"],
-                "Action":{"A1":["rrrrrrGG","rrrrrryy"],"A3":["rrrGrrrG","rrryrrry"]}
-            },
-        }
+            self.stateSpace[initState + i] = temp
+        print(self.stateSpace)
 
-        self.stateSpace = []
+    def get_nextState(self, q_length):
+        max_length = 0
+        max_lane = ''
+        for lane, length in q_length.items():
+            if length > max_length and lane not in self.moveState:
+                max_lane = lane
+                max_length = length        
+        return self.lane.index(max_lane) + 1
 
-        # self.reward = 0.0
-        # self.stateSpace = []
-        # self.complete = False
-        # self.action = 0
-
-
-    def StateTransition(self):
-        #วิธ๊ใช้ self.stateTransition ตามด้วย Array[] ของ State เรียกหา Dict ของ State นั้นๆ
-        #Search หาข้อมูลต่อด้วย key State Action 
-        #ตัวอย่างหา nextState ของ state8 action2 ==>> self.stateTransition[7]["Action"]["A2"]
-        print("state ->",self.stateTransition)
-
-    def takeAction(self,action):
-        #วิธ๊ใช้ self.action ตามด้วย Array[] ของ State - 1 เรียกหา Dict ของ action ณ State นั้นๆ
-        #Search หาข้อมูลต่อด้วย key Action 
-        #ตัวอย่างหา action A3 ของ state8 ==>> self.action[7]["Action"]["A3"]
-        # print("action ->",self.action[7]["Action"]["A3"])
-        # return self.action[self.state]["Action"][action]
-
-    def InitStateSpace(self,countState):
-        #สร้าง Table เก็บค่าของ Q-value เอาไว้
-        for i in range(0,countState):
-            self.stateSpace.append({"Q-Value":[0.0,0.0],"Q-Max":0.0,"Q-Sum":i})
-        print(self.stateSpace[5]["Q-Sum"])
-
-    def getTrafficState(self,currentState,action):
-        return self.stateTransition[currentState]["Action"][action]
-        
-    def randomAction(self):
-        index = random.randrange(0, 2)
-        print(self.action[self.state]["LegalAction"][index])
-        return self.action[self.state]["LegalAction"][index]
-
-    def changeState(self,NextLane):
-        for i in self.totalState:
-            if NextLane == self.stateTransition[i]["Lane"]:
-                self.state = self.stateTransition[i]["State"]
-        print("CurrentState => ",self.state)
-
-    def fineCandidateLane(self,action):
-        nextState = self.stateTransition["S1"]["Action"][action]
-        for i in nextState:
-            self.Nextlane.append(self.stateTransition[i]["Lane"])
-        print(nextState)
-        print(self.Nextlane)
-        return self.Nextlane
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def LegalAction(self, action, inputState):
-        State = inputState.copy()
-        
-        if action == 0:
-            State = [State[0]+15, State[1], State[2]]
-        elif action == 1:
-            State = [State[0]-15, State[1], State[2]]
-        elif action == 2:
-            State = [State[0], State[1]+15, State[2]]
-        elif action == 3:
-            State = [State[0], State[1]-15, State[2]]
-        elif action == 4:
-            State = [State[0], State[1], State[2]+15]
-        else:
-            State = [State[0], State[1], State[2]-15]
-
-        if (State[0] == 0 or State[1] == 0 or State[2] == 0):
-            return False
-        elif sum(State) > 105:
-            return False
-        else:
-            return True
-
+    def set_maxQ(self):
+        for i in range(len(self.stateSpace)):
+            maxQ = max(self.stateSpace[i+1]["q_value"])
+            self.stateSpace[i+1]["maxQ"] = maxQ
     
-    # def get_nextState(self, action, State):
-    #     state = self.takeAction(action, State)
-    #     return state
-
-    def get_state(self, inputState):
-        tempState = []
+    def set_sumQ(self):
         for i in range(len(self.stateSpace)):
-            if self.stateSpace[i]["state"] == inputState:
-                tempState = self.stateSpace[i]
-                break
-        return tempState
+            sumQ = sum(self.stateSpace[i+1]["q_value"])
+            self.stateSpace[i+1]["sumQ"] = sumQ    
 
-    
+    def get_action(self, policy):
+        action = None
+        if policy == "p_greedy":
+            action = self.p_greedy()
+        return action
 
-    # def InitStateSpace(self):
-    #     State = [15,15,15]
-    #     self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
-    #                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
-    #     while State != [75, 75, 75]:
-    #         State[2] += 15
-    #         if State[2] == 90:
-    #             State[2] = 15
-    #             State[1] += 15
-    #             if State[1] == 90:
-    #                 State[1] = 15
-    #                 State[0] += 15
-    #         if sum(State) <= 105:
-    #             self.stateSpace.append({"state": [State[0], State[1], State[2]], "Q_value": [
-    #                                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Q_MAX": 0.0, "Q_SUM": 0.0})
-    #     print(self.stateSpace)
-    #     # return print(self.stateSpace)
-
-    def Find_Q_Max(self):
-        for i in range(len(self.stateSpace)):
-            Q_MAX = max(self.stateSpace[i]['Q_value'])
-            self.stateSpace[i]["Q_MAX"] = Q_MAX
-
-    def Find_Q_Sum(self):
-        for i in range(len(self.stateSpace)):
-            tempState = self.stateSpace[i]['state'].copy()
-            Q_SUM = 0.0
-            for j in range(MAX_ACTION):
-                if self.LegalAction(j, tempState):
-                    # print("state : ", tempState,"Q_value : ", self.stateSpace[i]['Q_value'][j])
-                    Q_SUM += self.stateSpace[i]['Q_value'][j]
-                    self.stateSpace[i]['Q_SUM'] = Q_SUM
-        # return print(self.stateSpace)
-
-    def Find_avg_Q(self):
-        count_Q = 0
-        Q_sum_all = 0
-        for item in self.stateSpace:
-            if item['Q_SUM'] != 0:
-                Q_sum_all += item['Q_SUM']
-            count_Q += 1
-        avg_Q = Q_sum_all / count_Q
-        if count_Q == 0:
-            return 0
-        return avg_Q         
-
-
-    def Greedy_Al(self):
-        self.Find_Q_Max()
-        State = self.get_state(self.state)
-        for i in range(MAX_ACTION):
-            if State["Q_value"][i] == State["Q_MAX"]:
-                self.action = i
-        return self.action
-
-    def E_Greedy_Al(self):
-        randomNumber = random.uniform(0, 1)
-        State = self.get_state(self.state)
-        if ((EXPLORE_RATE > randomNumber) or (State["Q_SUM"] == 0.0)):
-            self.action = self.randomAction()
-            return self.action
+    def p_greedy(self):
+        action = 0
+        print('current state' ,end=' ')
+        print(self.current_state ,end=' : ')
+        print(self.stateSpace[self.current_state])
+        current_state = self.stateSpace[self.current_state]
+        if ((self.EXPLORE_RATE > random.uniform(0, 1)) or (current_state["sumQ"] == 0.0)):
+            #explore
+            action = self.random_action(self.current_state)
         else:
-            for i in range(MAX_ACTION):
-                if State["Q_value"][i] == State["Q_MAX"]:
-                    self.action = i
-            return self.action
-
-    def P_Greedy_Al(self):
-        randomNumber = random.uniform(0, 1)
-        randomProb = random.uniform(0, 1)
-        presentState = self.get_state(self.state)
-        if ((EXPLORE_RATE > randomNumber) or (presentState["Q_SUM"] == 0.0)):
-            # print("EXPLORE", EXPLORE_RATE, randomNumber)
-            self.action = self.randomAction()
-            return self.action
-        else:
-            action = self.randomAction()
-            for i in range(MAX_ACTION):
-                if self.LegalAction(action, self.state):
-                    
-                    prob = (presentState["Q_value"]
-                            [action] / presentState["Q_SUM"])
-                    if prob > randomProb:
-                        self.action = action
-                        return self.action
-                action = action + 1
-                if action == MAX_ACTION:
+            #exploit
+            action = self.random_action(self.current_state)
+            for count in range(self.MAX_ACTIONS):
+                if self.action_verify(self.current_state, action):
+                    prob = (current_state["q_value"][action-1]) / current_state["sumQ"]
+                    if prob > random.uniform(0, 1):
+                        return action
+                action += 1
+                if action == self.MAX_ACTIONS:
                     action = 0
-            if (i == MAX_ACTION-1):
-                self.action = self.randomAction()
-                return self.action
-               
-    def updateFuction_fixed(self):
-        state = [30,30,30]
-        api.get_waiting_time(self.lane,state)
+            if count == self.MAX_ACTIONS:
+                action = self.random_action(self.current_state)
+        return action
+    
+    def random_action(self, state): #complete
+        action = random.randint(1,3)
+        while not(self.action_verify(state, action)):
+            action = random.randint(1,3)       
+        return action
 
-    def updateFuction(self, waiting_time):
-        newState = self.takeAction(self.action, self.state)
-        presentState = self.get_state(self.state)
-        nextState = self.get_state(newState)
-        #continue simulate
-        # api.set_Trafficlight(newState)
-        rewardResult = waiting_time
-        if rewardResult != 0:
-            self.reward = (1/rewardResult) * 100
-        else: self.reward = 0
-        
-        self.Find_Q_Max()
-        presentState["Q_value"][self.action] += (LEARNING_RATE * (
-            self.reward+(DISCOUNT_RATE*nextState["Q_MAX"])-presentState["Q_value"][self.action]))
-        for i in range(len(self.stateSpace)):
-            if self.stateSpace[i]["state"] == presentState['state']:
-                self.stateSpace[i]["Q_value"][self.action] = presentState["Q_value"][self.action]
-        self.Find_Q_Sum()
-        api.csv_data_stateSpace(self.stateSpace)
+    def action_verify(self, state, action): #complete
+        if state % 2 == 1 and action in [1, 3]:
+            return True
+        elif state % 2 == 0 and action in [1, 2]:
+            return True
+        return False
+    
+    def take_action(self, action):
+        q_value = self.stateSpace[self.current_state]["q_value"]
+        green_state = [self.current_state] #which state can go?
+        phase = [[''],[''],0] #[0]-green , [1]-yellow
 
-    def updateState(self):
-        oldState = self.state.copy()
-        self.state = self.takeAction(self.action, self.state)
-        print("Present_STATE :",oldState,"Next_STATE :",self.state,"ACTION :",self.action,"Reward :",self.reward)
-        return self.state
+        #get phase
+        if action == 1:
+            green_state.append(self.current_state + ((self.current_state % 2) * 2) - 1)
+        else:
+            green_state.append(((self.current_state + 3) % 8) + 1)
         
+        g_phase = ''
+        y_phase = ''
+        for i in [8,7,6,5,4,3,2,1]:
+            if i in green_state:
+                g_phase += 'G' * (2 - (i % 2))
+                y_phase += 'y' * (2 - (i % 2))
+            else:
+                g_phase += 'r' * (2 - (i % 2))
+                y_phase += 'r' * (2 - (i % 2))
+        phase[0] = g_phase
+        phase[1] = y_phase
+        if action == q_value.index(max(q_value)):
+            phase[2] = 90
+        elif action == q_value.index(min(q_value)):
+            phase[2] = 30
+        else:
+            phase[2] = 60    
+
+        self.moveState = green_state
+        return phase           
+
+    def update(self, nextState, action, data):
+        reward = self.get_reward(data)
+        print('reward : ' ,end='')
+        print(reward)
+        self.set_maxQ()
+        state = self.stateSpace[self.current_state]
+        next_state = self.stateSpace[nextState]
+
+        state["q_value"][action - 1] += round((self.LEARNING_RATE * (reward + (self.DISCOUNT_RATE * next_state["maxQ"])) - state["q_value"][action - 1]), 5)
+
+        self.set_sumQ()
+        self.current_state = nextState
+
+    def get_reward(self, data):
+        expo = -0.003930312 * (data["arrival"] - 750)
+        alpha = 1 / (1 + math.exp(expo))
+        tp = sum(data["f_rate"]) / len(data["f_rate"])
+        func = (alpha * st.stdev(data["q_length"])) + ((1 - alpha) * (math.pow(self.TAU, tp)))
+        reward = math.log(func, self.DELTA)
+
+        return reward
+
+
+
+if __name__ == "__main__":
+    agent = Reinforcement(1, ['gneE8', 'gneE10', 'gneE12', 'gneE14'], 3)
+    q_length = {
+        "gneE8" : 2.4,
+        "gneE10" : 1.0,
+        "gneE12" : 1.4,
+        "gneE14" : 3.4
+    }
+    moved_lane = ['gneE10', 'gneE12']
+    x = agent.take_action(1)
+    print(x)
+    

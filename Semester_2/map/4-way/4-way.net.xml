@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 02/11/21 00:55:30 by Eclipse SUMO netedit Version 1.6.0
+<!-- generated on 02/11/21 23:34:48 by Eclipse SUMO netedit Version 1.6.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
@@ -175,7 +175,14 @@
     </edge>
 
     <tlLogic id="Center_TFL" type="static" programID="0" offset="0">
-        <phase duration="1"  state="rrrrrrrrrrrr"/>
+        <phase duration="45" state="rrrrrrrrrggg"/>
+        <phase duration="3"  state="rrrrrrrrryyy"/>
+        <phase duration="45" state="rrrrrrgggrrr"/>
+        <phase duration="3"  state="rrrrrryyyrrr"/>
+        <phase duration="45" state="rrrgggrrrrrr"/>
+        <phase duration="3"  state="rrryyyrrrrrr"/>
+        <phase duration="45" state="gggrrrrrrrrr"/>
+        <phase duration="3"  state="yyyrrrrrrrrr"/>
     </tlLogic>
 
     <junction id="C_TFL" type="traffic_light" x="0.00" y="0.00" incLanes="InB_S_2_0 InB_S_2_1 InB_E_2_0 InB_E_2_1 InB_N_2_0 InB_N_2_1 InB_W_2_0 InB_W_2_1" intLanes=":C_TFL_0_0 :C_TFL_1_0 :C_TFL_2_0 :C_TFL_3_0 :C_TFL_4_0 :C_TFL_5_0 :C_TFL_6_0 :C_TFL_7_0 :C_TFL_8_0 :C_TFL_9_0 :C_TFL_10_0 :C_TFL_11_0" shape="-6.40,-10.40 6.40,-10.40 6.84,-8.18 7.40,-7.40 8.18,-6.84 9.18,-6.51 10.40,-6.40 10.40,6.40 8.18,6.84 7.40,7.40 6.84,8.18 6.51,9.18 6.40,10.40 -6.40,10.40 -6.84,8.18 -7.40,7.40 -8.18,6.84 -9.18,6.51 -10.40,6.40 -10.40,-6.40 -8.18,-6.84 -7.40,-7.40 -6.84,-8.18 -6.51,-9.18">

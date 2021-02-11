@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<<<<<<< HEAD
-<!-- generated on 02/12/21 10:48:23 by Eclipse SUMO GUI Version 1.6.0
-=======
 <!-- generated on 02/11/21 22:47:43 by Eclipse SUMO GUI Version 1.6.0
->>>>>>> Scaling map to 1 km
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -23,11 +19,7 @@
     </processing>
 
     <traci_server>
-<<<<<<< HEAD
-        <remote-port value="53146"/>
-=======
         <remote-port value="51956"/>
->>>>>>> Scaling map to 1 km
     </traci_server>
 
     <gui_only>

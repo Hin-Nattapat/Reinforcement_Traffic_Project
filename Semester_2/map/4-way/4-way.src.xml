@@ -1,20 +1,20 @@
 <edgedata>
     <interval begin="0" end="10">
-        <edge id="gneE9" value="100.00"/>
-        <edge id="gneE7" value="100.00"/>
-        <edge id="gneE13" value="100.00"/>
-        <edge id="gneE11" value="100.00"/>
-        <edge id="gneE8" value="0.00"/>
-        <edge id="gneE14" value="0.00"/>
-        <edge id="gneE12" value="0.00"/>
-        <edge id="gneE10" value="0.00"/>
-        <edge id="-gneE8" value="0.00"/>
-        <edge id="-gneE14" value="0.00"/>
-        <edge id="-gneE12" value="0.00"/>
-        <edge id="-gneE10" value="0.00"/>
-        <edge id="-gneE9" value="0.00"/>
-        <edge id="-gneE7" value="0.00"/>
-        <edge id="-gneE13" value="0.00"/>
-        <edge id="-gneE11" value="0.00"/>
+        <edge id="OutB_W_2" value="0.00"/>
+        <edge id="OutB_S_2" value="0.00"/>
+        <edge id="OutB_N_2" value="0.00"/>
+        <edge id="OutB_E_2" value="0.00"/>
+        <edge id="InB_W_2" value="0.00"/>
+        <edge id="InB_W_1" value="100.00"/>
+        <edge id="InB_S_2" value="0.00"/>
+        <edge id="InB_S_1" value="100.00"/>
+        <edge id="InB_N_2" value="0.00"/>
+        <edge id="InB_N_1" value="100.00"/>
+        <edge id="InB_E_2" value="0.00"/>
+        <edge id="InB_E_1" value="100.00"/>
+        <edge id="OutB_W_1" value="0.00"/>
+        <edge id="OutB_S_1" value="0.00"/>
+        <edge id="OutB_N_1" value="0.00"/>
+        <edge id="OutB_E_1" value="0.00"/>
     </interval>
 </edgedata>

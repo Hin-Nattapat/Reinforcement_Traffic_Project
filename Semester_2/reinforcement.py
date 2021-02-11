@@ -30,7 +30,7 @@ class Reinforcement():
     def get_nextState(self, q_length):
         max_length = 0
         max_lane = ''
-        for lane, length in q_length.items():
+        for self.lane, length in q_length.items():
             if length > max_length and lane not in self.moveState:
                 max_lane = lane
                 max_length = length

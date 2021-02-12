@@ -1,5 +1,5 @@
 <edgedata>
-    <interval begin="0" end="1000">
+    <interval begin="0" end="10">
         <edge id="OutB_WS_2" value="0.00"/>
         <edge id="OutB_WN_2" value="0.00"/>
         <edge id="OutB_SW_2" value="0.00"/>
@@ -8,14 +8,22 @@
         <edge id="OutB_NE_2" value="0.00"/>
         <edge id="OutB_ES_2" value="0.00"/>
         <edge id="OutB_EN_2" value="0.00"/>
-        <edge id="Mid_W_2" value="0.00"/>
-        <edge id="Mid_W_1" value="0.00"/>
-        <edge id="Mid_S_2" value="0.00"/>
-        <edge id="Mid_S_1" value="0.00"/>
-        <edge id="Mid_N_2" value="0.00"/>
-        <edge id="Mid_N_1" value="0.00"/>
-        <edge id="Mid_E_2" value="0.00"/>
-        <edge id="Mid_E_1" value="0.00"/>
+        <edge id="Mid_WS_2" value="0.00"/>
+        <edge id="Mid_WS_1" value="0.00"/>
+        <edge id="Mid_WN_2" value="0.00"/>
+        <edge id="Mid_WN_1" value="0.00"/>
+        <edge id="Mid_SW_2" value="0.00"/>
+        <edge id="Mid_SW_1" value="0.00"/>
+        <edge id="Mid_SE_2" value="0.00"/>
+        <edge id="Mid_SE_1" value="0.00"/>
+        <edge id="Mid_NW_2" value="0.00"/>
+        <edge id="Mid_NW_1" value="0.00"/>
+        <edge id="Mid_NE_2" value="0.00"/>
+        <edge id="Mid_NE_1" value="0.00"/>
+        <edge id="Mid_ES_2" value="0.00"/>
+        <edge id="Mid_ES_1" value="0.00"/>
+        <edge id="Mid_EN_2" value="0.00"/>
+        <edge id="Mid_EN_1" value="0.00"/>
         <edge id="InB_WS_2" value="0.00"/>
         <edge id="InB_WS_1" value="100.00"/>
         <edge id="InB_WN_2" value="0.00"/>

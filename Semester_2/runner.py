@@ -20,15 +20,34 @@ def get_options():
     options, args = optParser.parse_args()
     return options
 
+def runRL(api, agent, tls):
+    traci.simulationStep()
+    while traci.simulation.getMinExpectedNumber() > 0:
+        action = agent.get_action('p_greedy')
+        phase = agent.take_action(action)
+        tls.set_logic(phase)
+        result = api.simulate(phase[2] + 3)
+        lastQueue = api.get_lastLength(state)
+        next_state = agent.get_nextState(lastQueue)
+        print(next_state)
+        agent.update(next_state, action, result)
+
+def run_normal(api, tls):
+    i = 0
+    g_phase = ["rrrrrrrrrGGG", "rrrGGGrrrrrr", "rrrrrrGGGrrr", "GGGrrrrrrrrr"]
+    y_phase = ["rrrrrrrrryyy", "rrryyyrrrrrr", "rrrrrryyyrrr", "yyyrrrrrrrrr"]
+    traci.simulationStep()
+    while traci.simulation.getMinExpectedNumber() > 0:
+        phase = [g_phase[i], y_phase[i], 45]
+        tls.set_logic(phase)
+        result = api.simulate(48)
+        print(result)
+        i = (i + 1) % 4
+
 if __name__ == "__main__":
     state = ['gneE8_1', 'gneE8_0', 'gneE10_1', 'gneE10_0', 'gneE12_1', 'gneE12_0', 'gneE14_1', 'gneE14_0']
     edge = ['gneE8', 'gneE10', 'gneE12', 'gneE14']
     options = get_options()
-
-    #initial
-    api = sim_api.Simulation(edge)
-    agent = RL.Reinforcement(1, state, 3)
-    tls = sim_api.TLScontrol('gneJ10')
 
     if options.nogui:
         sumoBinary = checkBinary('sumo')
@@ -38,22 +57,15 @@ if __name__ == "__main__":
     path_4Cross = os.path.abspath('Semester_2\\map\\4-way\\4-way.sumocfg')
     # path_16Cross = os.path.abspath('Semester_2\\map\\16-way\\16-way.sumocfg')
     traci.start([sumoBinary, "-c", path_4Cross])
-    
-    traci.simulationStep()
-    while traci.simulation.getMinExpectedNumber() > 0:
-        action = agent.get_action('p_greedy')
-        phase = agent.take_action(action)
-        print('action : ' ,end='')
-        print(action ,end=' -- ')
-        print('duration : ', end='')
-        print(phase[2] + 3)
-        tls.set_logic(phase)
-        result = api.simulate(phase[2] + 3)
-        lastQueue = api.get_lastLength(state)
-        next_state = agent.get_nextState(lastQueue)
-        agent.update(next_state, action, result)
-        # result = api.simulate(20)
-        # length = api.get_lastLength(state)
-        
+
+    #initial
+    api = sim_api.Simulation(edge)
+    agent = RL.Reinforcement(state, 3, 0)
+    tls = sim_api.TLScontrol('gneJ10')
+
+    #runRL(api, agent, tls)
+    run_normal(api, tls)
+    #run_dynTime(api, agent, tls)
+            
     traci.close()
     sys.stdout.flush()

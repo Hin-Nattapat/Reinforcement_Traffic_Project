@@ -61,7 +61,7 @@ if __name__ == "__main__":
     #initial
     api = sim_api.Simulation(edge)
     agent = RL.Reinforcement(state, 3, 0)
-    tls = sim_api.TLScontrol('gneJ10')
+    tls = sim_api.TLScontrol('Center_TFL')
 
     #runRL(api, agent, tls)
     run_normal(api, tls)

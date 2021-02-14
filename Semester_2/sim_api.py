@@ -5,7 +5,7 @@ class Simulation():
         self.edge = edge
         self.oldId = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]]
         self.carPass = [0, 0, 0, 0]
-        self.length = 900
+        self.length = 2400
         self.tls_id = ''
 
     def simulate(self, duration):

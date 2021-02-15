@@ -45,8 +45,8 @@ def run_normal(api, tls):
         i = (i + 1) % 4
 
 if __name__ == "__main__":
-    state = ['gneE8_1', 'gneE8_0', 'gneE10_1', 'gneE10_0', 'gneE12_1', 'gneE12_0', 'gneE14_1', 'gneE14_0']
-    edge = ['gneE8', 'gneE10', 'gneE12', 'gneE14']
+    state = ['InB_W_2_0', 'InB_W_2_1', 'InB_N_2_0', 'InB_N_2_1', 'InB_E_2_0', 'InB_E_2_1', 'InB_S_2_0', 'InB_S_2_1']
+    edge = ['InB_W_2', 'InB_N_2', 'InB_E_2', 'InB_S_2']
     options = get_options()
 
     if options.nogui:
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     #initial
     api = sim_api.Simulation(edge)
     agent = RL.Reinforcement(state, 3, 0)
-    tls = sim_api.TLScontrol('gneJ10')
+    tls = sim_api.TLScontrol('Center_TFL')
 
     #runRL(api, agent, tls)
     run_normal(api, tls)

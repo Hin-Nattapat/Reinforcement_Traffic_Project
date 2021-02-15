@@ -5,7 +5,7 @@ class Simulation():
         self.edge = edge
         self.oldId = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]]
         self.carPass = [0, 0, 0, 0]
-        self.length = 489.6
+        self.length = 2400
         self.tls_id = ''
 
     def simulate(self, duration):
@@ -38,6 +38,7 @@ class Simulation():
             result["q_length"][i] = round((result["q_length"][i] * 6 / duration), 2) 
         result["arrival"] = round((result["arrival"] * 3600 / duration), 2)
 
+        print("Result",result)
         return result
 
     def get_avg_speed(self, e_id):

@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     #initial
     api = sim_api.Simulation(edge)
-    agent = RL.Reinforcement(state, 3, 0)
+    agent = RL.Reinforcement(state, 3)
     tls = sim_api.TLScontrol('Center_TFL')
 
     #runRL(api, agent, tls)

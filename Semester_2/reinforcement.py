@@ -3,7 +3,7 @@ import math
 import statistics as st
 
 class Reinforcement():
-    def __init__(self, lane, max_actions, mode):
+    def __init__(self, lane, max_actions):
         self.EXPLORE_RATE = 0.5
         self.LEARNING_RATE = 0.1
         self.DISCOUNT_RATE = 0.9
@@ -14,7 +14,6 @@ class Reinforcement():
         self.current_state = 0
         self.stateSpace = {}
         self.moveState = [-1, -1]
-        self.mode = mode
         self.init_stateSpace()
 
     def init_stateSpace(self):
@@ -89,8 +88,6 @@ class Reinforcement():
         return False
     
     def take_action(self, action):
-        #mode --> 0 = fixed time, 1 = sort time
-        q_value = self.stateSpace[self.current_state]["q_value"]
         green_state = [self.current_state] #which state can go?
         phase = [[''],[''],0]
 
@@ -111,34 +108,16 @@ class Reinforcement():
 
         phase[0] = g_phase
         phase[1] = y_phase
-
-        if self.mode == 0:
-            phase[2] = 60
-        elif self.mode == 1:
-            phase[2] = self.get_duration(action, q_value)    
+        phase[2] = 60   
 
         for i in range(len(green_state)):
             self.moveState[i] = self.lane[green_state[i]]
         
         return phase 
 
-    def get_duration(self, action, q_value):
-        duration = 0
-        if action == q_value.index(max(q_value)):
-            duration = 90
-        elif action == q_value.index(min(q_value)):
-            duration = 30
-        else:
-            duration = 60
-
-        return duration
-
     def update(self, nextState, action, data):
         reward = 0
-        if self.mode == 0:
-            reward = self.get_reward(data)
-        elif self.mode == 1:
-            reward = self.get_reward_2(data)
+        reward = self.get_reward(data)
         self.set_maxQ()
         state = self.stateSpace[self.current_state]
         next_state = self.stateSpace[nextState]
@@ -147,21 +126,12 @@ class Reinforcement():
 
         self.set_sumQ()
         self.current_state = nextState
-        print(self.stateSpace)
 
     def get_reward(self, data):
-        expo = -0.003930312 * (data["arrival"] - 750)
+        arrival = sum(data["arrival"])
+        expo = -0.003930312 * (arrival - 750)
         alpha = 1 / (1 + math.exp(expo))
-        tp = sum(data["f_rate"]) / len(data["f_rate"])
-        func = (alpha * st.stdev(data["q_length"])) + ((1 - alpha) * (math.pow(self.TAU, tp)))
-        reward = math.log(func, self.DELTA)
-
-        return reward
-    
-    def get_reward_2(self, data):
-        expo = -0.003930312 * (data["arrival"] - 750)
-        alpha = 1 / (1 + math.exp(expo))
-        tp = sum(data["f_rate"]) / len(data["f_rate"])
+        tp = sum(data["f_rate"])
         func = (alpha * st.stdev(data["q_length"])) + ((1 - alpha) * (math.pow(self.TAU, tp)))
         reward = math.log(func, self.DELTA)
 

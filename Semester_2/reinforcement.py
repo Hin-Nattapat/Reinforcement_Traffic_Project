@@ -10,6 +10,11 @@ class Reinforcement():
         self.MAX_ACTIONS = max_actions
         self.TAU = 0.8
         self.DELTA = 0.5
+        #####################################
+        self.AVG_SPD = 0
+        self.DENSITY = 0
+        self.MAX_WAITING_TIME = 0
+        #####################################
         self.lane = lane
         self.current_state = 0
         self.stateSpace = {}
@@ -134,6 +139,20 @@ class Reinforcement():
         self.set_sumQ()
         self.current_state = nextState
 
+    def find_flowrate_expo(self,flowrate):
+        # ต้องหา avg_spd,density นำข้อมูลมาจากกราฟของการทดลองแรก
+        Saturate_Flowrate = self.AVG_SPD * self.DENSITY
+        A3 = Saturate_Flowrate/2
+        A2 = 2.944/(0.95-A3)
+        flowrateExpo = A2*(flowrate-A3)
+        return flowrateExpo
+
+    def find_waitingtime_expo(self,waitingtime):
+        A3 = Max_Waiting_Time/2
+        A2 = 2.944/(0.95-A3)
+        waitingtimeExpo = A2*(waitingtime-A3)
+        return waitingtimeExpo
+
     def get_reward(self, data):
         arrival = sum(data[4]) / len(data[4])
         expo = -0.003930312 * (arrival - 750)
@@ -143,7 +162,14 @@ class Reinforcement():
         reward = math.log(func, self.DELTA)
 
         return reward
-
+    
+    def get_reward_2(self, data):
+        flowrateExpo = find_flowrate_expo(data["f_rate"])
+        waitingtimeExpo = find_waitingtime_expo(data["w_time"])
+        FlowRateScale = 1/(1+math.exp(flowrateExpo))
+        WaitingTimeScale = 1/(1+math.exp(waitingtimeExpo))
+        reward = FlowRateScale/(1+WaitingTimeScale)
+        return reward
 
        
     

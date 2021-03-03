@@ -5,7 +5,7 @@ from sumolib import checkBinary
 import traci
 import random
 import sim_api
-import reinforcement as RL 
+import reinforcement as RL
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -20,19 +20,16 @@ def get_options():
     options, args = optParser.parse_args()
     return options
 
-def runRL(api, agent, tls):
-    traci.simulationStep()
-    while traci.simulation.getMinExpectedNumber() > 0:
-        action = agent.get_action('p_greedy')
-        phase = agent.take_action(action)
-        tls.set_logic(phase)
-        result = api.simulate(phase[2] + 3)
-        lastQueue = api.get_lastLength(state)
-        next_state = agent.get_nextState(lastQueue)
-        print(next_state)
-        agent.update(next_state, action, result)
+def showResult(result, nextState):
+    print('\nflowRate    :' ,result[0])
+    print('speed       :' ,result[1])
+    print('density     :' ,result[2])
+    print('waitingTime :' ,result[3])
+    print('arrivalRate :' ,result[4])
+    print('\nnextstate :' ,nextState)
+    print('-------------------------------------------------------------')
 
-def run_normal(api, tls):
+def runNormal(api, tls):
     i = 0
     g_phase = ["rrrrrrrrrGGG", "rrrGGGrrrrrr", "rrrrrrGGGrrr", "GGGrrrrrrrrr"]
     y_phase = ["rrrrrrrrryyy", "rrryyyrrrrrr", "rrrrrryyyrrr", "yyyrrrrrrrrr"]
@@ -41,31 +38,50 @@ def run_normal(api, tls):
         phase = [g_phase[i], y_phase[i], 45]
         tls.set_logic(phase)
         result = api.simulate(48)
-        print(result)
+        showResult(result ,0)
         i = (i + 1) % 4
 
+def runRL(api, tls, agent):
+    traci.simulationStep()
+    while traci.simulation.getMinExpectedNumber() > 0:
+        action = agent.get_action('p_greedy')
+        phase = agent.take_action(action)
+        print('action :' ,action ,end=' | ')
+        print('duration :',phase[2]+3)
+        tls.set_logic(phase)
+        try:    
+            result = api.simulate(phase[2] + 3)
+        except:
+            print('closed')
+            return 0
+        
+        lastQueue = api.get_lastLength(state)
+        nextState = agent.get_nextState(lastQueue)
+        showResult(result, nextState)
+        if nextState != None:
+            agent.update(nextState, action, result)
+    print('bye')
+    agent.printStateSpace()
+
 if __name__ == "__main__":
-    state = ['InB_W_2_0', 'InB_W_2_1', 'InB_N_2_0', 'InB_N_2_1', 'InB_E_2_0', 'InB_E_2_1', 'InB_S_2_0', 'InB_S_2_1']
-    edge = ['InB_W_2', 'InB_N_2', 'InB_E_2', 'InB_S_2']
+    state = ['gneE8_1', 'gneE8_0', 'gneE10_1', 'gneE10_0', 'gneE12_1', 'gneE12_0', 'gneE14_1', 'gneE14_0']
+    edge = ['gneE8', 'gneE10', 'gneE12', 'gneE14']
     options = get_options()
+
+    #initial
+    api = sim_api.Simulation(edge, state)
+    agent = RL.Reinforcement(state, 3)
+    tls = sim_api.TLScontrol('gneJ10')
 
     if options.nogui:
         sumoBinary = checkBinary('sumo')
     else:
         sumoBinary = checkBinary('sumo-gui')
 
-    path_4Cross = os.path.abspath('Semester_2\\map\\4-way\\4-way.sumocfg')
-    # path_16Cross = os.path.abspath('Semester_2\\map\\16-way\\16-way.sumocfg')
-    traci.start([sumoBinary, "-c", path_4Cross])
-
-    #initial
-    api = sim_api.Simulation(edge)
-    agent = RL.Reinforcement(state, 3)
-    tls = sim_api.TLScontrol('Center_TFL')
-
-    #runRL(api, agent, tls)
-    run_normal(api, tls)
-    #run_dynTime(api, agent, tls)
-            
-    traci.close()
-    sys.stdout.flush()
+    traci.start([sumoBinary, "-c", "map/4-way/4-way.sumocfg"])
+    
+    #runNormal(api, tls)
+    runRL(api, tls, agent)
+         
+traci.close()
+sys.stdout.flush() 

@@ -1,107 +1,96 @@
 import traci
 
 class Simulation():
-    def __init__(self, edge):
+    def __init__(self, edge, laneId):
         self.edge = edge
-        self.oldId = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]]
+        self.laneId = laneId
+        self.passId = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]]
         self.arrId = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]]
-        self.carPass = [0, 0, 0, 0]
-        self.arrPass = [0, 0, 0, 0]
-        self.length = 2400
+        self.carOut = 0
+        self.carIn = 0
+        self.length = 489.6
         self.tls_id = ''
+        self.dur = 3
 
     def simulate(self, duration):
-        result = {
-            "speed" : [0.0, 0.0, 0.0, 0.0],
-            "f_rate" : [0.0, 0.0, 0.0, 0.0],
-            "dens" : [0.0, 0.0, 0.0, 0.0],
-            # "w_time" : [0.0, 0.0, 0.0, 0.0],
-            "q_length" : [0.0, 0.0, 0.0, 0.0],
-            "arrival" : [0.0, 0.0, 0.0, 0.0]
-        }
+        result = [[],[],[],[],[],[]] #flowrate,speed,density,waiting,arrivalRate,queueLength
         time = 0
-
         while time < duration:
             traci.simulationStep()
-            for i in range(len(self.edge)):
-                result["speed"][i] += self.get_avg_speed(self.edge[i])
-                result["f_rate"][i] += self.get_flow_rate(self.edge[i])
-                result["dens"][i] += self.get_density(self.edge[i])
-            #     result["w_time"][i] += self.get_waiting_time(self.edge[i])
-            #     result["q_length"][i] += self.get_length(self.edge[i])
-                result["arrival"][i] += self.get_arrival(self.edge[i])
+            
+            self.carOut += self.getCarOut()
+            self.carIn += self.getCarIn()
+
+            if (time+1) % self.dur == 0:
+                flowRate = round((self.carOut * 3600 / traci.simulation.getTime()), 2)
+                arrRate = round((self.carIn * 3600 / traci.simulation.getTime()), 2)
+                result[0].append(flowRate)
+                result[1].append(self.get_avg_speed())
+                result[2].append(self.get_density())
+                result[3].append(self.getWaitingTime())
+                result[4].append(arrRate)
+            result[5] = self.get_length(self.laneId)    
             time += 1
-        
-        for i in range(len(self.edge)):
-            result["q_length"][i] += self.get_length(self.edge[i])
 
-        for i in range(len(self.edge)):
-            result["speed"][i] = round((result["speed"][i] / duration * 3.6), 2)
-            result["f_rate"][i] = round((result["f_rate"][i] * 3600 / duration), 2)
-            result["dens"][i] = round((result["dens"][i] * 1000 / self.length / duration), 2)
-        #     result["w_time"][i] = round((result["w_time"][i] / duration), 2)
-            result["q_length"][i] = round((result["q_length"][i] * 6), 2) 
-            result["arrival"][i] = round((result["arrival"][i] * 3600 / duration), 2)
-
-        self.carPass = [0, 0, 0, 0]
-        self.arrPass = [0, 0, 0, 0]
         return result
 
-    def get_avg_speed(self, e_id):
-        #return average speed of edge in m/s
+    def get_avg_speed(self): #complete
         avg_spd = 0
-        if traci.edge.getLastStepVehicleNumber(e_id) > 0:
-            avg_spd = traci.edge.getLastStepMeanSpeed(e_id)
-        return avg_spd
+        for e_id in self.edge:
+            if traci.edge.getLastStepVehicleNumber(e_id) > 0:
+                avg_spd += traci.edge.getLastStepMeanSpeed(e_id)
+        return round(((avg_spd / 4) * 3.6), 2)
 
-    def get_flow_rate(self, e_id):
-        e_index = self.edge.index(e_id)
-        for lane in range(0, 2):
-            num = traci.inductionloop.getLastStepVehicleNumber('e1_' + e_id + '_' + str(lane))
-            curID = traci.inductionloop.getLastStepVehicleIDs('e1_' + e_id + '_' + str(lane))
-            if num > 0 and curID != self.oldId[e_index][lane]:
-                self.oldId[e_index][lane] = curID
-                self.carPass[e_index] += 1
-        flow_rate = self.carPass[e_index] / traci.simulation.getTime()        
+    def getCarOut(self):
+        numCar = 0
+        for eId in self.edge:
+            eIndex = self.edge.index(eId)
+            for lane in range(0, 2):
+                num = traci.inductionloop.getLastStepVehicleNumber('e1_' + eId + '_' + str(lane))
+                curId = traci.inductionloop.getLastStepVehicleIDs('e1_' + eId + '_' + str(lane))
+                if num > 0 and curId[0] != self.passId[eIndex][lane]:
+                    self.passId[eIndex][lane] = curId[0]
+                    numCar += 1
         
-        return flow_rate
+        return numCar
 
-    def get_density(self, e_id):
-        return traci.edge.getLastStepVehicleNumber(e_id)
+    def getCarIn(self):
+        numCar = 0
+        for eId in self.edge:
+            eIndex = self.edge.index(eId)
+            for lane in range(0, 2):
+                num = traci.inductionloop.getLastStepVehicleNumber('a1_' + eId + '_' + str(lane))
+                curId = traci.inductionloop.getLastStepVehicleIDs('a1_' + eId + '_' + str(lane))
+                if num > 0 and curId[0] != self.arrId[eIndex][lane]:
+                    self.arrId[eIndex][lane] = curId[0]
+                    numCar += 1
+        return numCar            
 
-    def get_waiting_time(self, e_id):
-        total_time = 0
-        vehs = traci.edge.getLastStepVehicleIDs(e_id)
-        num_wait = 0
-        if len(vehs) > 0:
-            for vid in vehs:
-                wait = traci.vehicle.getAccumulatedWaitingTime(vid)
-                if wait > 0:
-                    total_time += wait
-                    num_wait += 1
-            if num_wait > 0:
-                return total_time/num_wait
-                
+    def get_density(self): #complete
+        density = 0
+        for e_id in self.edge:
+            density += traci.edge.getLastStepVehicleNumber(e_id)
+        return round(((density / 4) * 1000 / self.length), 2)
+
+    def getWaitingTime(self): #complete
+        wTime = []
+        for eId in self.edge:
+            vehs = traci.edge.getLastStepVehicleIDs(eId)
+            if len(vehs) > 0:
+                for vId in vehs:
+                    wait = traci.vehicle.getAccumulatedWaitingTime(vId)
+                    if wait > 0:
+                        wTime.append(wait)
+        if len(wTime) > 0:
+            return round((sum(wTime) / len(wTime)), 2)
         return 0
     
-    def get_length(self, e_id): #queue length in m
-        lane_0 = traci.lane.getLastStepHaltingNumber(e_id + '_0')
-        lane_1 = traci.lane.getLastStepHaltingNumber(e_id + '_1')
-        length = ((lane_0 + lane_1) / 2)
+    def get_length(self, laneId): #queue length in m
+        length = []
+        for lane in laneId:
+            length.append(traci.lane.getLastStepHaltingNumber(lane) * 6.0)
         return length
 
-    def get_arrival(self ,e_id):
-        e_index = self.edge.index(e_id)
-        for lane in range(0, 2):
-            num = traci.inductionloop.getLastStepVehicleNumber('a1_' + e_id + '_' + str(lane))
-            curID = traci.inductionloop.getLastStepVehicleIDs('a1_' + e_id + '_' + str(lane))
-            if num > 0 and curID != self.arrId[e_index][lane]:
-                self.oldId[e_index][lane] = curID
-                self.arrPass[e_index] += 1
-        flow_rate = self.arrPass[e_index] / traci.simulation.getTime()        
-        
-        return flow_rate   
-    
     def get_lastLength(self, laneID):
         length = {}
         for lane in laneID:

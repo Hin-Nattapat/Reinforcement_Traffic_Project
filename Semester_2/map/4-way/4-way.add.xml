@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 02/11/21 01:05:47 by Eclipse SUMO netedit Version 1.6.0
+<!-- generated on 01/22/21 10:13:52 by Eclipse SUMO netedit Version 1.6.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="D:\Picasso\kmitl_ce4\Project\Reinforcement_traffic_control\Semester_2\map\4-way\4-way.net.xml"/>
+        <sumo-net-file value="D:\me\myProject\RL-TrafficSignal\code\map\test-map\4-way.net.xml"/>
     </input>
 
     <output>
-        <output-file value="D:\Picasso\kmitl_ce4\Project\Reinforcement_traffic_control\Semester_2\map\4-way\4-way.net.xml"/>
+        <output-file value="D:\me\myProject\RL-TrafficSignal\code\map\test-map\4-way.net.xml"/>
     </output>
 
     <processing>
@@ -30,7 +30,7 @@
     </pedestrian>
 
     <netedit>
-        <additional-files value="D:\Picasso\kmitl_ce4\Project\Reinforcement_traffic_control\Semester_2\map\4-way\4-way.add.xml"/>
+        <additional-files value="D:\me\myProject\RL-TrafficSignal\code\map\test-map\4-way.add.xml"/>
     </netedit>
 
     <report>
@@ -41,12 +41,24 @@
 -->
 
 <additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
-    <e1Detector id="e1_InB_S_2_1" lane="InB_S_2_1" pos="700.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_E_2_0" lane="InB_E_2_0" pos="700.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_E_2_1" lane="InB_E_2_1" pos="700.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_N_2_0" lane="InB_N_2_0" pos="700.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_N_2_1" lane="InB_N_2_1" pos="700.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_S_2_0" lane="InB_S_2_0" pos="700.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_W_2_0" lane="InB_W_2_0" pos="700.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_W_2_1" lane="InB_W_2_1" pos="700.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_gneE10_0" lane="gneE10_0" pos="487.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="e1_gneE10_1" lane="gneE10_1" pos="487.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="e1_gneE12_0" lane="gneE12_0" pos="487.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="e1_gneE12_1" lane="gneE12_1" pos="487.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="e1_gneE14_0" lane="gneE14_0" pos="487.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="e1_gneE14_1" lane="gneE14_1" pos="487.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="e1_gneE8_0" lane="gneE8_0" pos="487.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="e1_gneE8_1" lane="gneE8_1" pos="487.00" freq="500.00" file="e1.xml"/>
+
+    <e1Detector id="a1_gneE10_0" lane="gneE10_0" pos="1.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="a1_gneE10_1" lane="gneE10_1" pos="1.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="a1_gneE12_0" lane="gneE12_0" pos="1.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="a1_gneE12_1" lane="gneE12_1" pos="1.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="a1_gneE14_0" lane="gneE14_0" pos="1.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="a1_gneE14_1" lane="gneE14_1" pos="1.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="a1_gneE8_0" lane="gneE8_0" pos="1.00" freq="500.00" file="e1.xml"/>
+    <e1Detector id="a1_gneE8_1" lane="gneE8_1" pos="1.00" freq="500.00" file="e1.xml"/>
+    
 </additional>
+
+

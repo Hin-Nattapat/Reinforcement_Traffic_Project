@@ -1,5 +1,5 @@
 	<viewsettings>
-		<viewport y="0" x="0" zoom="1000"/>
+		<viewport y="-400" x="-1800" zoom="1000"/>
 		<delay value="200"/>
 		<scheme name="Shapes_waitingTime">
         <opengl dither="0" fps="0" drawBoundaries="0" forceDrawPositionSelection="0" forceDrawRectangleSelection="0"/>

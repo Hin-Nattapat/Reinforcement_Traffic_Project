@@ -20,7 +20,7 @@ def get_options():
     options, args = optParser.parse_args()
     return options
 
-def showResult(result, nextState):
+def printResult(result, nextState):
     print('\nflowRate    :' ,result[0])
     print('speed       :' ,result[1])
     print('density     :' ,result[2])
@@ -38,7 +38,7 @@ def runNormal(api, tls):
         phase = [g_phase[i], y_phase[i], 45]
         tls.set_logic(phase)
         result = api.simulate(48)
-        showResult(result ,0)
+        printResult(result ,0)
         i = (i + 1) % 4
 
 def runRL(api, tls, agent):
@@ -57,10 +57,9 @@ def runRL(api, tls, agent):
         
         lastQueue = api.get_lastLength(state)
         nextState = agent.get_nextState(lastQueue)
-        showResult(result, nextState)
+        printResult(result, nextState)
         if nextState != None:
             agent.update(nextState, action, result)
-    print('bye')
     agent.printStateSpace()
 
 if __name__ == "__main__":
@@ -78,7 +77,7 @@ if __name__ == "__main__":
     else:
         sumoBinary = checkBinary('sumo-gui')
 
-    traci.start([sumoBinary, "-c", "map/4-way/4-way.sumocfg"])
+    traci.start([sumoBinary, "-c", "Semester_2/map/4-way/4-way.sumocfg"])
     
     #runNormal(api, tls)
     runRL(api, tls, agent)

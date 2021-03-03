@@ -33,7 +33,11 @@ class Reinforcement():
         #print(self.stateSpace)
 
     def printStateSpace(self):
-        print(self.stateSpace)
+        print('\nThis is result at end of simulation' ,end='')
+        for state, data in self.stateSpace.items():
+            print('\n----------------- state' ,state ,'-----------------')
+            for key, value in data.items():
+                print(key, '=' ,value)
 
     def get_nextState(self, q_length):
         max_length = 0

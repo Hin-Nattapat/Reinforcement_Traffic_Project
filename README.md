@@ -15,7 +15,16 @@ This command will generate route file :
 python randomTrips.py -n ../4-way.net.xml -r ./Period_1/Period_1.rou.xml -e 1000 -l --validate --fringe-factor 10 --period 1 --trip-attributes="departLane=\"best\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ../4-way --additional-file vTypeDistributions.add.xml
 ```
 
-# Running simulation
+<!-- # Running simulation
 
-Run simulator with normal traffic light solution :
+Run simulator with normal traffic light solution : -->
+# Result from simulation
+
+After simulate traffic for `'n'` seconds, simulation will return these value after collecting them every `'m'` seconds
+* result [0] = flow rate
+* result [1] = speed
+* result [2] = density
+* result [3] = waiting time
+* result [4] = arrival rate
+* result [5] = queue length
 

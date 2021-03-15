@@ -6,6 +6,8 @@ import traci
 import random
 import sim_api
 import reinforcement as RL
+import smarterRL as SRL
+import Plotter as PT
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -35,12 +37,24 @@ def runNormal(api, tls):
     y_phase = ["rrrrrrrrryyy", "rrryyyrrrrrr", "rrrrrryyyrrr", "yyyrrrrrrrrr"]
     traci.simulationStep()
     while traci.simulation.getMinExpectedNumber() > 0:
-        phase = [g_phase[i], y_phase[i], 45]
+        phase = [g_phase[i], y_phase[i], 60]
         tls.set_logic(phase)
         result = api.simulate(48)
         printResult(result ,0)
         i = (i + 1) % 4
 
+
+def findInitValue(tls,path_config,path_csv): 
+    plotter = PT.Plotter()
+    for i in range(len(path_config)):
+        api = sim_api.Simulation(edge, state, './Semester_2/map/4-way/Rou_File/'+path_csv[i]+'/result.csv')
+        traci.start([sumoBinary, "-c", "Semester_2/map/4-way/Config_File/"+path_config[i]])
+        runNormal(api, tls)
+        plotter.findAverage('Semester_2/map/4-way/Rou_File/'+path_csv[i]+'/result.csv')
+
+        traci.close()
+        sys.stdout.flush() 
+    
 def runRL(api, tls, agent):
     traci.simulationStep()
     while traci.simulation.getMinExpectedNumber() > 0:
@@ -65,11 +79,20 @@ def runRL(api, tls, agent):
 if __name__ == "__main__":
     state = ['gneE8_1', 'gneE8_0', 'gneE10_1', 'gneE10_0', 'gneE12_1', 'gneE12_0', 'gneE14_1', 'gneE14_0']
     edge = ['gneE8', 'gneE10', 'gneE12', 'gneE14']
+    path_csv = ['Period_2','Period_1.5','Period_1','Period_0.5','Period_0.1']
+    path_config = ['4-way_2.sumocfg','4-way_1.5.sumocfg','4-way_1.sumocfg','4-way_0.5.sumocfg','4-way_0.1.sumocfg']
     options = get_options()
 
     #initial
-    api = sim_api.Simulation(edge, state)
-    agent = RL.Reinforcement(state, 3)
+
+    
+    # plotter = PT.Plotter('./Semester_2/map/4-way/Rou_File/'+path_csv[0]+'/result.csv')
+    # result = plotter.findAverage()
+    # print(result)
+    # agent = RL.Reinforcement(state, 3)
+
+    api = sim_api.Simulation(edge, state,'./Semester_2/map/4-way/Rou_File/'+path_csv[2]+'/result.csv')
+    agent = SRL.Reinforcement(state, 3, 9.5, 145, 75)
     tls = sim_api.TLScontrol('gneJ10')
 
     if options.nogui:
@@ -77,11 +100,14 @@ if __name__ == "__main__":
     else:
         sumoBinary = checkBinary('sumo-gui')
 
-    traci.start([sumoBinary, "-c", "Semester_2/map/4-way/4-way.sumocfg"])
-    
-    #runNormal(api, tls)
+
+    # findInitValue(tls, path_config,path_csv)
+
+    traci.start([sumoBinary, "-c","Semester_2/map/4-way/Config_File/4-way_1.sumocfg"])
+    # runNormal(api, tls)
     runRL(api, tls, agent)
          
 traci.close()
 sys.stdout.flush() 
-api.plotData()
+# plot.plotData()
+

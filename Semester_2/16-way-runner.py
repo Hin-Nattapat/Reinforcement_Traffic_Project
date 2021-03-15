@@ -41,10 +41,10 @@ def runNormal(api, tls):
         printResult(result ,0)
         i = (i + 1) % 4
 
-def runRL(api, tls, agent,side):
+def runRL(api, tls, agent):
     traci.simulationStep()
-    print('----------------side =>'+str(side+1)+'--------------------')
     while traci.simulation.getMinExpectedNumber() > 0:
+        
         action = agent.get_action('p_greedy')
         phase = agent.take_action(action)
         print('action :' ,action ,end=' | ')
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     
     #runNormal(api, tls)
 
-    # runRL(api[1], tls[1], agent[1],1)
+    runRL(api, tls, agent)
 
          
 traci.close()

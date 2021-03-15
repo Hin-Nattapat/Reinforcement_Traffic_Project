@@ -1,6 +1,6 @@
 	<viewsettings>
 		<viewport y="-400" x="-1800" zoom="1000"/>
-		<delay value="200"/>
+		<delay value="0"/>
 		<scheme name="Shapes_waitingTime">
         <opengl dither="0" fps="0" drawBoundaries="0" forceDrawPositionSelection="0" forceDrawRectangleSelection="0"/>
         <background backgroundColor="white" showGrid="0" gridXSize="100.00" gridYSize="100.00"/>

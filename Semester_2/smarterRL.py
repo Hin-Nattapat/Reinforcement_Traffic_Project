@@ -3,7 +3,7 @@ import math
 import statistics as st
 
 class Reinforcement():
-    def __init__(self, lane, max_actions):
+    def __init__(self, lane, max_actions, avg_speed, avg_density, max_waiting_time):
         self.EXPLORE_RATE = 0.5
         self.LEARNING_RATE = 0.1
         self.DISCOUNT_RATE = 0.9
@@ -16,9 +16,9 @@ class Reinforcement():
         self.moveState = [-1, -1]
         self.greenTime = 60
         #####################################
-        self.AVG_SPD = 0
-        self.DENSITY = 0
-        self.MAX_WAITING_TIME = 0
+        self.AVG_SPD = avg_speed
+        self.DENSITY = avg_density
+        self.MAX_WAITING_TIME = max_waiting_time
         #####################################
         self.init_stateSpace()
 
@@ -146,6 +146,7 @@ class Reinforcement():
     def update(self, nextState, action, data):
         reward = 0
         reward = self.get_reward(data)
+        # reward = self.get_reward_2(data)
         self.set_maxQ()
         state = self.stateSpace[self.current_state]
         next_state = self.stateSpace[nextState]
@@ -170,21 +171,21 @@ class Reinforcement():
         return waitingtimeExpo
 
     def get_reward_2(self, data):
-        flowrateExpo = find_flowrate_expo(data["f_rate"])
-        waitingtimeExpo = find_waitingtime_expo(data["w_time"])
+        flowrateExpo = self.find_flowrate_expo(data[0])
+        waitingtimeExpo = self.find_waitingtime_expo(data[3])
         FlowRateScale = 1/(1+math.exp(flowrateExpo))
         WaitingTimeScale = 1/(1+math.exp(waitingtimeExpo))
         reward = FlowRateScale/(1+WaitingTimeScale)
         return reward
 
-    # def get_reward(self, data):
-    #     arrival = sum(data[4]) / len(data[4])
-    #     expo = -0.003930312 * (arrival - 750)
-    #     alpha = 1 / (1 + math.exp(expo))
-    #     tp = sum(data[0]) / len(data[0])
-    #     func = (alpha * st.stdev(data[5])) + ((1 - alpha) * (math.pow(self.TAU, tp)))
-    #     reward = math.log(func, self.DELTA)
-    #     return reward
+    def get_reward(self, data):
+        arrival = sum(data[4]) / len(data[4])
+        expo = -0.003930312 * (arrival - 750)
+        alpha = 1 / (1 + math.exp(expo))
+        tp = sum(data[0]) / len(data[0])
+        func = (alpha * st.stdev(data[5])) + ((1 - alpha) * (math.pow(self.TAU, tp)))
+        reward = math.log(func, self.DELTA)
+        return reward
 
      
 

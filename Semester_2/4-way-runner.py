@@ -81,20 +81,17 @@ if __name__ == "__main__":
     edge = ['gneE8', 'gneE10', 'gneE12', 'gneE14']
     path_csv = ['Period_2','Period_1.5','Period_1','Period_0.5','Period_0.1']
     path_config = ['4-way_2.sumocfg','4-way_1.5.sumocfg','4-way_1.sumocfg','4-way_0.5.sumocfg','4-way_0.1.sumocfg']
+    read_csv_path = './Semester_2/map/4-way/Rou_File/'+path_csv[2]+'/result.csv'
+    
     options = get_options()
 
     #initial
-
-    
-    # plotter = PT.Plotter('./Semester_2/map/4-way/Rou_File/'+path_csv[0]+'/result.csv')
-    # result = plotter.findAverage()
-    # print(result)
+    api = sim_api.Simulation(edge, state, read_csv_path)
     # agent = RL.Reinforcement(state, 3)
-
-    api = sim_api.Simulation(edge, state,'./Semester_2/map/4-way/Rou_File/'+path_csv[2]+'/result.csv')
     agent = SRL.Reinforcement(state, 3, 9.5, 145, 75)
     tls = sim_api.TLScontrol('gneJ10')
-
+    plotter = PT.Plotter()
+    
     if options.nogui:
         sumoBinary = checkBinary('sumo')
     else:
@@ -109,5 +106,5 @@ if __name__ == "__main__":
          
 traci.close()
 sys.stdout.flush() 
-# plot.plotData()
+plotter.plotData(read_csv_path)
 

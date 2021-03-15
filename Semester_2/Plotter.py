@@ -22,7 +22,7 @@ class Plotter():
         print(result)
         self.csvResultData(result,'./Semester_2/map/4-way/avg_result.csv','a')
 
-    def plotData(self):
+    def plotData(self,path):
         fig , ax = plt.subplots(2,3)
         ax[0,0].set_title("Flow Rate")
         ax[0,0].set_xlabel("Time")
@@ -42,7 +42,7 @@ class Plotter():
         #ax[1,2].set_title("Flow-Density model")
         #ax[1,2].set_xlabel("Density")
         #ax[1,2].set_ylabel("Flow Rate")
-        dataframe = pandas.read_csv(self.path)
+        dataframe = pandas.read_csv(path)
         dataframe.plot(ax=ax[0,0],x="Time", y="Flow_Rate")
         dataframe.plot(ax=ax[0,1],x="Time", y="Speed")
         dataframe.plot(ax=ax[0,2],x="Time", y="Density")

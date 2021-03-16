@@ -25,13 +25,13 @@ ax[1,1].set_ylabel("Arrival Rate")
 #ax[1,2].set_ylabel("Flow Rate")
 
 def plotData(i):
-    dataframe = pandas.read_csv("result.csv")
+    dataframe = pandas.read_csv("map/4-way/Rou_File/Period_1/result.csv")
     x = dataframe['Time']
-    y1 = dataframe['Flow Rate']
+    y1 = dataframe['Flow_Rate']
     y2 = dataframe['Speed']
     y3 = dataframe['Density']
-    y4 = dataframe['Waiting Time']
-    y5 = dataframe['Arrival Rate']
+    y4 = dataframe['Waiting_Time']
+    y5 = dataframe['Arrival_Rate']
     plt.cla()
     
     ax[0,0].plot(x,y1,color = 'blue')

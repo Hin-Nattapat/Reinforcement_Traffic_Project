@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 03/05/21 00:40:08 by Eclipse SUMO netedit Version 1.6.0
+<!-- generated on 03/11/21 01:49:27 by Eclipse SUMO netedit Version 1.6.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
@@ -41,40 +41,69 @@
 -->
 
 <additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
-    <e1Detector id="e1_InB_WN_2_0" lane="InB_WN_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_WN_2_1" lane="InB_WN_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_NW_2_0" lane="InB_NW_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_NW_2_1" lane="InB_NW_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_N_2_0" lane="Mid_N_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_N_2_1" lane="Mid_N_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_W_1_0" lane="Mid_W_1_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_W_1_1" lane="Mid_W_1_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-    
-    <e1Detector id="e1_Mid_N_1_0" lane="Mid_N_1_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_N_1_1" lane="Mid_N_1_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_NE_2_0" lane="InB_NE_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_NE_2_1" lane="InB_NE_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_EN_2_0" lane="InB_EN_2_0" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_EN_2_1" lane="InB_EN_2_1" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_ES_2_0" lane="InB_ES_2_0" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_ES_2_1" lane="InB_ES_2_1" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_NE_2_0" lane="InB_NE_2_0" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_NE_2_1" lane="InB_NE_2_1" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_NW_2_0" lane="InB_NW_2_0" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_NW_2_1" lane="InB_NW_2_1" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_SE_2_0" lane="InB_SE_2_0" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_SE_2_1" lane="InB_SE_2_1" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_SW_2_0" lane="InB_SW_2_0" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_SW_2_1" lane="InB_SW_2_1" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_WN_2_0" lane="InB_WN_2_0" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_WN_2_1" lane="InB_WN_2_1" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_WS_2_0" lane="InB_WS_2_0" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_InB_WS_2_1" lane="InB_WS_2_1" pos="1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_E_1_0" lane="Mid_E_1_0" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_E_1_1" lane="Mid_E_1_1" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_E_2_0" lane="Mid_E_2_0" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_E_2_1" lane="Mid_E_2_1" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_N_1_0" lane="Mid_N_1_0" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_N_1_1" lane="Mid_N_1_1" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_N_2_0" lane="Mid_N_2_0" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_N_2_1" lane="Mid_N_2_1" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_S_1_0" lane="Mid_S_1_0" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_S_1_1" lane="Mid_S_1_1" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_S_2_0" lane="Mid_S_2_0" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_S_2_1" lane="Mid_S_2_1" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_W_1_0" lane="Mid_W_1_0" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_W_1_1" lane="Mid_W_1_1" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_W_2_0" lane="Mid_W_2_0" pos="2500.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="a1_Mid_W_2_1" lane="Mid_W_2_1" pos="2500.00" freq="900.00" file="e1.xml"/>
+
     <e1Detector id="e1_InB_EN_2_0" lane="InB_EN_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
     <e1Detector id="e1_InB_EN_2_1" lane="InB_EN_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_E_1_0" lane="Mid_E_1_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_E_1_1" lane="Mid_E_1_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-
-    <e1Detector id="e1_Mid_S_1_0" lane="Mid_S_1_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_S_1_1" lane="Mid_S_1_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_E_2_0" lane="Mid_E_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_E_2_1" lane="Mid_E_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
     <e1Detector id="e1_InB_ES_2_0" lane="InB_ES_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
     <e1Detector id="e1_InB_ES_2_1" lane="InB_ES_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_InB_NE_2_0" lane="InB_NE_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_InB_NE_2_1" lane="InB_NE_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_InB_NW_2_0" lane="InB_NW_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_InB_NW_2_1" lane="InB_NW_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
     <e1Detector id="e1_InB_SE_2_0" lane="InB_SE_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
     <e1Detector id="e1_InB_SE_2_1" lane="InB_SE_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-
-    <e1Detector id="e1_InB_WS_2_0" lane="InB_WS_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_InB_WS_2_1" lane="InB_WS_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_W_2_0" lane="Mid_W_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_W_2_1" lane="Mid_W_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_S_2_0" lane="Mid_S_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
-    <e1Detector id="e1_Mid_S_2_1" lane="Mid_S_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
     <e1Detector id="e1_InB_SW_2_0" lane="InB_SW_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
     <e1Detector id="e1_InB_SW_2_1" lane="InB_SW_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
-
+    <e1Detector id="e1_InB_WN_2_0" lane="InB_WN_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_InB_WN_2_1" lane="InB_WN_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_InB_WS_2_0" lane="InB_WS_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_InB_WS_2_1" lane="InB_WS_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_E_1_0" lane="Mid_E_1_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_E_1_1" lane="Mid_E_1_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_E_2_0" lane="Mid_E_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_E_2_1" lane="Mid_E_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_N_1_0" lane="Mid_N_1_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_N_1_1" lane="Mid_N_1_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_N_2_0" lane="Mid_N_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_N_2_1" lane="Mid_N_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_S_1_0" lane="Mid_S_1_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_S_1_1" lane="Mid_S_1_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_S_2_0" lane="Mid_S_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_S_2_1" lane="Mid_S_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_W_1_0" lane="Mid_W_1_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_W_1_1" lane="Mid_W_1_1" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_W_2_0" lane="Mid_W_2_0" pos="-1.00" freq="900.00" file="e1.xml"/>
+    <e1Detector id="e1_Mid_W_2_1" lane="Mid_W_2_1" pos="-1.00" freq="900.00" file="e1.xml"/>
 </additional>

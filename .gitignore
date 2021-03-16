@@ -193,12 +193,19 @@ Semester_1/64cross_TLS/trips.trips.xml
 Semester_1/64cross_TLS/4_4Cross.rou.xml
 Semester_1/64cross_TLS/4_4Cross.rou.alt.xml
 
-Semester_2/map/4-way/Rou_File/Period_1/trips.trips.xml
-Semester_2/map/4-way/Rou_File/Period_1/Period_1.rou.xml
-Semester_2/map/4-way/Rou_File/Period_1/Period_1.rou.alt.xml
+Semester_2/map/4-way/Rou_File/Period_0.1/
+Semester_2/map/4-way/Rou_File/Period_0.5/
+Semester_2/map/4-way/Rou_File/Period_1/
+Semester_2/map/4-way/Rou_File/Period_1.5/
+Semester_2/map/4-way/Rou_File/Period_2/
 
-Semester_2/map/16-way/Rou_File/Period_0_5/trips.trips.xml
-Semester_2/map/16-way/Rou_File/Period_0_5/Period_0_5.rou.xml
-Semester_2/map/16-way/Rou_File/Period_0_5/Period_0_5.rou.alt.xml
+
+Semester_2/map/16-way/Rou_File/Period_0_5
+Semester_2/map/16-way/Rou_File/Period_1
+
+Semester_2/map/36-way/Rou_File/Period_1
 
 Semester_2/map/4-way/e1.xml
+Semester_2/map/16-way/e1.xml
+
+result.csv

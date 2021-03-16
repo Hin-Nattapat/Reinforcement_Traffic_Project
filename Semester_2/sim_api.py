@@ -1,6 +1,6 @@
 import traci
 import pandas
-import Plotter as PT
+import csv_api as CSV
 
 class Simulation():
     def __init__(self, edge, laneId, path_csv):
@@ -18,7 +18,7 @@ class Simulation():
         self.path_csv = path_csv
 
     def simulate(self, duration):
-        write_csv = PT.Plotter()
+        write_csv = CSV.Csv_api()
 
         result = [[],[],[],[],[],[]] #flowrate,speed,density,waiting,arrivalRate,queueLength
         time = 0

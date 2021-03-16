@@ -7,7 +7,7 @@ import random
 import sim_api
 import reinforcement as RL
 import smarterRL as SRL
-import Plotter as PT
+import csv_api as CSV
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -45,12 +45,12 @@ def runNormal(api, tls):
 
 
 def findInitValue(tls,path_config,path_csv): 
-    plotter = PT.Plotter()
+    csv_api = CSV.Csv_api()
     for i in range(len(path_config)):
         api = sim_api.Simulation(edge, state, './Semester_2/map/4-way/Rou_File/'+path_csv[i]+'/result.csv')
         traci.start([sumoBinary, "-c", "Semester_2/map/4-way/Config_File/"+path_config[i]])
         runNormal(api, tls)
-        plotter.findAverage('Semester_2/map/4-way/Rou_File/'+path_csv[i]+'/result.csv')
+        csv_api.findAverage('Semester_2/map/4-way/Rou_File/'+path_csv[i]+'/result.csv')
 
         traci.close()
         sys.stdout.flush() 
@@ -90,21 +90,20 @@ if __name__ == "__main__":
     # agent = RL.Reinforcement(state, 3)
     agent = SRL.Reinforcement(state, 3, 9.5, 145, 75)
     tls = sim_api.TLScontrol('gneJ10')
-    plotter = PT.Plotter()
     
     if options.nogui:
         sumoBinary = checkBinary('sumo')
     else:
         sumoBinary = checkBinary('sumo-gui')
 
+    # Find_Instance_Value_Runner
+    findInitValue(tls, path_config,path_csv)
 
-    # findInitValue(tls, path_config,path_csv)
-
-    traci.start([sumoBinary, "-c","Semester_2/map/4-way/Config_File/4-way_1.sumocfg"])
+    # ----------------- Runner ---------------------
+    # traci.start([sumoBinary, "-c","Semester_2/map/4-way/Config_File/4-way_1.sumocfg"])
     # runNormal(api, tls)
-    runRL(api, tls, agent)
+    # runRL(api, tls, agent)
          
 traci.close()
 sys.stdout.flush() 
-plotter.plotData(read_csv_path)
 

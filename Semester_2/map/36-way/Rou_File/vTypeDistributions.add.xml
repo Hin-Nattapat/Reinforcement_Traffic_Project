@@ -1,0 +1,11 @@
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+    
+    <vTypeDistribution id="vehDist">
+        <vType id="vehDist0" sigma="0.549" accel="1.801" maxSpeed="31.505" length="4.700" minGap="1.300" vClass="passenger" carFollowModel="Krauss"/>
+        <vType id="vehDist1" sigma="0.472" accel="1.610" maxSpeed="26.401" length="4.700" minGap="1.300" vClass="passenger" carFollowModel="Krauss"/>
+        <vType id="vehDist2" sigma="0.266" accel="2.695" maxSpeed="19.819" length="4.700" minGap="1.300" vClass="passenger" carFollowModel="Krauss"/>
+        <vType id="vehDist3" sigma="0.407" accel="2.593" maxSpeed="33.084" length="4.700" minGap="1.300" vClass="passenger" carFollowModel="Krauss"/>
+        <vType id="vehDist4" sigma="0.574" accel="1.737" maxSpeed="15.267" length="4.700" minGap="1.300" vClass="passenger" carFollowModel="Krauss"/>
+    </vTypeDistribution>
+    
+</additional>

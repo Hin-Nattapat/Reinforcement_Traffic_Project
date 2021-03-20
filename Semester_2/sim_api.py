@@ -44,11 +44,11 @@ class Simulation():
                 result[4].append(arrRate)
                 update_result.append(arrRate)
                 self.result_data.append(update_result)
+                write_csv.csvResultData(self.result_data,self.path_csv,'w')
             result[5] = self.get_length(self.laneId)    
             time += 1
 
         self.epoch += 1
-        write_csv.csvResultData(self.result_data,self.path_csv,'w')
         return result
         
 

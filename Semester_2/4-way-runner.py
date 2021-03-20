@@ -75,6 +75,8 @@ def runRL(api, tls, agent):
         if nextState != None:
             agent.update(nextState, action, result)
     agent.printStateSpace()
+    write_csv = CSV.Csv_api()
+    write_csv.saveStateSpace(agent.getStateSpace(),"q_value.csv")
 
 if __name__ == "__main__":
     state = ['gneE8_1', 'gneE8_0', 'gneE10_1', 'gneE10_0', 'gneE12_1', 'gneE12_0', 'gneE14_1', 'gneE14_0']
@@ -97,12 +99,12 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
 
     # Find_Instance_Value_Runner
-    findInitValue(tls, path_config,path_csv)
+    # findInitValue(tls, path_config,path_csv)
 
     # ----------------- Runner ---------------------
-    # traci.start([sumoBinary, "-c","Semester_2/map/4-way/Config_File/4-way_1.sumocfg"])
-    # runNormal(api, tls)
-    # runRL(api, tls, agent)
+    traci.start([sumoBinary, "-c","Semester_2/map/4-way/Config_File/4-way_1.sumocfg"])
+    runNormal(api, tls)
+    runRL(api, tls, agent)
          
 traci.close()
 sys.stdout.flush() 

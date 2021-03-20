@@ -21,3 +21,18 @@ class Csv_api():
         result.append(avg_result)
         print(result)
         self.csvResultData(result,'./Semester_2/map/4-way/avg_result.csv','a')
+
+    def saveStateSpace(self,data,path):
+        queryList = ['State','Q_Value','SumQ','MaxQ']
+        result = []
+        result.append(queryList)
+        for x in data:
+            temp = []
+            temp.append(x)
+            temp.append(data[x]['q_value'])
+            temp.append(data[x]['sumQ'])
+            temp.append(data[x]['maxQ'])
+            result.append(temp)
+            
+        self.csvResultData(result,path,'w')
+

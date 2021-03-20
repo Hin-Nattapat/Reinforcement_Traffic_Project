@@ -25,7 +25,7 @@ ax[1,1].set_ylabel("Arrival Rate")
 #ax[1,2].set_ylabel("Flow Rate")
 
 def plotData(i):
-    dataframe = pandas.read_csv("map/4-way/Rou_File/Period_1/result.csv")
+    dataframe = pandas.read_csv("Semester_2/map/4-way/Rou_File/Period_1/result.csv")
     x = dataframe['Time']
     y1 = dataframe['Flow_Rate']
     y2 = dataframe['Speed']
@@ -37,7 +37,7 @@ def plotData(i):
     ax[0,0].plot(x,y1,color = 'blue')
     ax[0,1].plot(x,y2,color = 'green')
     ax[0,2].plot(x,y3,color = 'red')
-    ax[1,0].plot(x,y4,color = 'yellow')
+    ax[1,0].plot(x,y4,color = 'magenta')
     ax[1,1].plot(x,y5,color = 'grey')
     plt.tight_layout()
 

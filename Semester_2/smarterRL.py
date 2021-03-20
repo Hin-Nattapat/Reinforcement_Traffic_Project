@@ -35,6 +35,9 @@ class Reinforcement():
     def printStateSpace(self):
         print(self.stateSpace)
 
+    def getStateSpace(self):
+        return self.stateSpace
+
     def get_nextState(self, q_length):
         max_length = 0
         max_lane = ''

@@ -148,8 +148,8 @@ class Reinforcement():
 
     def update(self, nextState, action, data):
         reward = 0
-        reward = self.get_reward(data)
-        # reward = self.get_reward_2(data)
+        # reward = self.get_paper_reward(data)
+        reward = self.get_our_reward(data)
         self.set_maxQ()
         state = self.stateSpace[self.current_state]
         next_state = self.stateSpace[nextState]
@@ -168,20 +168,22 @@ class Reinforcement():
         return flowrateExpo
 
     def find_waitingtime_expo(self,waitingtime):
-        A3 = Max_Waiting_Time/2
+        A3 = self.MAX_WAITING_TIME/2
         A2 = 2.944/(0.95-A3)
         waitingtimeExpo = A2*(waitingtime-A3)
         return waitingtimeExpo
 
-    def get_reward_2(self, data):
-        flowrateExpo = self.find_flowrate_expo(data[0])
-        waitingtimeExpo = self.find_waitingtime_expo(data[3])
+    def get_our_reward(self, data):
+        FR = sum(data[0]) / len(data[0])
+        WT = sum(data[3]) / len(data[3])
+        flowrateExpo = self.find_flowrate_expo(FR)
+        waitingtimeExpo = self.find_waitingtime_expo(WT)
         FlowRateScale = 1/(1+math.exp(flowrateExpo))
         WaitingTimeScale = 1/(1+math.exp(waitingtimeExpo))
         reward = FlowRateScale/(1+WaitingTimeScale)
         return reward
 
-    def get_reward(self, data):
+    def get_paper_reward(self, data):
         arrival = sum(data[4]) / len(data[4])
         expo = -0.003930312 * (arrival - 750)
         alpha = 1 / (1 + math.exp(expo))

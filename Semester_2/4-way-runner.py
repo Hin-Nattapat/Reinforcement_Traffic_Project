@@ -75,6 +75,7 @@ def runRL(api, tls, agent):
         lastQueue = api.get_lastLength(state)
         nextState = agent.get_nextState(lastQueue)
         printResult(result, nextState)
+        # agent.printStateSpace()
         if nextState != None:
             agent.update(nextState, action, result)
     agent.printStateSpace()
@@ -105,7 +106,7 @@ if __name__ == "__main__":
 
     # ----------------- Runner ---------------------
     traci.start([sumoBinary, "-c","Semester_2/map/4-way/Config_File/4-way_1.sumocfg"])
-    #runNormal(api, tls)
+    # runNormal(api, tls)
     runRL(api, tls, agent)
          
 traci.close()

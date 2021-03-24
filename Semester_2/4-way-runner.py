@@ -56,6 +56,9 @@ def findInitValue(tls,path_config,path_csv):
         sys.stdout.flush() 
     
 def runRL(api, tls, agent):
+    write_csv = CSV.Csv_api()
+    write_csv.createAvg_Q("avg_Q.csv")
+    write_csv.createReward("Reward.csv")
     traci.simulationStep()
     while traci.simulation.getMinExpectedNumber() > 0:
         action = agent.get_action('p_greedy')
@@ -75,7 +78,6 @@ def runRL(api, tls, agent):
         if nextState != None:
             agent.update(nextState, action, result)
     agent.printStateSpace()
-    write_csv = CSV.Csv_api()
     write_csv.saveStateSpace(agent.getStateSpace(),"q_value.csv")
 
 if __name__ == "__main__":
@@ -88,7 +90,7 @@ if __name__ == "__main__":
     options = get_options()
 
     #initial
-    api = sim_api.Simulation(edge, state, read_csv_path)
+    api =  sim_api.Simulation(edge, state, read_csv_path)
     # agent = RL.Reinforcement(state, 3)
     agent = SRL.Reinforcement(state, 3, 9.5, 145, 75)
     tls = sim_api.TLScontrol('gneJ10')
@@ -103,7 +105,7 @@ if __name__ == "__main__":
 
     # ----------------- Runner ---------------------
     traci.start([sumoBinary, "-c","Semester_2/map/4-way/Config_File/4-way_1.sumocfg"])
-    runNormal(api, tls)
+    #runNormal(api, tls)
     runRL(api, tls, agent)
          
 traci.close()

@@ -4,7 +4,7 @@ from matplotlib.animation import FuncAnimation
 #CSV structure
 #Time,Flow Rate,Speed,Density,Waiting Time,Arrival Rate
 
-fig , ax = plt.subplots(3,3)
+fig , ax = plt.subplots(3,4)
 ax[0,0].set_title("Flow Rate")
 ax[0,0].set_xlabel("Time")
 ax[0,0].set_ylabel("Flow Rate")
@@ -20,15 +20,19 @@ ax[1,0].set_ylabel("Waiting Time")
 ax[1,1].set_title("Arrival Rate")
 ax[1,1].set_xlabel("Time")
 ax[1,1].set_ylabel("Arrival Rate")
-ax[1,2].set_title("Greenshields Linear model")
-ax[1,2].set_xlabel("Density")
-ax[1,2].set_ylabel("Average Speed")
-ax[2,0].set_title("Speed-Flow model")
-ax[2,0].set_xlabel("Flow Rate")
-ax[2,0].set_ylabel("Speed")
-ax[2,1].set_title("Flow-Density model")
-ax[2,1].set_xlabel("Density")
-ax[2,1].set_ylabel("Flow Rate")
+ax[1,2].set_title("Average of Q-Value")
+ax[1,2].set_xlabel("Time")
+ax[1,2].set_ylabel("Avg_Q")
+ax[2,0].set_title("Greenshields Linear model")
+ax[2,0].set_xlabel("Density")
+ax[2,0].set_ylabel("Average Speed")
+ax[2,1].set_title("Speed-Flow model")
+ax[2,1].set_xlabel("Flow Rate")
+ax[2,1].set_ylabel("Speed")
+ax[2,2].set_title("Flow-Density model")
+ax[2,2].set_xlabel("Density")
+ax[2,2].set_ylabel("Flow Rate")
+
 
 def plotData(i):
     dataframe = pandas.read_csv("Semester_2/map/4-way/Rou_File/Period_1/result.csv")
@@ -38,6 +42,10 @@ def plotData(i):
     y3 = dataframe['Density']
     y4 = dataframe['Waiting_Time']
     y5 = dataframe['Arrival_Rate']
+
+    dataframe_Q = pandas.read_csv("avg_Q.csv")
+    x2 = dataframe_Q['Epoch']
+    y2_1 = dataframe_Q['Avg_Q']
     plt.cla()
     
     ax[0,0].plot(x,y1,color = 'blue')
@@ -45,9 +53,10 @@ def plotData(i):
     ax[0,2].plot(x,y3,color = 'red')
     ax[1,0].plot(x,y4,color = 'magenta')
     ax[1,1].plot(x,y5,color = 'grey')
-    ax[1,2].scatter(y3,y2,color = 'deeppink')
-    ax[2,0].scatter(y1,y2,color = 'mediumorchid')
-    ax[2,1].scatter(y3,y1,color = 'skyblue')
+    ax[1,2].plot(x2,y2_1,color = 'gold')
+    ax[2,0].scatter(y3,y2,color = 'deeppink')
+    ax[2,1].scatter(y1,y2,color = 'mediumorchid')
+    ax[2,2].scatter(y3,y1,color = 'skyblue')
     plt.tight_layout()
 
 

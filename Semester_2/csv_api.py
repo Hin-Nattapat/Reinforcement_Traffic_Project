@@ -36,3 +36,31 @@ class Csv_api():
             
         self.csvResultData(result,path,'w')
 
+    def createAvg_Q(self,path):
+        queryList = ['Epoch','Avg_Q']
+        result = []
+        result.append(queryList)
+
+        self.csvResultData(result,path,'w')
+
+    def saveAvg_Q(self,data,path):
+        dataframe = pandas.read_csv(path)
+        result = [dataframe.columns.values.tolist()] + dataframe.values.tolist()
+        result.append(data)
+            
+        self.csvResultData(result,path,'w')
+
+    def createReward(self,path):
+        queryList = ['Epoch','Reward']
+        result = []
+        result.append(queryList)
+
+        self.csvResultData(result,path,'w')
+
+    def saveReward(self,data,path):
+        dataframe = pandas.read_csv(path)
+        result = [dataframe.columns.values.tolist()] + dataframe.values.tolist()
+        result.append(data)
+            
+        self.csvResultData(result,path,'w')
+

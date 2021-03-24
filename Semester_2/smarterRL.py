@@ -1,6 +1,7 @@
 import random
 import math
 import statistics as st
+import csv_api as CSV
 
 class Reinforcement():
     def __init__(self, lane, max_actions, avg_speed, avg_density, max_waiting_time):
@@ -10,6 +11,7 @@ class Reinforcement():
         self.MAX_ACTIONS = max_actions
         self.TAU = 0.8
         self.DELTA = 0.5
+        self.EPOCH = 1
         self.lane = lane
         self.current_state = 0
         self.stateSpace = {}
@@ -38,6 +40,9 @@ class Reinforcement():
     def getStateSpace(self):
         return self.stateSpace
 
+    def getEpoch(self):
+        return self.EPOCH
+
     def get_nextState(self, q_length):
         max_length = 0
         max_lane = ''
@@ -58,7 +63,14 @@ class Reinforcement():
     def set_sumQ(self):
         for i in range(len(self.stateSpace)):
             sumQ = sum(self.stateSpace[i]["q_value"])
-            self.stateSpace[i]["sumQ"] = sumQ    
+            self.stateSpace[i]["sumQ"] = sumQ
+
+    def get_avgQ(self):
+        total_sumQ = 0
+        for i in range(len(self.stateSpace)):
+            total_sumQ += self.stateSpace[i]["sumQ"]
+        avg_sumQ = total_sumQ / len(self.stateSpace)
+        return avg_sumQ
 
     def get_action(self, policy):
         action = None
@@ -147,9 +159,11 @@ class Reinforcement():
         return phase 
 
     def update(self, nextState, action, data):
+        write_csv = CSV.Csv_api()
         reward = 0
         reward = self.get_reward(data)
         # reward = self.get_reward_2(data)
+        write_csv.saveReward([self.getEpoch(),reward],"Reward.csv")
         self.set_maxQ()
         state = self.stateSpace[self.current_state]
         next_state = self.stateSpace[nextState]
@@ -158,6 +172,8 @@ class Reinforcement():
 
         self.set_sumQ()
         self.current_state = nextState
+        write_csv.saveAvg_Q([self.getEpoch(),self.get_avgQ()],"avg_Q.csv")
+        self.EPOCH += 1
 
     def find_flowrate_expo(self,flowrate):
         # ต้องหา avg_spd,density นำข้อมูลมาจากกราฟของการทดลองแรก

@@ -5,7 +5,7 @@ from sumolib import checkBinary
 import traci
 import random
 import sim_api
-import reinforcement as RL
+import paperRL as RL
 import smarterRL as SRL
 import csv_api as CSV
 

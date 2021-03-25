@@ -144,17 +144,15 @@ class Reinforcement():
 
     def update(self, nextState, action, data):
         reward = 0
-        reward = self.get_reward(data)
+        reward = self.get_paper_reward(data)
         self.set_maxQ()
         state = self.stateSpace[self.current_state]
         next_state = self.stateSpace[nextState]
-
         state["q_value"][action] += round((self.LEARNING_RATE * (reward + (self.DISCOUNT_RATE * next_state["maxQ"])) - state["q_value"][action]), 5)
-
         self.set_sumQ()
         self.current_state = nextState
 
-    def get_reward(self, data):
+    def get_paper_reward(self, data):
         arrival = sum(data[4]) / len(data[4])
         expo = -0.003930312 * (arrival - 750)
         alpha = 1 / (1 + math.exp(expo))

@@ -89,8 +89,8 @@ class Simulation():
     def getAvgLength(self, edgeId): #queue length in m
         lengthList = []
         for edge in edgeId:
-            lengthList.append(traci.lane.getLastStepHaltingNumber(edge+'_0') * 6.0)
             lengthList.append(traci.lane.getLastStepHaltingNumber(edge+'_1') * 6.0)
+            lengthList.append(traci.lane.getLastStepHaltingNumber(edge+'_0') * 6.0)
         avg_length = sum(lengthList) / len(lengthList)
         std_length = st.stdev(lengthList)
         return avg_length, std_length
@@ -99,8 +99,8 @@ class Simulation():
         edgeID = self.edge[juncID]
         length = []
         for edge in edgeID:
-            length.append(traci.lane.getLastStepHaltingNumber(edge+'_0') * 6.0)
             length.append(traci.lane.getLastStepHaltingNumber(edge+'_1') * 6.0)
+            length.append(traci.lane.getLastStepHaltingNumber(edge+'_0') * 6.0)
         
         return length
 

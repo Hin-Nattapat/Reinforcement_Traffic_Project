@@ -77,6 +77,7 @@ def runRL(api, agent, tlsList):
         for tls in tlsList:
             if tls.isCycleEnd():
                 lastQueue = api.getLastLength(tls.id)
+                print(lastQueue)
                 if sum(lastQueue) == 0:
                     nextState = agent.getRandomState(tls.moveState)
                 else:
@@ -115,8 +116,8 @@ if __name__ == "__main__":
     
     traci.start([sumoBinary, "-c", "Semester_2/map/16-way/16-way.sumocfg"])
     
-    runNormal(api, tls)
-    # runRL(api, agent, tls)
+    #runNormal(api, tls)
+    runRL(api, agent, tls)
 
 traci.close()
 sys.stdout.flush() 

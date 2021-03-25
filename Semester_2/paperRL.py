@@ -44,6 +44,13 @@ class Reinforcement():
             action = self.eGreedy(currentState)
         return action
 
+    def get_avgQ(self):
+        total_sumQ = 0
+        for i in range(len(self.stateSpace)):
+            total_sumQ += sum(self.stateSpace[i]["qValue"])
+        avg_sumQ = total_sumQ / (len(self.stateSpace) * (self.MAX_ACTIONS - 1))
+        return round(avg_sumQ,3)
+
     def eGreedy(self, currentState):
         action = 0
         stateData = self.stateSpace[currentState]

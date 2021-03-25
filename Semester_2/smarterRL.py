@@ -68,8 +68,8 @@ class Reinforcement():
     def get_avgQ(self):
         total_sumQ = 0
         for i in range(len(self.stateSpace)):
-            total_sumQ += self.stateSpace[i]["sumQ"]
-        avg_sumQ = total_sumQ / len(self.stateSpace)
+            total_sumQ += sum(self.stateSpace[i]["q_value"])
+        avg_sumQ = total_sumQ / (len(self.stateSpace) * (self.MAX_ACTIONS - 1))
         return avg_sumQ
 
     def get_action(self, policy):

@@ -28,6 +28,14 @@ After simulate traffic for `'n'` seconds, simulation will return these value aft
 * result [4] = arrival rate
 * result [5] = queue length
 
+# Edge 4-way
+* 'TFL_1' : ['gneE8', 'gneE10', 'gneE12', 'gneE14'] 
+
+# Rou 4-way
+* File Period_0 : Period 0.8
+* File Period_1 : Period 1
+* File Period_2 : Period 1.2
+
 # Edge 16-way
 * 'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_N_2', 'Mid_W_1'],
 * 'TFL_2' : ['Mid_N_1', 'InB_NE_2', 'InB_EN_2', 'Mid_E_1'],

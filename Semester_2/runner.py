@@ -7,6 +7,7 @@ import random
 import sim_api
 import paperRL as PRL
 import smarterRL as SRL
+import csv_api as CSV
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -60,6 +61,13 @@ def runNormal(api, tlsList):
                 tls.setLogic(l_phase)
 
 def runRL(api, agent, tlsList):
+    csv_manage = CSV.Csv_api()
+    if agent.typeRL == 'SRL':
+        csv_AvgResult_path = "%s/AvgResult_SRL.csv" % save_path
+        csv_manage.createAvgResult(csv_AvgResult_path)
+    elif agent.typeRL == 'PRL':
+        csv_AvgResult_path = "%s/AvgResult_PRL.csv" % save_path
+        csv_manage.createAvgResult(csv_AvgResult_path)
     traci.simulationStep()
     for tls in tlsList:
         tls.action = agent.getAction('e_greedy', tls.currentState)
@@ -88,7 +96,8 @@ def runRL(api, agent, tlsList):
                 tls.action = agent.getAction('e_greedy', tls.currentState)
                 printResult(tls.id, data, nextState, tls.action)
                 phase, tls.moveState = agent.takeAction(tls.action, tls.currentState)
-                tls.setLogic(phase)                
+                tls.setLogic(phase)
+        csv_manage.saveResult(['Time','Avg_FlowRate','Avg_Speed','Avg_Density','Avg_WaitingTime','Avg_ArrivalRate','Avg_qLength','Avg_qSTD','Avg_QValue'],csv_AvgResult_path)                
 
 if __name__ == "__main__":
     numJunc = 4
@@ -101,6 +110,12 @@ if __name__ == "__main__":
         'TFL_3' : ['Mid_S_1', 'Mid_E_2', 'InB_ES_2', 'InB_SE_2'],
         'TFL_4' : ['InB_WS_2', 'Mid_W_2', 'Mid_S_2', 'InB_SW_2']
     }
+    
+    save_path = "Semester_2/map/" #ต้องไปเติมว่าเป็น 16-way กับ Period อะไรมาเพิ่ม ทำเป็นโครงอยู่บรรทัดล่าง
+    method = "16-way"
+    method_period = "Period_1"
+    save_path += "%s/Rou_File/%s" % (method,method_period)
+    
     api = sim_api.Simulation(edgeID)
     agent = PRL.Reinforcement(8)
 
@@ -116,9 +131,9 @@ if __name__ == "__main__":
     
     traci.start([sumoBinary, "-c", "Semester_2/map/16-way/16-way.sumocfg"])
     
-    runNormal(api, tls)
-    # runRL(api, agent, tls)
+    # runNormal(api, tls)
+    runRL(api, agent, tls)
 
 traci.close()
-sys.stdout.flush() 
+sys.stdout.flush()
 # api.plotData()

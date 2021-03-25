@@ -10,6 +10,7 @@ class Reinforcement():
         self.TAU = 0.8
         self.DELTA = 0.5
         self.stateSpace = {}
+        self.typeRL = 'PRL'
 
         for state in range(8):
             temp = {

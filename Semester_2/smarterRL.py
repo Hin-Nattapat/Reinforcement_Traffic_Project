@@ -23,6 +23,7 @@ class Reinforcement():
         self.MAX_WAITING_TIME = max_waiting_time
         #####################################
         self.init_stateSpace()
+        self.typeRL = 'SRL'
 
     def init_stateSpace(self):
         for i in range(len(self.lane)):
@@ -163,7 +164,7 @@ class Reinforcement():
         reward = 0
         # reward = self.get_paper_reward(data)
         reward = self.get_our_reward(data)
-        write_csv.saveReward([self.getEpoch(),reward],"Reward.csv")
+        write_csv.saveResult([self.getEpoch(),reward],"Reward.csv")
         self.set_maxQ()
         state = self.stateSpace[self.current_state]
         next_state = self.stateSpace[nextState]
@@ -172,7 +173,7 @@ class Reinforcement():
 
         self.set_sumQ()
         self.current_state = nextState
-        write_csv.saveAvg_Q([self.getEpoch(),self.get_avgQ()],"avg_Q.csv")
+        write_csv.saveResult([self.getEpoch(),self.get_avgQ()],"avg_Q.csv")
         self.EPOCH += 1
 
     def find_flowrate_expo(self,flowrate):

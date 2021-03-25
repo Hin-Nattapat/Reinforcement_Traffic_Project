@@ -5,7 +5,8 @@ from sumolib import checkBinary
 import traci
 import random
 import sim_api
-import paperRL as RL
+import paperRL as PRL
+import smarterRL as SRL
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -40,8 +41,8 @@ def runNormal(api, tlsList):
     for tls in tlsID:
         tls.cycle = 48
         tls.setLogic(l_phase)
-
-    while traci.simulation.getMinExpectedNumber() > 0:
+    
+    while (traci.simulation.getMinExpectedNumber() - traci.vehicle.getIDCount() != 0):
         try:
             result = api.simulate()
         except:
@@ -64,7 +65,7 @@ def runRL(api, agent, tlsList):
         tls.action = agent.getAction('e_greedy', tls.currentState)
         phase, tls.moveState = agent.takeAction(tls.action, tls.currentState)
         tls.setLogic(phase)
-    while traci.simulation.getMinExpectedNumber() > 0:
+    while (traci.simulation.getMinExpectedNumber() - traci.vehicle.getIDCount() != 0):
         try:
             result = api.simulate()
         except:
@@ -100,7 +101,8 @@ if __name__ == "__main__":
         'TFL_4' : ['InB_WS_2', 'Mid_W_2', 'Mid_S_2', 'InB_SW_2']
     }
     api = sim_api.Simulation(edgeID)
-    agent = RL.Reinforcement(8)
+    agent = PRL.Reinforcement(8)
+
     for junc, edge in edgeID.items():
         tls.append(sim_api.TLScontrol(junc, edge))
 
@@ -113,8 +115,8 @@ if __name__ == "__main__":
     
     traci.start([sumoBinary, "-c", "Semester_2/map/16-way/16-way.sumocfg"])
     
-    #runNormal(api, tls)
-    runRL(api, agent, tls)
+    runNormal(api, tls)
+    # runRL(api, agent, tls)
 
 traci.close()
 sys.stdout.flush() 

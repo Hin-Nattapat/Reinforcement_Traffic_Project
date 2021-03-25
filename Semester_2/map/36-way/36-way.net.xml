@@ -931,94 +931,31 @@
     </edge>
 
     <tlLogic id="TFL_1" type="static" programID="0" offset="0">
-        <phase duration="33" state="GGgrrrGGgrrr"/>
-        <phase duration="3"  state="yygrrryygrrr"/>
-        <phase duration="6"  state="rrGrrrrrGrrr"/>
-        <phase duration="3"  state="rryrrrrryrrr"/>
-        <phase duration="33" state="rrrGGgrrrGGg"/>
-        <phase duration="3"  state="rrryygrrryyg"/>
-        <phase duration="6"  state="rrrrrGrrrrrG"/>
-        <phase duration="3"  state="rrrrryrrrrry"/>
+        <phase duration="1"  state="rrrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="TFL_2" type="static" programID="0" offset="0">
-        <phase duration="33" state="GGgrrrGGgrrr"/>
-        <phase duration="3"  state="yygrrryygrrr"/>
-        <phase duration="6"  state="rrGrrrrrGrrr"/>
-        <phase duration="3"  state="rryrrrrryrrr"/>
-        <phase duration="33" state="rrrGGgrrrGGg"/>
-        <phase duration="3"  state="rrryygrrryyg"/>
-        <phase duration="6"  state="rrrrrGrrrrrG"/>
-        <phase duration="3"  state="rrrrryrrrrry"/>
+        <phase duration="1"  state="rrrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="TFL_3" type="static" programID="0" offset="0">
-        <phase duration="33" state="GGgrrrGGgrrr"/>
-        <phase duration="3"  state="yygrrryygrrr"/>
-        <phase duration="6"  state="rrGrrrrrGrrr"/>
-        <phase duration="3"  state="rryrrrrryrrr"/>
-        <phase duration="33" state="rrrGGgrrrGGg"/>
-        <phase duration="3"  state="rrryygrrryyg"/>
-        <phase duration="6"  state="rrrrrGrrrrrG"/>
-        <phase duration="3"  state="rrrrryrrrrry"/>
+        <phase duration="1"  state="rrrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="TFL_4" type="static" programID="0" offset="0">
-        <phase duration="33" state="GGgrrrGGgrrr"/>
-        <phase duration="3"  state="yygrrryygrrr"/>
-        <phase duration="6"  state="rrGrrrrrGrrr"/>
-        <phase duration="3"  state="rryrrrrryrrr"/>
-        <phase duration="33" state="rrrGGgrrrGGg"/>
-        <phase duration="3"  state="rrryygrrryyg"/>
-        <phase duration="6"  state="rrrrrGrrrrrG"/>
-        <phase duration="3"  state="rrrrryrrrrry"/>
+        <phase duration="1"  state="rrrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="TFL_5" type="static" programID="0" offset="0">
-        <phase duration="33" state="GGgrrrGGgrrr"/>
-        <phase duration="3"  state="yygrrryygrrr"/>
-        <phase duration="6"  state="rrGrrrrrGrrr"/>
-        <phase duration="3"  state="rryrrrrryrrr"/>
-        <phase duration="33" state="rrrGGgrrrGGg"/>
-        <phase duration="3"  state="rrryygrrryyg"/>
-        <phase duration="6"  state="rrrrrGrrrrrG"/>
-        <phase duration="3"  state="rrrrryrrrrry"/>
+        <phase duration="1"  state="rrrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="TFL_6" type="static" programID="0" offset="0">
-        <phase duration="33" state="GGgrrrGGgrrr"/>
-        <phase duration="3"  state="yygrrryygrrr"/>
-        <phase duration="6"  state="rrGrrrrrGrrr"/>
-        <phase duration="3"  state="rryrrrrryrrr"/>
-        <phase duration="33" state="rrrGGgrrrGGg"/>
-        <phase duration="3"  state="rrryygrrryyg"/>
-        <phase duration="6"  state="rrrrrGrrrrrG"/>
-        <phase duration="3"  state="rrrrryrrrrry"/>
+        <phase duration="1"  state="rrrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="TFL_7" type="static" programID="0" offset="0">
-        <phase duration="33" state="GGgrrrGGgrrr"/>
-        <phase duration="3"  state="yygrrryygrrr"/>
-        <phase duration="6"  state="rrGrrrrrGrrr"/>
-        <phase duration="3"  state="rryrrrrryrrr"/>
-        <phase duration="33" state="rrrGGgrrrGGg"/>
-        <phase duration="3"  state="rrryygrrryyg"/>
-        <phase duration="6"  state="rrrrrGrrrrrG"/>
-        <phase duration="3"  state="rrrrryrrrrry"/>
+        <phase duration="1"  state="rrrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="TFL_8" type="static" programID="0" offset="0">
-        <phase duration="33" state="GGgrrrGGgrrr"/>
-        <phase duration="3"  state="yygrrryygrrr"/>
-        <phase duration="6"  state="rrGrrrrrGrrr"/>
-        <phase duration="3"  state="rryrrrrryrrr"/>
-        <phase duration="33" state="rrrGGgrrrGGg"/>
-        <phase duration="3"  state="rrryygrrryyg"/>
-        <phase duration="6"  state="rrrrrGrrrrrG"/>
-        <phase duration="3"  state="rrrrryrrrrry"/>
+        <phase duration="1"  state="rrrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="TFL_9" type="static" programID="0" offset="0">
-        <phase duration="33" state="GGgrrrGGgrrr"/>
-        <phase duration="3"  state="yygrrryygrrr"/>
-        <phase duration="6"  state="rrGrrrrrGrrr"/>
-        <phase duration="3"  state="rryrrrrryrrr"/>
-        <phase duration="33" state="rrrGGgrrrGGg"/>
-        <phase duration="3"  state="rrryygrrryyg"/>
-        <phase duration="6"  state="rrrrrGrrrrrG"/>
-        <phase duration="3"  state="rrrrryrrrrry"/>
+        <phase duration="1"  state="rrrrrrrrrrrr"/>
     </tlLogic>
 
     <junction id="Start_EM" type="dead_end" x="7500.00" y="-2500.00" incLanes="OutB_EM_1_0 OutB_EM_1_1" intLanes="" shape="7500.00,-2500.00 7500.00,-2493.60 7500.00,-2500.00"/>

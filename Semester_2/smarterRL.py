@@ -199,14 +199,6 @@ class Reinforcement():
         reward = FlowRateScale/(1+WaitingTimeScale)
         return reward
 
-    def get_paper_reward(self, data):
-        arrival = sum(data[4]) / len(data[4])
-        expo = -0.003930312 * (arrival - 750)
-        alpha = 1 / (1 + math.exp(expo))
-        tp = sum(data[0]) / len(data[0])
-        func = (alpha * st.stdev(data[5])) + ((1 - alpha) * (math.pow(self.TAU, tp)))
-        reward = math.log(func, self.DELTA)
-        return reward
 
      
 

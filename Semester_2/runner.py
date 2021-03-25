@@ -5,8 +5,7 @@ from sumolib import checkBinary
 import traci
 import random
 import sim_api
-import reinforcement as RL
-
+import paperRL as RL
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -43,7 +42,15 @@ def runNormal(api, tlsList):
         tls.setLogic(l_phase)
 
     while traci.simulation.getMinExpectedNumber() > 0:
-        traci.simulationStep()
+        try:
+            result = api.simulate()
+        except:
+            print('Closed')
+            return 0
+        if result != None:
+            print(result)
+            for tls in tlsID:
+                tls.saveResult(result[tls.id])
         for tls in tlsID:
             index = tlsID.index(tls)
             if tls.isCycleEnd():
@@ -86,22 +93,11 @@ if __name__ == "__main__":
     agent = []
     tls = []
     state = ['gneE8_1', 'gneE8_0', 'gneE10_1', 'gneE10_0', 'gneE12_1', 'gneE12_0', 'gneE14_1', 'gneE14_0']
-    # edgeID = {
-    #     'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_N_2', 'Mid_W_1'],
-    #     'TFL_2' : ['Mid_N_1', 'InB_NE_2', 'InB_EN_2', 'Mid_E_1'],
-    #     'TFL_3' : ['Mid_S_1', 'Mid_E_2', 'InB_ES_2', 'InB_SE_2'],
-    #     'TFL_4' : ['InB_WS_2', 'Mid_W_2', 'Mid_S_2', 'InB_SW_2']
-    # }
     edgeID = {
-        'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_NW_2', 'Mid_WN_1'],
-        'TFL_2' : ['Mid_NW_1', 'InB_NM_2', 'Mid_NE_2', 'Mid_N_1'],
-        'TFL_3' : ['Mid_NE_1', 'InB_NE_2', 'InB_EN_2', 'Mid_EN_1'],
-        'TFL_4' : ['InB_WM_2', 'Mid_WN_2', 'Mid_W_2', 'Mid_WS_1'],
-        'TFL_5' : ['Mid_W_1', 'Mid_N_2', 'Mid_E_2', 'Mid_S_1'],
-        'TFL_6' : ['Mid_E_1', 'Mid_EN_2', 'InB_EM_2', 'Mid_ES_1'],
-        'TFL_7' : ['InB_WS_2', 'Mid_WS_2', 'Mid_SW_2', 'InB_SW_2'],
-        'TFL_8' : ['Mid_SW_1', 'Mid_S_2', 'Mid_SE_2', 'InB_SM_2'],
-        'TFL_9' : ['Mid_SE_1', 'Mid_ES_2', 'InB_ES_2', 'InB_SE_2']
+        'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_N_2', 'Mid_W_1'],
+        'TFL_2' : ['Mid_N_1', 'InB_NE_2', 'InB_EN_2', 'Mid_E_1'],
+        'TFL_3' : ['Mid_S_1', 'Mid_E_2', 'InB_ES_2', 'InB_SE_2'],
+        'TFL_4' : ['InB_WS_2', 'Mid_W_2', 'Mid_S_2', 'InB_SW_2']
     }
     api = sim_api.Simulation(edgeID)
     agent = RL.Reinforcement(8)
@@ -115,10 +111,10 @@ if __name__ == "__main__":
     else:
         sumoBinary = checkBinary('sumo-gui')
     
-    traci.start([sumoBinary, "-c", "Semester_2/map/36-way/36-way.sumocfg"])
+    traci.start([sumoBinary, "-c", "Semester_2/map/16-way/16-way.sumocfg"])
     
-    runNormal(api, tls)
-    #runRL(api, agent, tls)
+    #runNormal(api, tls)
+    runRL(api, agent, tls)
 
 traci.close()
 sys.stdout.flush() 

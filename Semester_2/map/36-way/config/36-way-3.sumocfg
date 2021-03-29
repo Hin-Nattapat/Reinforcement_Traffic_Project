@@ -3,27 +3,27 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.sf.net/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="36-way.net.xml"/>
-        <route-files value="./Rou_File/Period_1/Period_1.rou.xml"/>
+        <net-file value="../36-way.net.xml"/>
+        <route-files value="../route/Period_3.rou.xml"/>
     </input>
 
     <time>
         <begin value="0"/>
-        <end value="10000"/>
+        <end value="7000"/>
     </time>
 	
     <gui_only>
-        <gui-settings-file value="36-way.settings.xml"/>
+        <gui-settings-file value="../36-way.settings.xml"/>
     </gui_only>
 
-    <!-- <additional-files value="36-way.add.xml"/> -->
+    <additional-files value="../36-way.add.xml"/>
 
     <simulation>
         <start value = "1" />
         <quit-on-end value = "1"/>
     </simulation>
     <processing>
-        <time-to-teleport value="320"/>
+        <time-to-teleport value="800"/>
     </processing>
 
 </configuration>

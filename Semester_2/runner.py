@@ -47,12 +47,12 @@ def runNormal(api, tlsList, csvManage, csvRew):
         tls.cycle = greenTime + 3
         tls.setLogic(l_phase)
     while (traci.simulation.getMinExpectedNumber() - traci.vehicle.getIDCount() != 0):
-        try:
-            result = api.simulate()
-        except:
-            print('Closed')
-            return 0
-
+        # try:
+        #     result = api.simulate()
+        # except:
+        #     print('Closed')
+        #     return 0
+        result = api.simulate()
         if result != None:
             csvManage.saveAvgResult(result[1])
             for tls in tlsID:
@@ -144,9 +144,10 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
                 tls.setLogic(phase)
 
 if __name__ == "__main__":
-    solution = 'PRL'
-    route = 'p1'
-    runningMap = 4
+    solution = 'fix'
+    route = 'p3'
+    runningMap = 16
+
     maxState = 8
     tls = []
     edgeID = {}
@@ -163,8 +164,15 @@ if __name__ == "__main__":
     elif runningMap == 16:
         edgeID = const.edge_16
         nextLane = const.nextEdge_16
+        avgSPD = const.avgSPD_16
+        avgDEN = const.avgDEN_16
+        maxWait = const.maxWT_16
     elif runningMap == 36:
         edgeID = const.edge_36
+        nextLane = const.nextEdge_36
+        avgSPD = const.avgSPD_36
+        avgDEN = const.avgDEN_36
+        maxWait = const.maxWT_36
 
     savePath = "Semester_2/map/%s-way/result/%s_result_%s.csv" % (runningMap, solution, route) #ต้องไปเติมว่าเป็น 16-way กับ Period อะไรมาเพิ่ม ทำเป็นโครงอยู่บรรทัดล่าง
     savePath2 = "Semester_2/map/%s-way/result/%s_reward_%s.csv" % (runningMap, solution, route)
@@ -218,3 +226,4 @@ if __name__ == "__main__":
 traci.close()
 sys.stdout.flush()
 # api.plotData()
+

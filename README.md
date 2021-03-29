@@ -12,7 +12,9 @@ This command will generate routing that contain many types of car depend on `map
 
 This command will generate route file :
 ```
-python randomTrips.py -n ../16-way.net.xml -r ./Period_1/Period_1.rou.xml -e 1000 -l --validate --fringe-factor 10 --period 1 --trip-attributes="departLane=\"best\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ../16-way --additional-file vTypeDistributions.add.xml
+
+python randomTrips.py -n ./36-way/36-way.net.xml -r ./36-way/route/Period_3.rou.xml -e 6000 -l --validate --fringe-factor 10 --period 0.8 --trip-attributes="departLane=\"best\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ./36-way/36-way --additional-file vTypeDistributions.add.xml
+
 ```
 
 <!-- # Running simulation

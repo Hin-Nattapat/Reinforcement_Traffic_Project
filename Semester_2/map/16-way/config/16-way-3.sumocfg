@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.sf.net/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="../16-way.net.xml"/>
+        <route-files value="../route/Period_3.rou.xml"/>
+    </input>
+
+    <time>
+        <begin value="0"/>
+        <end value="10000"/>
+    </time>
+	
+    <gui_only>
+        <gui-settings-file value="../16-way.settings.xml"/>
+    </gui_only>
+
+    <additional-files value="../16-way.add.xml"/>
+
+    <simulation>
+        <start value = "1" />
+        <quit-on-end value = "1"/>
+    </simulation>
+    <processing>
+        <time-to-teleport value="800"/>
+    </processing>
+
+</configuration>

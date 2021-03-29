@@ -167,8 +167,15 @@ if __name__ == "__main__":
 
     savePath = "Semester_2/map/%s-way/result/%s_result.csv" % (runningMap, solution) #ต้องไปเติมว่าเป็น 16-way กับ Period อะไรมาเพิ่ม ทำเป็นโครงอยู่บรรทัดล่าง
     savePath2 = "Semester_2/map/%s-way/result/%s_reward.csv" % (runningMap, solution)
-    startPath = "Semester_2/map/%s-way/config/%s-way.sumocfg" %(runningMap, runningMap)
-    
+    startPath = ""
+
+    if route == 'p1':
+        startPath = "Semester_2/map/%s-way/config/%s-way-1.sumocfg" %(runningMap, runningMap)
+    elif route == 'p2':
+        startPath = "Semester_2/map/%s-way/config/%s-way-2.sumocfg" %(runningMap, runningMap)
+    elif route == 'p3':
+        startPath = "Semester_2/map/%s-way/config/%s-way-3.sumocfg" %(runningMap, runningMap)
+
     api = sim_api.Simulation(edgeID)
     agent = 0
     csvResult = 0

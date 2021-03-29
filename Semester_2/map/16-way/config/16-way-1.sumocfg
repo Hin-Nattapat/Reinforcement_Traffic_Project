@@ -4,7 +4,7 @@
 
     <input>
         <net-file value="../16-way.net.xml"/>
-        <route-files value="../route/Period_1/Period_1.rou.xml"/>
+        <route-files value="../route/Period_1.rou.xml"/>
     </input>
 
     <time>

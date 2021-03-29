@@ -146,7 +146,7 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
 if __name__ == "__main__":
     solution = 'SRL'
     route = 'p3'
-    runningMap = 16
+    runningMap = 36
 
     maxState = 8
     tls = []

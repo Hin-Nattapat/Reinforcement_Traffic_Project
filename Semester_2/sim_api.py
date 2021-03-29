@@ -180,9 +180,6 @@ class TLScontrol():
         #and write data to CSV
 
     def getAvgResult(self):
-        print(self.result)
-        print(self.result['speed'])
-        print(len(self.result['speed']))
         avgResult = {
             'flowRate' : round(sum(self.result['flowRate']) / len(self.result['flowRate']), 2),
             'speed' : round(sum(self.result['speed']) / len(self.result['speed']), 2),

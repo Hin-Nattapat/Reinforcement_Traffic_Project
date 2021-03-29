@@ -4,7 +4,7 @@ edge_4 = {
 nextEdge_4 = {
     'TFL_1' : ['-gneE14_1','-gneE12_0','-gneE8_1','-gneE14_0','-gneE10_1','-gneE8_0','-gneE12_1','-gneE10_0']
 }
-maxWT_4 = 90.85
+maxWT_4 = 180
 avgSPD_4 = 37.89
 avgDEN_4 = 7.4
 

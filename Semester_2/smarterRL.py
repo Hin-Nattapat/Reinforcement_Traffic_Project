@@ -157,9 +157,13 @@ class Reinforcement():
         return greenTime
 
     def getNextState(self, qLength, moveState, waitingTime):
-        for i in range(len(waitingTime)):
-            if waitingTime[i] > 300:
-                return i  
+        maxWT = max(waitingTime)
+        index = waitingTime.index(maxWT)
+        val = maxWT / (qLength[index] / 6)
+        print(val)
+        if val > 300:
+            return index
+
         length = qLength
         maxLength = max(length)
         nextState = length.index(maxLength)
@@ -177,7 +181,7 @@ class Reinforcement():
         return nextState
 
     def update(self, currentState, nextState, action, data):
-        reward = self.get_our_reward(data)
+        reward = self.getSrlReward(data)
         self.reward.append(reward)
         self.setMaxQ()
         currentData = self.stateSpace[currentState]
@@ -211,7 +215,7 @@ class Reinforcement():
         waitingtimeExpo = A2*(waitingtime-A3)
         return waitingtimeExpo
 
-    def get_our_reward(self, data):
+    def getSrlReward(self, data):
         FR = data['flowRate']
         WT = data['waitingTime']
         flowrateExpo = self.find_flowrate_expo(FR)

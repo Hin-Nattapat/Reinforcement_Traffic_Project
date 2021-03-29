@@ -118,19 +118,20 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
             print('Closed')
             return 0
         if result != None:
-            print(result)
-            csvManage.saveAvgResult(result[1])
+            # print(result)
+            # csvManage.saveAvgResult(result[1])
             for tls in tlsList:
                 tls.saveResult(result[0][tls.id])
         for tls in tlsList:
             if tls.isCycleEnd():
                 lastQueue = api.getLastLength(tls.id)
                 waitingTime = api.getLastWaiting(tls.id)
+                print(lastQueue, waitingTime)
                 if sum(lastQueue) == 0:
                     nextState = agent.getRandomState(tls.moveState)
                 else:
                     nextState = agent.getNextState(lastQueue, tls.moveState, waitingTime)
-                print(tls.cycle)
+                # print(tls.cycle)
                 data = tls.getAvgResult()
                 reward = agent.update(tls.currentState, nextState, tls.action, data)
                 if reward != None:
@@ -143,9 +144,9 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
                 tls.setLogic(phase)
 
 if __name__ == "__main__":
-    solution = 'fix'
+    solution = 'SRL'
     route = 'p1'
-    runningMap = 16
+    runningMap = 4
     maxState = 8
     tls = []
     edgeID = {}
@@ -165,8 +166,8 @@ if __name__ == "__main__":
     elif runningMap == 36:
         edgeID = const.edge_36
 
-    savePath = "Semester_2/map/%s-way/result/%s_result.csv" % (runningMap, solution) #ต้องไปเติมว่าเป็น 16-way กับ Period อะไรมาเพิ่ม ทำเป็นโครงอยู่บรรทัดล่าง
-    savePath2 = "Semester_2/map/%s-way/result/%s_reward.csv" % (runningMap, solution)
+    savePath = "Semester_2/map/%s-way/result/%s_result_%s.csv" % (runningMap, solution, route) #ต้องไปเติมว่าเป็น 16-way กับ Period อะไรมาเพิ่ม ทำเป็นโครงอยู่บรรทัดล่าง
+    savePath2 = "Semester_2/map/%s-way/result/%s_reward_%s.csv" % (runningMap, solution, route)
     startPath = ""
 
     if route == 'p1':
@@ -206,10 +207,13 @@ if __name__ == "__main__":
 
     if solution == 'fix':
         runNormal(api, tls, csvResult, csvRew)
+        print('Complete')
     elif solution == 'PRL':
         runPRL(api, agent, tls, csvResult, csvRew)
+        print('Complete')
     elif solution == 'SRL':
         runSRL(api, agent, tls, csvResult, csvRew)
+        print('Complete')
 
 traci.close()
 sys.stdout.flush()

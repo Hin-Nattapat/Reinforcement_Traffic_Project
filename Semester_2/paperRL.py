@@ -156,7 +156,7 @@ class Reinforcement():
         return nextState
 
     def update(self, currentState, nextState, action, data):
-        reward = self.getReward(data)
+        reward = self.getPrlReward(data)
         self.reward.append(reward)
         self.setMaxQ()
         currentData = self.stateSpace[currentState]

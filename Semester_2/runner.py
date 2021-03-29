@@ -36,7 +36,7 @@ def printResult(tlsID, result, nextState, nextAction):
 def runNormal(api, tlsList, csvManage, csvRew):
     epoch = 0
     count = 0
-    greenTime = 45
+    greenTime = 60
     phase = [0]*len(tlsList)
     tlsID = tlsList
     g_phase = ["rrrrrrrrrGGG", "rrrGGGrrrrrr", "rrrrrrGGGrrr", "GGGrrrrrrrrr"]
@@ -119,7 +119,7 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
             return 0
         if result != None:
             # print(result)
-            # csvManage.saveAvgResult(result[1])
+            csvManage.saveAvgResult(result[1])
             for tls in tlsList:
                 tls.saveResult(result[0][tls.id])
         for tls in tlsList:
@@ -144,7 +144,7 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
                 tls.setLogic(phase)
 
 if __name__ == "__main__":
-    solution = 'SRL'
+    solution = 'PRL'
     route = 'p1'
     runningMap = 4
     maxState = 8

@@ -12,7 +12,7 @@ This command will generate routing that contain many types of car depend on `map
 
 This command will generate route file :
 ```
-python randomTrips.py -n ../4-way.net.xml -r ./Period_1/Period_1.rou.xml -e 1000 -l --validate --fringe-factor 10 --period 1 --trip-attributes="departLane=\"best\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ../4-way --additional-file vTypeDistributions.add.xml
+python randomTrips.py -n ../16-way.net.xml -r ./Period_1/Period_1.rou.xml -e 1000 -l --validate --fringe-factor 10 --period 1 --trip-attributes="departLane=\"best\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ../16-way --additional-file vTypeDistributions.add.xml
 ```
 
 <!-- # Running simulation
@@ -53,3 +53,6 @@ After simulate traffic for `'n'` seconds, simulation will return these value aft
 * 'TFL_8' : ['Mid_SW_1', 'Mid_S_2', 'Mid_SE_2', 'InB_SM_2'],
 * 'TFL_9' : ['Mid_SE_1', 'Mid_ES_2', 'InB_ES_2', 'InB_SE_2']
 
+# How to run?
+* Choose solution ( fix = normal , PRL = model in paper , SRL = our model)
+* Choose running map (4,16,36)

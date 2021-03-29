@@ -8,6 +8,7 @@ import sim_api
 import paperRL as PRL
 import smarterRL as SRL
 import csv_api as CSV
+import constant as const
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -32,42 +33,43 @@ def printResult(tlsID, result, nextState, nextAction):
     print('\nnextstate :', nextState, '| nextAction :', nextAction)
     print('-------------------------------------------------------------')
 
-def runNormal(api, tlsList):
+def runNormal(api, tlsList, csvManage, csvRew):
+    epoch = 0
+    count = 0
+    greenTime = 45
     phase = [0]*len(tlsList)
     tlsID = tlsList
     g_phase = ["rrrrrrrrrGGG", "rrrGGGrrrrrr", "rrrrrrGGGrrr", "GGGrrrrrrrrr"]
     y_phase = ["rrrrrrrrryyy", "rrryyyrrrrrr", "rrrrrryyyrrr", "yyyrrrrrrrrr"]
     traci.simulationStep()
-    l_phase = [g_phase[phase[0]], y_phase[phase[0]], 45]
+    l_phase = [g_phase[phase[0]], y_phase[phase[0]], greenTime]
     for tls in tlsID:
-        tls.cycle = 48
+        tls.cycle = greenTime + 3
         tls.setLogic(l_phase)
-    
     while (traci.simulation.getMinExpectedNumber() - traci.vehicle.getIDCount() != 0):
         try:
             result = api.simulate()
         except:
             print('Closed')
             return 0
+
         if result != None:
-            print(result)
+            csvManage.saveAvgResult(result[1])
             for tls in tlsID:
-                tls.saveResult(result[tls.id])
+                tls.saveResult(result[0][tls.id])
         for tls in tlsID:
             index = tlsID.index(tls)
             if tls.isCycleEnd():
                 phase[index] = (phase[index] + 1) % 4
-                l_phase = [g_phase[phase[index]], y_phase[phase[index]], 45]
+                count += 1
+                l_phase = [g_phase[phase[index]], y_phase[phase[index]], greenTime]
                 tls.setLogic(l_phase)
+                if count == len(phase):
+                    count = 0
+                    epoch += 1
+                    csvRew.saveAvgResult([epoch, greenTime])                    
 
-def runRL(api, agent, tlsList):
-    csv_manage = CSV.Csv_api()
-    if agent.typeRL == 'SRL':
-        csv_AvgResult_path = "%s/AvgResult_SRL.csv" % save_path
-        csv_manage.createAvgResult(csv_AvgResult_path)
-    elif agent.typeRL == 'PRL':
-        csv_AvgResult_path = "%s/AvgResult_PRL.csv" % save_path
-        csv_manage.createAvgResult(csv_AvgResult_path)
+def runPRL(api, agent, tlsList, csvManage, csvRew):
     traci.simulationStep()
     for tls in tlsList:
         tls.action = agent.getAction('e_greedy', tls.currentState)
@@ -80,47 +82,111 @@ def runRL(api, agent, tlsList):
             print('Closed')
             return 0
         if result != None:
+            print(result)
+            csvManage.saveAvgResult(result[1])
             for tls in tlsList:
-                tls.saveResult(result[tls.id])
+                tls.saveResult(result[0][tls.id])
         for tls in tlsList:
             if tls.isCycleEnd():
                 lastQueue = api.getLastLength(tls.id)
-                print(lastQueue)
                 if sum(lastQueue) == 0:
                     nextState = agent.getRandomState(tls.moveState)
                 else:
                     nextState = agent.getNextState(lastQueue, tls.moveState)
                 data = tls.getAvgResult()
-                agent.update(tls.currentState, nextState, tls.action, data)
+                reward = agent.update(tls.currentState, nextState, tls.action, data)
+                if reward != None:
+                    csvRew.saveAvgResult(reward)
                 tls.currentState = nextState
                 tls.action = agent.getAction('e_greedy', tls.currentState)
                 printResult(tls.id, data, nextState, tls.action)
                 phase, tls.moveState = agent.takeAction(tls.action, tls.currentState)
                 tls.setLogic(phase)
-        csv_manage.saveResult(['Time','Avg_FlowRate','Avg_Speed','Avg_Density','Avg_WaitingTime','Avg_ArrivalRate','Avg_qLength','Avg_qSTD','Avg_QValue'],csv_AvgResult_path)                
+
+def runSRL(api, agent, tlsList, csvManage, csvRew):
+    traci.simulationStep()
+    for tls in tlsList:
+        tls.action = agent.getAction('e_greedy', tls.currentState)
+        phase, tls.moveState = agent.takeAction(tls.action, tls.currentState)
+        # print(tls.getNextLane())
+        phase[2] = agent.getGreenTime(tls.getMoveLane(), tls.getNextLane())
+        tls.setLogic(phase)
+    while (traci.simulation.getMinExpectedNumber() - traci.vehicle.getIDCount() != 0):
+        try:
+            result = api.simulate()
+        except:
+            print('Closed')
+            return 0
+        if result != None:
+            print(result)
+            csvManage.saveAvgResult(result[1])
+            for tls in tlsList:
+                tls.saveResult(result[0][tls.id])
+        for tls in tlsList:
+            if tls.isCycleEnd():
+                lastQueue = api.getLastLength(tls.id)
+                waitingTime = api.getLastWaiting(tls.id)
+                if sum(lastQueue) == 0:
+                    nextState = agent.getRandomState(tls.moveState)
+                else:
+                    nextState = agent.getNextState(lastQueue, tls.moveState, waitingTime)
+                print(tls.cycle)
+                data = tls.getAvgResult()
+                reward = agent.update(tls.currentState, nextState, tls.action, data)
+                if reward != None:
+                    csvRew.saveAvgResult(reward)
+                tls.currentState = nextState
+                tls.action = agent.getAction('e_greedy', tls.currentState)
+                printResult(tls.id, data, nextState, tls.action)
+                phase, tls.moveState = agent.takeAction(tls.action, tls.currentState)
+                phase[2] = agent.getGreenTime(tls.getMoveLane(), tls.getNextLane())
+                tls.setLogic(phase)
 
 if __name__ == "__main__":
-    numJunc = 4
-    agent = []
+    solution = 'fix'
+    route = 'p1'
+    runningMap = 16
+    maxState = 8
     tls = []
-    state = ['gneE8_1', 'gneE8_0', 'gneE10_1', 'gneE10_0', 'gneE12_1', 'gneE12_0', 'gneE14_1', 'gneE14_0']
-    edgeID = {
-        'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_N_2', 'Mid_W_1'],
-        'TFL_2' : ['Mid_N_1', 'InB_NE_2', 'InB_EN_2', 'Mid_E_1'],
-        'TFL_3' : ['Mid_S_1', 'Mid_E_2', 'InB_ES_2', 'InB_SE_2'],
-        'TFL_4' : ['InB_WS_2', 'Mid_W_2', 'Mid_S_2', 'InB_SW_2']
-    }
-    
-    save_path = "Semester_2/map/" #ต้องไปเติมว่าเป็น 16-way กับ Period อะไรมาเพิ่ม ทำเป็นโครงอยู่บรรทัดล่าง
-    method = "16-way"
-    method_period = "Period_1"
-    save_path += "%s/Rou_File/%s" % (method,method_period)
+    edgeID = {}
+    nextLane = {}
+    avgSPD = 0
+    avgDEN = 0
+    maxWait = 0
+    if runningMap == 4:
+        edgeID = const.edge_4
+        nextLane = const.nextEdge_4
+        avgSPD = const.avgSPD_4
+        avgDEN = const.avgDEN_4
+        maxWait = const.maxWT_4
+    elif runningMap == 16:
+        edgeID = const.edge_16
+        nextLane = const.nextEdge_16
+    elif runningMap == 36:
+        edgeID = const.edge_36
+
+    savePath = "Semester_2/map/%s-way/result/%s_result.csv" % (runningMap, solution) #ต้องไปเติมว่าเป็น 16-way กับ Period อะไรมาเพิ่ม ทำเป็นโครงอยู่บรรทัดล่าง
+    savePath2 = "Semester_2/map/%s-way/result/%s_reward.csv" % (runningMap, solution)
+    startPath = "Semester_2/map/%s-way/config/%s-way.sumocfg" %(runningMap, runningMap)
     
     api = sim_api.Simulation(edgeID)
-    agent = PRL.Reinforcement(8)
+    agent = 0
+    csvResult = 0
+    csvRew = 0
+    if solution == 'fix':
+        csvResult = CSV.Csv_api(savePath, ['time','avgFlowRate','avgSpeed','avgDensity','avgWaiting','avgQLength'])
+        csvRew = CSV.Csv_api(savePath2, ['epoch','greenTime'])
+    elif solution == 'PRL':
+        agent = PRL.Reinforcement(8, len(edgeID))
+        csvResult = CSV.Csv_api(savePath, ['time','avgFlowRate','avgSpeed','avgDensity','avgWaiting','avgQLength'])
+        csvRew = CSV.Csv_api(savePath2, ['epoch','greenTime','reward'])
+    elif solution == 'SRL':
+        agent = SRL.Reinforcement(8, len(edgeID), avgSPD, avgDEN, maxWait)
+        csvResult = CSV.Csv_api(savePath, ['time','avgFlowRate','avgSpeed','avgDensity','avgWaiting','avgQLength'])
+        csvRew = CSV.Csv_api(savePath2, ['epoch','greenTime','reward'])
 
     for junc, edge in edgeID.items():
-        tls.append(sim_api.TLScontrol(junc, edge))
+        tls.append(sim_api.TLScontrol(junc, edge, nextLane[junc]))
 
     options = get_options()
     
@@ -129,10 +195,14 @@ if __name__ == "__main__":
     else:
         sumoBinary = checkBinary('sumo-gui')
     
-    traci.start([sumoBinary, "-c", "Semester_2/map/16-way/16-way.sumocfg"])
-    
-    # runNormal(api, tls)
-    runRL(api, agent, tls)
+    traci.start([sumoBinary, "-c", startPath])
+
+    if solution == 'fix':
+        runNormal(api, tls, csvResult, csvRew)
+    elif solution == 'PRL':
+        runPRL(api, agent, tls, csvResult, csvRew)
+    elif solution == 'SRL':
+        runSRL(api, agent, tls, csvResult, csvRew)
 
 traci.close()
 sys.stdout.flush()

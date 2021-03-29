@@ -10,13 +10,14 @@ class Simulation():
         self.arrId = [[-1] *8] *self.numJunc
         self.carOut = [0] *self.numJunc
         self.carIn = [0] *self.numJunc
-        self.getDuration = 4
+        self.getDuration = 10
         
     def simulate(self):
         #flowrate,speed,density,waiting,arrivalRate,queuelength,sdLength
         self.addCarOut()
         self.addCarIn()
         result = {}
+        avgData = [[],[],[],[],[],[]]
         if traci.simulation.getTime() % self.getDuration == 0:
             juncIndex = 0
             for junc, edge in self.edge.items():
@@ -24,18 +25,32 @@ class Simulation():
                 flowRate = round((self.carOut[juncIndex] * 3600 / traci.simulation.getTime()), 2)
                 arrRate = round((self.carIn[juncIndex] * 3600 / traci.simulation.getTime()), 2)
                 length = self.getAvgLength(edge)
+                speed = self.get_avg_speed(edge)
+                density = self.get_density(edge)
+                waiting = self.getWaitingTime(edge)
                 result[junc]["flowRate"] = flowRate
-                result[junc]["speed"] = self.get_avg_speed(edge)
-                result[junc]["density"] = self.get_density(edge)
-                result[junc]["waitingTime"] = self.getWaitingTime(edge)
+                result[junc]["speed"] = speed
+                result[junc]["density"] = density
+                result[junc]["waitingTime"] = waiting
                 result[junc]["arrivalRate"] = arrRate
                 result[junc]["qLength"] = length[0]
                 result[junc]["qStd"] = length[1]
+                avgData[1].append(flowRate)
+                avgData[2].append(speed)
+                avgData[3].append(density)
+                avgData[4].append(waiting)
+                avgData[5].append(length[0])
                 juncIndex += 1
                 
         traci.simulationStep()
         if len(result) > 0:
-            return result
+            avgData[0] = traci.simulation.getTime()
+            avgData[1] = round(sum(avgData[1]) / len(avgData[1]), 2)
+            avgData[2] = round(sum(avgData[2]) / len(avgData[2]), 2)
+            avgData[3] = round(sum(avgData[3]) / len(avgData[3]), 2)
+            avgData[4] = round(sum(avgData[4]) / len(avgData[4]), 2)
+            avgData[5] = round(sum(avgData[5]) / len(avgData[5]), 2)
+            return result, avgData
         return None
 
     def addCarOut(self):
@@ -93,7 +108,7 @@ class Simulation():
             lengthList.append(traci.lane.getLastStepHaltingNumber(edge+'_0') * 6.0)
         avg_length = sum(lengthList) / len(lengthList)
         std_length = st.stdev(lengthList)
-        return avg_length, std_length
+        return avg_length, round(std_length, 2)
 
     def getLastLength(self, juncID):
         edgeID = self.edge[juncID]
@@ -101,15 +116,23 @@ class Simulation():
         for edge in edgeID:
             length.append(traci.lane.getLastStepHaltingNumber(edge+'_1') * 6.0)
             length.append(traci.lane.getLastStepHaltingNumber(edge+'_0') * 6.0)
-        
         return length
+    
+    def getLastWaiting(self, juncID):
+        edgeID = self.edge[juncID]
+        wait = []
+        for edge in edgeID:
+            wait.append(traci.lane.getWaitingTime(edge+'_1'))
+            wait.append(traci.lane.getWaitingTime(edge+'_0'))
+        return wait
 
 class TLScontrol():
-    def __init__(self, tlsID, edgeID):
+    def __init__(self, tlsID, edgeID, nextLane):
         self.id = tlsID
         self.cycle = 0
         self.time = 0
         self.lane = []
+        self.nextLane = nextLane
         self.currentState = 0
         self.moveState = []
         self.action = 0
@@ -129,7 +152,7 @@ class TLScontrol():
             self.lane.append(edge + '_0')
 
     def __str__(self):
-        return self.id
+        return 'hi'
 
     def setLogic(self, phase):
         tlPhase = []
@@ -157,6 +180,9 @@ class TLScontrol():
         #and write data to CSV
 
     def getAvgResult(self):
+        print(self.result)
+        print(self.result['speed'])
+        print(len(self.result['speed']))
         avgResult = {
             'flowRate' : round(sum(self.result['flowRate']) / len(self.result['flowRate']), 2),
             'speed' : round(sum(self.result['speed']) / len(self.result['speed']), 2),
@@ -176,4 +202,16 @@ class TLScontrol():
             'qStd' : []
         }
         return avgResult
+    
+    def getMoveLane(self):
+        lane = []
+        for i in self.moveState:
+            lane.append(self.lane[i])
+        return lane
+    
+    def getNextLane(self):
+        lane = []
+        for i in self.moveState:
+            lane.append(self.nextLane[i])
+        return lane
 

@@ -2,17 +2,22 @@ import random
 import math
 
 class Reinforcement():
-    def __init__(self, maxState):
+    def __init__(self, maxState, numJunc):
         self.EXPLORE_RATE = 0.5
         self.LEARNING_RATE = 0.1
         self.DISCOUNT_RATE = 0.9
         self.MAX_ACTIONS = 3
         self.TAU = 0.8
         self.DELTA = 0.5
+        self.TYPE = 'PRL'
+        self.EPOCH = 1
         self.stateSpace = {}
-        self.typeRL = 'PRL'
-
-        for state in range(8):
+        self.count = 0
+        self.numJunc = numJunc
+        self.reward = []
+        self.greenTime = []
+        
+        for state in range(maxState):
             temp = {
                 'qValue' : [0.0]*self.MAX_ACTIONS,
                 'sumQ' : 0.0,
@@ -45,12 +50,12 @@ class Reinforcement():
             action = self.eGreedy(currentState)
         return action
 
-    def get_avgQ(self):
+    def getAvgQ(self):
         total_sumQ = 0
         for i in range(len(self.stateSpace)):
             total_sumQ += sum(self.stateSpace[i]["qValue"])
         avg_sumQ = total_sumQ / (len(self.stateSpace) * (self.MAX_ACTIONS - 1))
-        return round(avg_sumQ,3)
+        return round(avg_sumQ, 3)
 
     def eGreedy(self, currentState):
         action = 0
@@ -125,10 +130,14 @@ class Reinforcement():
 
         phase[0] = g_phase
         phase[1] = y_phase
-        phase[2] = 60  
+        phase[2] = self.getGreenTime()
+        self.greenTime.append(phase[2])  
         
         return phase, green_state
     
+    def getGreenTime(self):
+        return 60
+
     def getNextState(self, qLength, moveState):  
         length = qLength
         maxLength = max(length)
@@ -148,6 +157,7 @@ class Reinforcement():
 
     def update(self, currentState, nextState, action, data):
         reward = self.getReward(data)
+        self.reward.append(reward)
         self.setMaxQ()
         currentData = self.stateSpace[currentState]
         nextData = self.stateSpace[nextState]
@@ -155,6 +165,16 @@ class Reinforcement():
         currentData["qValue"][action] += round((self.LEARNING_RATE * (reward + (self.DISCOUNT_RATE * nextData["maxQ"])) - currentData["qValue"][action]), 5)
         self.stateSpace[currentState] = currentData
         self.setSumQ()
+        self.count += 1
+        if self.count == self.numJunc:
+            self.EPOCH += 1
+            avgGreen = round(sum(self.greenTime) / len(self.greenTime), 2)
+            avgRew = round(sum(self.reward) / len(self.reward), 2)
+            self.reward = []
+            self.greenTime = []
+            self.count = 0
+            return [self.EPOCH - 1, avgGreen, avgRew]
+        return None
 
     def getReward(self, data):
         expo = -0.003930312 * (data['arrivalRate'] - 750)

@@ -2,38 +2,35 @@ import random
 import math
 import statistics as st
 import csv_api as CSV
+import traci
 
 class Reinforcement():
-    def __init__(self, lane, max_actions, avg_speed, avg_density, max_waiting_time):
+    def __init__(self, maxState, numJunc, avg_speed, avg_density, max_waiting_time):
         self.EXPLORE_RATE = 0.5
         self.LEARNING_RATE = 0.1
         self.DISCOUNT_RATE = 0.9
-        self.MAX_ACTIONS = max_actions
+        self.MAX_ACTIONS = 3
         self.TAU = 0.8
         self.DELTA = 0.5
         self.EPOCH = 1
-        self.lane = lane
-        self.current_state = 0
+        self.TYPE = 'SRL'
         self.stateSpace = {}
-        self.moveState = [-1, -1]
-        self.greenTime = 60
+        self.count = 0
+        self.numJunc = numJunc
+        self.reward = []
+        self.greenTime = []
         #####################################
         self.AVG_SPD = avg_speed
         self.DENSITY = avg_density
         self.MAX_WAITING_TIME = max_waiting_time
         #####################################
-        self.init_stateSpace()
-        self.typeRL = 'SRL'
-
-    def init_stateSpace(self):
-        for i in range(len(self.lane)):
+        for i in range(maxState):
             temp = {
-                "q_value" : [0.0]*self.MAX_ACTIONS,
+                "qValue" : [0.0]*self.MAX_ACTIONS,
                 "sumQ" : 0.0,
                 "maxQ" : 0.0
             }
             self.stateSpace[i] = temp
-        #print(self.stateSpace)
 
     def printStateSpace(self):
         print(self.stateSpace)
@@ -44,101 +41,91 @@ class Reinforcement():
     def getEpoch(self):
         return self.EPOCH
 
-    def get_nextState(self, q_length):
-        max_length = 0
-        max_lane = ''
-        for lane, length in q_length.items():
-            if length > max_length and lane not in self.moveState:
-                max_lane = lane
-                max_length = length
-        if max_length > 0:
-            return self.lane.index(max_lane)
-        else:
-            return None
-
-    def set_maxQ(self):
+    def setMaxQ(self):
         for i in range(len(self.stateSpace)):
-            maxQ = max(self.stateSpace[i]["q_value"])
+            maxQ = max(self.stateSpace[i]["qValue"])
             self.stateSpace[i]["maxQ"] = maxQ
     
-    def set_sumQ(self):
+    def setSumQ(self):
         for i in range(len(self.stateSpace)):
-            sumQ = sum(self.stateSpace[i]["q_value"])
+            sumQ = sum(self.stateSpace[i]["qValue"])
             self.stateSpace[i]["sumQ"] = sumQ
 
-    def get_avgQ(self):
+    def getAvgQ(self):
         total_sumQ = 0
         for i in range(len(self.stateSpace)):
-            total_sumQ += sum(self.stateSpace[i]["q_value"])
+            total_sumQ += sum(self.stateSpace[i]["qValue"])
         avg_sumQ = total_sumQ / (len(self.stateSpace) * (self.MAX_ACTIONS - 1))
         return avg_sumQ
 
-    def get_action(self, policy):
+    def getAction(self, policy, currentState):
         action = None
         if policy == "p_greedy":
-            action = self.p_greedy()
+            action = self.pGreedy(currentState)
+        if policy == "e_greedy":
+            action = self.eGreedy(currentState)
         return action
 
-    def e_greedy(self):
+    def eGreedy(self, currentState):
         action = 0
-        current_state = self.stateSpace[self.current_state]
-        if (self.EXPLORE_RATE > random.uniform(0, 1)) or (current_state["sumQ"] == 0.0):
+        stateData = self.stateSpace[currentState]
+        if (self.EXPLORE_RATE > random.uniform(0, 1)) or (stateData["sumQ"] == 0.0):
             #explore
             print('explore' ,end=' | ')
-            action = self.random_action(self.current_state)
+            action = self.randomAction(currentState)
         else:
             #exploit
             print('exploit' ,end=' | ')
             for count in range(self.MAX_ACTIONS):
-                if self.action_verify(self.current_state, count):
-                    if (current_state["q_value"][count] == current_state["maxQ"]):
+                if self.actionVerify(currentState, count):
+                    if (stateData["qValue"][count] == stateData["maxQ"]):
                         action = count
         return action
 
-    def p_greedy(self):
+    def pGreedy(self, currentState):
         action = 0
-        current_state = self.stateSpace[self.current_state]
-        if (self.EXPLORE_RATE > random.uniform(0, 1)) or (current_state["sumQ"] == 0.0):
+        stateData = self.stateSpace[currentState]
+        if (self.EXPLORE_RATE > random.uniform(0, 1)) or (stateData["sumQ"] == 0.0):
             #explore
             print('explore' ,end=' | ')
-            action = self.random_action(self.current_state)
+            action = self.randomAction(currentState)
         else:
             #exploit
             print('exploit' ,end=' | ')
-            action = self.random_action(self.current_state)
+            action = self.randomAction(currentState)
             for count in range(self.MAX_ACTIONS):
-                if self.action_verify(self.current_state, action):
-                    prob = (current_state["q_value"][action]) / current_state["sumQ"]
+                if self.actionVerify(currentState, action):
+                    prob = (stateData["qValue"][action]) / stateData["sumQ"]
                     if prob > random.uniform(0, 1):
                         return action
                 action += 1
                 if action == self.MAX_ACTIONS:
                     action = 0
             if count == self.MAX_ACTIONS:
-                action = self.random_action(self.current_state)
+                action = self.randomAction(currentState)
         return action
     
-    def random_action(self, state): #complete
+    def randomAction(self, state): #complete
         action = random.randint(0,2)
-        while not(self.action_verify(state, action)):
+        while not(self.actionVerify(state, action)):
             action = random.randint(0,2)       
         return action
 
-    def action_verify(self, state, action): #complete
+    def actionVerify(self, state, action): #complete
         if state % 2 == 0 and action in [0, 2]:
             return True
         elif state % 2 == 1 and action in [0, 1]:
             return True
         return False
     
-    def take_action(self, action):
-        green_state = [self.current_state] #which state can go?
+    def takeAction(self, action, currentState):
+        green_state = [currentState] #which state can go?
         phase = [[''],[''],0]
-
+        
         if action == 0:
-            green_state.append(self.current_state + (-2 * (self.current_state % 2)) + 1)
+            green_state.append(currentState + (-2 * (currentState % 2)) + 1)
         else:
-            green_state.append((self.current_state + 4) % 8)
+            green_state.append((currentState + 4) % 8)
         
         g_phase = ''
         y_phase = ''
@@ -151,30 +138,64 @@ class Reinforcement():
                 y_phase += 'r' * (1 + (i % 2))
 
         phase[0] = g_phase
-        phase[1] = y_phase
-        phase[2] = self.greenTime  
-
-        for i in range(len(green_state)):
-            self.moveState[i] = self.lane[green_state[i]]
+        phase[1] = y_phase  
         
-        return phase 
+        return phase, green_state
+    
+    def getGreenTime(self, moveLane, nextLane):
+        moveDens = []
+        nextDens = []
+        for i in range(len(moveDens)):
+            moveDens.append(traci.lane.getLastStepVehicleNumber(moveLane[i])*0.4)
+            nextDens.append(traci.lane.getLastStepVehicleNumber(nextLane[i])*0.4)
+        
+        if sum(moveDens)==0 or sum(nextDens)==0:
+            self.greenTime.append(60)
+            return 60
+        greenTime = (sum(moveDens)/len(moveDens)) / (sum(nextDens)/len(nextDens)) * 60
+        self.greenTime.append(greenTime)
+        return greenTime
 
-    def update(self, nextState, action, data):
-        write_csv = CSV.Csv_api()
-        reward = 0
-        # reward = self.get_paper_reward(data)
+    def getNextState(self, qLength, moveState, waitingTime):
+        for i in range(len(waitingTime)):
+            if waitingTime[i] > 300:
+                return i  
+        length = qLength
+        maxLength = max(length)
+        nextState = length.index(maxLength)
+        while nextState in moveState:
+            length[nextState] = -1
+            maxLength = max(length)
+            nextState = length.index(maxLength)
+        print(nextState)
+        return nextState
+    
+    def getRandomState(self, moveState):
+        nextState = random.randint(0, 7)
+        while nextState in moveState:
+            nextState = random.randint(0, 7)
+        return nextState
+
+    def update(self, currentState, nextState, action, data):
         reward = self.get_our_reward(data)
-        write_csv.saveResult([self.getEpoch(),reward],"Reward.csv")
-        self.set_maxQ()
-        state = self.stateSpace[self.current_state]
-        next_state = self.stateSpace[nextState]
+        self.reward.append(reward)
+        self.setMaxQ()
+        currentData = self.stateSpace[currentState]
+        nextData = self.stateSpace[nextState]
 
-        state["q_value"][action] += round((self.LEARNING_RATE * (reward + (self.DISCOUNT_RATE * next_state["maxQ"])) - state["q_value"][action]), 5)
-
-        self.set_sumQ()
-        self.current_state = nextState
-        write_csv.saveResult([self.getEpoch(),self.get_avgQ()],"avg_Q.csv")
-        self.EPOCH += 1
+        currentData["qValue"][action] += round((self.LEARNING_RATE * (reward + (self.DISCOUNT_RATE * nextData["maxQ"])) - currentData["qValue"][action]), 5)
+        self.stateSpace[currentState] = currentData
+        self.setSumQ()
+        self.count += 1
+        if self.count == self.numJunc:
+            self.EPOCH += 1
+            avgGreen = round(sum(self.greenTime) / len(self.greenTime), 2)
+            avgRew = round(sum(self.reward) / len(self.reward), 2)
+            self.reward = []
+            self.greenTime = []
+            self.count = 0
+            return [self.EPOCH - 1, avgGreen, avgRew]
+        return None
 
     def find_flowrate_expo(self,flowrate):
         # ต้องหา avg_spd,density นำข้อมูลมาจากกราฟของการทดลองแรก
@@ -191,8 +212,8 @@ class Reinforcement():
         return waitingtimeExpo
 
     def get_our_reward(self, data):
-        FR = sum(data[0]) / len(data[0])
-        WT = sum(data[3]) / len(data[3])
+        FR = data['flowRate']
+        WT = data['waitingTime']
         flowrateExpo = self.find_flowrate_expo(FR)
         waitingtimeExpo = self.find_waitingtime_expo(WT)
         FlowRateScale = 1/(1+math.exp(flowrateExpo))

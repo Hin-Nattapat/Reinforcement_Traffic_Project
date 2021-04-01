@@ -22,8 +22,8 @@ nextEdge_16 = {
 }
 
 maxWT_16 = 180
-avgSPD_16 = 27.98
-avgDEN_16 = 26.36
+avgSPD_16 = 33.26
+avgDEN_16 = 12.44
 
 edge_36 = {
     'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_NW_2', 'Mid_WN_1'],

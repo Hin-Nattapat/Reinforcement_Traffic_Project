@@ -13,9 +13,15 @@ This command will generate routing that contain many types of car depend on `map
 This command will generate route file :
 ```
 
-python randomTrips.py -n ./36-way/36-way.net.xml -r ./36-way/route/Period_3.rou.xml -e 6000 -l --validate --fringe-factor 10 --period 0.8 --trip-attributes="departLane=\"best\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ./36-way/36-way --additional-file vTypeDistributions.add.xml
+python randomTrips.py -n ./16-way/16-way.net.xml -r ./16-way/route/Period_1.rou.xml -e 10800 -l --validate --period 0.6 --trip-attributes="departLane=\"random\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ./16-way/16-way --additional-file vTypeDistributions.add.xml --min-distance 2500 
+
+python randomTrips.py -n ./36-way/36-way.net.xml -r ./36-way/route/Period_1.rou.xml -e 10800 -l --validate --period 1 --trip-attributes="departLane=\"random\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ./36-way/36-way --additional-file vTypeDistributions.add.xml --min-distance 2500
+
 
 ```
+
+16-way => --min-distance 2500 
+36-way => --min-distance 7500 
 
 <!-- # Running simulation
 
@@ -34,15 +40,20 @@ After simulate traffic for `'n'` seconds, simulation will return these value aft
 * 'TFL_1' : ['gneE8', 'gneE10', 'gneE12', 'gneE14'] 
 
 # Rou 4-way
-* File Period_0 : Period 0.8
-* File Period_1 : Period 1
-* File Period_2 : Period 1.2
+* File Period_1 : Period 0.8
+* File Period_2 : Period 1
+* File Period_3 : Period 1.2
 
 # Edge 16-way
 * 'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_N_2', 'Mid_W_1'],
 * 'TFL_2' : ['Mid_N_1', 'InB_NE_2', 'InB_EN_2', 'Mid_E_1'],
 * 'TFL_3' : ['Mid_S_1', 'Mid_E_2', 'InB_ES_2', 'InB_SE_2'],
 * 'TFL_4' : ['InB_WS_2', 'Mid_W_2', 'Mid_S_2', 'InB_SW_2']
+
+# Rou 16-way
+* File Period_1 : Period 0.6
+* File Period_2 : Period 0.8
+* File Period_3 : Period 1
 
 # Edge 36-way
 * 'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_NW_2', 'Mid_WN_1'],
@@ -54,6 +65,11 @@ After simulate traffic for `'n'` seconds, simulation will return these value aft
 * 'TFL_7' : ['InB_WS_2', 'Mid_WS_2', 'Mid_SW_2', 'InB_SW_2'],
 * 'TFL_8' : ['Mid_SW_1', 'Mid_S_2', 'Mid_SE_2', 'InB_SM_2'],
 * 'TFL_9' : ['Mid_SE_1', 'Mid_ES_2', 'InB_ES_2', 'InB_SE_2']
+
+# Rou 36-way
+* File Period_1 : Period 0.6
+* File Period_2 : Period 0.8
+* File Period_3 : Period 1
 
 # How to run?
 * Choose solution ( fix = normal , PRL = model in paper , SRL = our model)

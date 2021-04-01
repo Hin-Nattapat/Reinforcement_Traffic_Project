@@ -10,7 +10,7 @@ def plot_line(ax,data_x,data_y,label_x,label_y,line_label,color):
     ax.set_xlabel(label_x, fontsize=10)
     ax.set_ylabel(label_y, fontsize=10)
     ax.plot(data_x,data_y,label =line_label,color = color)
-    ax.legend()
+    # ax.legend()
 
 def plot_bar_3(ax,data1,data2,data3,label1,label2,label3,label_y):
     ax.set_ylabel(label_y)

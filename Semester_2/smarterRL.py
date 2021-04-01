@@ -145,14 +145,14 @@ class Reinforcement():
     def getGreenTime(self, moveLane, nextLane):
         moveDens = []
         nextDens = []
-        for i in range(len(moveDens)):
-            moveDens.append(traci.lane.getLastStepVehicleNumber(moveLane[i])*0.4)
-            nextDens.append(traci.lane.getLastStepVehicleNumber(nextLane[i])*0.4)
-        
-        if sum(moveDens)==0 or sum(nextDens)==0:
-            self.greenTime.append(60)
-            return 60
-        greenTime = (sum(moveDens)/len(moveDens)) / (sum(nextDens)/len(nextDens)) * 60
+        for i in range(len(moveLane)):
+            moveDens.append(traci.lane.getLastStepHaltingNumber(moveLane[i]))
+            nextDens.append(traci.lane.getLastStepVehicleNumber(nextLane[i]))
+        print(moveLane, nextLane)
+        print(moveDens, nextDens)
+        avgMoveDens = (sum(moveDens) / len(moveDens)) + 1
+        avgNextDens = (sum(moveDens) / len(nextDens)) + 1
+        greenTime = avgMoveDens/avgNextDens * 60
         self.greenTime.append(greenTime)
         return greenTime
 
@@ -222,7 +222,7 @@ class Reinforcement():
         waitingtimeExpo = self.find_waitingtime_expo(WT)
         FlowRateScale = 1/(1+math.exp(flowrateExpo))
         WaitingTimeScale = 1/(1+math.exp(waitingtimeExpo))
-        reward = FlowRateScale/(1+WaitingTimeScale)
+        reward = FlowRateScale/(1+WaitingTimeScale) * 10
         return reward
 
 

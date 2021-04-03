@@ -23,7 +23,7 @@
         <quit-on-end value = "1"/>
     </simulation>
     <processing>
-        <time-to-teleport value="1000"/>
+        <time-to-teleport value="10000"/>
     </processing>
 
 </configuration>

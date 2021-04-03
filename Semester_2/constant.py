@@ -4,9 +4,8 @@ edge_4 = {
 nextEdge_4 = {
     'TFL_1' : ['-gneE14_1','-gneE12_0','-gneE8_1','-gneE14_0','-gneE10_1','-gneE8_0','-gneE12_1','-gneE10_0']
 }
-maxWT_4 = 180
-avgSPD_4 = 37.89
-avgDEN_4 = 7.4
+maxWT_4 = 90
+satFR_16 = 1500
 
 edge_16 = {
     'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_N_2', 'Mid_W_1'],
@@ -21,9 +20,8 @@ nextEdge_16 = {
     'TFL_4' : ['OutB_SW_2_1','Mid_S_1_0','OutB_WS_2_1','OutB_SW_2_0','Mid_W_1_1','OutB_WS_2_0','Mid_S_1_1','Mid_W_1_0']   
 }
 
-maxWT_16 = 180
-avgSPD_16 = 33.26
-avgDEN_16 = 12.44
+maxWT_16 = 90 # peak WT fix rou1
+satFR_16 = 4000 # peak FR fix rou1
 
 edge_36 = {
     'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_NW_2', 'Mid_WN_1'],

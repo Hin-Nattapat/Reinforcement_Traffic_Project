@@ -5,32 +5,30 @@ import csv_api as CSV
 import traci
 
 class Reinforcement():
-    def __init__(self, maxState, numJunc, avg_speed, avg_density, max_waiting_time):
+    def __init__(self, maxState, numJunc, sat_flowrate, max_waiting_time):
         self.EXPLORE_RATE = 0.5
         self.LEARNING_RATE = 0.1
         self.DISCOUNT_RATE = 0.9
         self.MAX_ACTIONS = 3
-        self.TAU = 0.8
-        self.DELTA = 0.5
-        self.EPOCH = 1
         self.TYPE = 'SRL'
+        self.EPOCH = 1
         self.stateSpace = {}
         self.count = 0
         self.numJunc = numJunc
         self.reward = []
         self.greenTime = []
         #####################################
-        self.AVG_SPD = avg_speed
-        self.DENSITY = avg_density
+        self.SAT_FR = sat_flowrate
         self.MAX_WAITING_TIME = max_waiting_time
         #####################################
-        for i in range(maxState):
+
+        for state in range(maxState):
             temp = {
-                "qValue" : [0.0]*self.MAX_ACTIONS,
-                "sumQ" : 0.0,
-                "maxQ" : 0.0
+                'qValue' : [0.0]*self.MAX_ACTIONS,
+                'sumQ' : 0.0,
+                'maxQ' : 0.0
             }
-            self.stateSpace[i] = temp
+            self.stateSpace[state] = temp
 
     def printStateSpace(self):
         print(self.stateSpace)
@@ -56,7 +54,7 @@ class Reinforcement():
         for i in range(len(self.stateSpace)):
             total_sumQ += sum(self.stateSpace[i]["qValue"])
         avg_sumQ = total_sumQ / (len(self.stateSpace) * (self.MAX_ACTIONS - 1))
-        return avg_sumQ
+        return round(avg_sumQ, 3)
 
     def getAction(self, policy, currentState):
         action = None
@@ -89,6 +87,7 @@ class Reinforcement():
             #explore
             print('explore' ,end=' | ')
             action = self.randomAction(currentState)
+            print("ACTION => ", action)
         else:
             #exploit
             print('exploit' ,end=' | ')
@@ -103,6 +102,7 @@ class Reinforcement():
                     action = 0
             if count == self.MAX_ACTIONS:
                 action = self.randomAction(currentState)
+            print("ACTION => ", action)
         return action
     
     def randomAction(self, state): #complete
@@ -148,12 +148,19 @@ class Reinforcement():
         for i in range(len(moveLane)):
             moveDens.append(traci.lane.getLastStepHaltingNumber(moveLane[i]))
             nextDens.append(traci.lane.getLastStepVehicleNumber(nextLane[i]))
-        print(moveLane, nextLane)
-        print(moveDens, nextDens)
         avgMoveDens = (sum(moveDens) / len(moveDens)) + 1
-        avgNextDens = (sum(moveDens) / len(nextDens)) + 1
-        greenTime = avgMoveDens/avgNextDens * 60
+        avgNextDens = (sum(nextDens) / len(nextDens)) + 1
+        
+        GT = avgMoveDens/avgNextDens * 60
+        if GT > 60:
+            greenTime = 60
+        elif GT < 20 :
+            greenTime = 20
+        else: 
+            greenTime = int(GT)
+
         self.greenTime.append(greenTime)
+        print("Green Time => ",greenTime)
         return greenTime
 
     def getNextState(self, qLength, moveState, waitingTime):
@@ -203,8 +210,9 @@ class Reinforcement():
 
     def find_flowrate_expo(self,flowrate):
         # ต้องหา avg_spd,density นำข้อมูลมาจากกราฟของการทดลองแรก
-        Saturate_Flowrate = self.AVG_SPD * self.DENSITY
-        A3 = Saturate_Flowrate/2
+        # Saturate_Flowrate = self.SAT_FR * self.DENSITY
+        Saturate_Flowrate = 3500
+        A3 =  self.SAT_FR/2
         A2 = 2.944/(0.95-A3)
         flowrateExpo = A2*(flowrate-A3)
         return flowrateExpo

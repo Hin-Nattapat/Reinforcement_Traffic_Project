@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import pandas
 import numpy as np
 
-route = 'p3'
-runningMap = 4
+route = 'p1'
+runningMap = 16
 
 resultFix = pandas.read_csv("Semester_2/map/%s-way/result/fix_result_%s.csv" %(runningMap, route))
 resultPRL = pandas.read_csv("Semester_2/map/%s-way/result/PRL_result_%s.csv" %(runningMap, route))

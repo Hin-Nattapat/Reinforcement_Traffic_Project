@@ -46,7 +46,7 @@ def runNormal(api, tlsList, csvManage, csvRew):
     for tls in tlsID:
         tls.cycle = greenTime + 3
         tls.setLogic(l_phase)
-    while (traci.simulation.getMinExpectedNumber() - traci.vehicle.getIDCount() != 0):
+    while (traci.simulation.getTime() < 10800):
         # try:
         #     result = api.simulate()
         # except:
@@ -75,7 +75,7 @@ def runPRL(api, agent, tlsList, csvManage, csvRew):
         tls.action = agent.getAction('e_greedy', tls.currentState)
         phase, tls.moveState = agent.takeAction(tls.action, tls.currentState)
         tls.setLogic(phase)
-    while (traci.simulation.getMinExpectedNumber() - traci.vehicle.getIDCount() != 0):
+    while (traci.simulation.getTime() < 10800):
         try:
             result = api.simulate()
         except:
@@ -108,17 +108,15 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
     for tls in tlsList:
         tls.action = agent.getAction('e_greedy', tls.currentState)
         phase, tls.moveState = agent.takeAction(tls.action, tls.currentState)
-        # print(tls.getNextLane())
         phase[2] = agent.getGreenTime(tls.getMoveLane(), tls.getNextLane())
         tls.setLogic(phase)
-    while (traci.simulation.getMinExpectedNumber() - traci.vehicle.getIDCount() != 0):
+    while (traci.simulation.getTime() < 10800):
         try:
             result = api.simulate()
         except:
             print('Closed')
             return 0
         if result != None:
-            # print(result)
             csvManage.saveAvgResult(result[1])
             for tls in tlsList:
                 tls.saveResult(result[0][tls.id])
@@ -131,7 +129,6 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
                     nextState = agent.getRandomState(tls.moveState)
                 else:
                     nextState = agent.getNextState(lastQueue, tls.moveState, waitingTime)
-                # print(tls.cycle)
                 data = tls.getAvgResult()
                 reward = agent.update(tls.currentState, nextState, tls.action, data)
                 if reward != None:
@@ -142,9 +139,9 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
                 phase, tls.moveState = agent.takeAction(tls.action, tls.currentState)
                 phase[2] = agent.getGreenTime(tls.getMoveLane(), tls.getNextLane())
                 tls.setLogic(phase)
-
+ 
 if __name__ == "__main__":
-    solution = 'SRL' #fix, prl, srl
+    solution = 'PRL' #fix, PRL, SRL
     route = 'p1'
     runningMap = 16
 
@@ -158,20 +155,17 @@ if __name__ == "__main__":
     if runningMap == 4:
         edgeID = const.edge_4
         nextLane = const.nextEdge_4
-        avgSPD = const.avgSPD_4
-        avgDEN = const.avgDEN_4
+        avgFR = const.satFR_4
         maxWait = const.maxWT_4
     elif runningMap == 16:
         edgeID = const.edge_16
         nextLane = const.nextEdge_16
-        avgSPD = const.avgSPD_16
-        avgDEN = const.avgDEN_16
+        avgFR = const.satFR_16
         maxWait = const.maxWT_16
     elif runningMap == 36:
         edgeID = const.edge_36
         nextLane = const.nextEdge_36
-        avgSPD = const.avgSPD_36
-        avgDEN = const.avgDEN_36
+        avgFR = const.satFR_36
         maxWait = const.maxWT_36
 
     savePath = "Semester_2/map/%s-way/result/%s_result_%s.csv" % (runningMap, solution, route) #ต้องไปเติมว่าเป็น 16-way กับ Period อะไรมาเพิ่ม ทำเป็นโครงอยู่บรรทัดล่าง
@@ -197,7 +191,7 @@ if __name__ == "__main__":
         csvResult = CSV.Csv_api(savePath, ['time','avgFlowRate','avgSpeed','avgDensity','avgWaiting','avgQLength'])
         csvRew = CSV.Csv_api(savePath2, ['epoch','greenTime','reward'])
     elif solution == 'SRL':
-        agent = SRL.Reinforcement(8, len(edgeID), avgSPD, avgDEN, maxWait)
+        agent = SRL.Reinforcement(8, len(edgeID), avgFR, maxWait)
         csvResult = CSV.Csv_api(savePath, ['time','avgFlowRate','avgSpeed','avgDensity','avgWaiting','avgQLength'])
         csvRew = CSV.Csv_api(savePath2, ['epoch','greenTime','reward'])
 

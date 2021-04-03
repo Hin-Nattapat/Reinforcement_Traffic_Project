@@ -40,7 +40,7 @@ class Reinforcement():
     def setSumQ(self):
         for i in range(len(self.stateSpace)):
             sumQ = sum(self.stateSpace[i]['qValue'])
-            self.stateSpace[i]['maxQ'] = sumQ
+            self.stateSpace[i]['sumQ'] = sumQ
 
     def getAction(self, policy, currentState):
         action = None
@@ -69,7 +69,7 @@ class Reinforcement():
             print('exploit' ,end=' | ')
             for count in range(self.MAX_ACTIONS):
                 if self.actionVerify(currentState, count):
-                    if (stateData["q_value"][count] == stateData["maxQ"]):
+                    if (stateData["qValue"][count] == stateData["maxQ"]):
                         action = count
         return action
 

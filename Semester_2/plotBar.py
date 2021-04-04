@@ -50,7 +50,7 @@ def plotBar(ax, y1, y2, y3, label_y):
     label_x = [None, None, 'Proposed', 'TSCRL', 'Fix', None, None]
     width = 0.8
     # ax.set_ylim(0, 50)
-    ax.bar(pos, y_val, width=width, edgecolor='w', color=['w', 'w', 'cornflowerblue', 'lightpink', 'navajowhite', 'w', 'w'])
+    ax.bar(pos, y_val, width=width, edgecolor='w', color=['w', 'w', 'navy', 'darkred', 'green', 'w', 'w'])
     # ax.locator_params(nbins=3)
     ax.set_ylabel(label_y, fontsize=12)
     ax.set_xticks(pos)

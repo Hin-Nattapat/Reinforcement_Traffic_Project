@@ -13,9 +13,11 @@ This command will generate routing that contain many types of car depend on `map
 This command will generate route file :
 ```
 
-python randomTrips.py -n ./16-way/16-way.net.xml -r ./16-way/route/Period_1.rou.xml -e 10800 -l --validate --period 0.6 --trip-attributes="departLane=\"random\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ./16-way/16-way --additional-file vTypeDistributions.add.xml --min-distance 2500 
+python randomTrips.py -n ./4-way/4-way.net.xml -r ./4-way/route/Period_3.rou.xml -e 10800 -l --validate --period 1.2 --trip-attributes="departLane=\"random\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ./4-way/4-way --additional-file vTypeDistributions.add.xml
 
-python randomTrips.py -n ./36-way/36-way.net.xml -r ./36-way/route/Period_1.rou.xml -e 10800 -l --validate --period 0.4 --trip-attributes="departLane=\"random\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ./36-way/36-way --additional-file vTypeDistributions.add.xml --min-distance 7500
+python randomTrips.py -n ./16-way/16-way.net.xml -r ./16-way/route/Period_3.rou.xml -e 10800 -l --validate --period 1 --trip-attributes="departLane=\"random\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ./16-way/16-way --additional-file vTypeDistributions.add.xml --min-distance 2500 
+
+python randomTrips.py -n ./36-way/36-way.net.xml -r ./36-way/route/Period_3.rou.xml -e 10800 -l --validate --period 1 --trip-attributes="departLane=\"random\" departSpeed=\"random\" departPos=\"random\" type=\"vehDist\"" --weights-prefix ./36-way/36-way --additional-file vTypeDistributions.add.xml --min-distance 7500
 
 
 ```
@@ -67,9 +69,9 @@ After simulate traffic for `'n'` seconds, simulation will return these value aft
 * 'TFL_9' : ['Mid_SE_1', 'Mid_ES_2', 'InB_ES_2', 'InB_SE_2']
 
 # Rou 36-way
-* File Period_1 : Period 0.4
-* File Period_2 : Period 0.6
-* File Period_3 : Period 0.8
+* File Period_1 : Period 0.6
+* File Period_2 : Period 0.8
+* File Period_3 : Period 1
 
 # How to run?
 * Choose solution ( fix = normal , PRL = model in paper , SRL = our model)

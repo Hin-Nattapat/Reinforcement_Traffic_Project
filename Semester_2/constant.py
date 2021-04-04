@@ -43,11 +43,9 @@ nextEdge_36 = {
     'TFL_5' : ['Mid_E_1_1', 'Mid_E_1_0', 'Mid_S_2_1', 'Mid_S_2_0','Mid_W_2_1','Mid_W_2_0','Mid_N_1_1','Mid_N_1_0'],
     'TFL_6' : ['OutB_EM_2_1', 'OutB_EM_2_0', 'Mid_ES_2_1', 'Mid_ES_2_0','Mid_E_2_1','Mid_E_2_0','Mid_EN_1_1','Mid_EN_1_0'],
     'TFL_7' : ['Mid_SW_1_1', 'Mid_SW_1_0', 'OutB_SW_2_1', 'OutB_SW_2_0','OutB_WS_2_1','OutB_WS_2_0','Mid_WS_1_1','Mid_WS_1_0'],
-    'TFL_8' : ['MID_SE_1_1', 'MID_SE_1_0', 'OutB_SM_2_1', 'OutB_SM_2_0','Mid_SW_2_1','Mid_SW_2_0','Mid_S_1_1','Mid_S_1_0'],
-    'TFL_9' : ['OutB_ES_2_1', 'OutB_ES_2_0', 'OutB_SE_2_1', 'OutB_SE_2_0','MID_SE_2_1','MID_SE_2_0','Mid_ES_1_1','Mid_ES_1_0'] 
+    'TFL_8' : ['Mid_SE_1_1', 'Mid_SE_1_0', 'OutB_SM_2_1', 'OutB_SM_2_0','Mid_SW_2_1','Mid_SW_2_0','Mid_S_1_1','Mid_S_1_0'],
+    'TFL_9' : ['OutB_ES_2_1', 'OutB_ES_2_0', 'OutB_SE_2_1', 'OutB_SE_2_0','Mid_SE_2_1','Mid_SE_2_0','Mid_ES_1_1','Mid_ES_1_0'] 
 }
 
-maxWT_36 = 180
-satFR_36 = 4000
-avgSPD_36 = 31.03
-avgDEN_36 = 14.7
+maxWT_36 = 90
+satFR_36 = 4000 # peak FR fix rou1

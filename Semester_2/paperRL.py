@@ -177,7 +177,7 @@ class Reinforcement():
         return None
 
     def getPrlReward(self, data):
-        expo = -0.003930312 * (data['arrivalRate'] - 750)
+        expo = -0.003930312 * (data['arrivalRate'] - 1750)
         alpha = 1 / (1 + math.exp(expo))
         func = (alpha * data['qStd']) + ((1 - alpha) * (math.pow(self.TAU, data['flowRate'])))
         reward = math.log(func, self.DELTA)

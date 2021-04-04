@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas
 
-route = 'p1'
+route = 'p3'
 runningMap = 4
 
 resultFix = pandas.read_csv("Semester_2/map/%s-way/result/fix_result_%s.csv" %(runningMap, route))
@@ -61,20 +61,20 @@ line2 = plt.subplot2grid((2, 8), (0, 4), colspan=4)
 line3 = plt.subplot2grid((2, 8), (1, 0), colspan=4)
 line4 = plt.subplot2grid((2, 8), (1, 4), colspan=4)
 
-plotLine(line1, x_time, yf_wait, 'time', 'avg Waiting time', 'FixedTime', 'green', [0,120])
-plotLine(line1, xp_time, yp_wait, 'time', 'avg Waiting time', 'TSCRL', 'darkred', [0,120])
-plotLine(line1, xs_time, ys_wait, 'time', 'avg Waiting time', 'Proposed', 'navy', [0,120])
+plotLine(line1, x_time, yf_wait, 'time', 'avg Waiting time', 'FixedTime', 'green', [0,200])
+plotLine(line1, xp_time, yp_wait, 'time', 'avg Waiting time', 'TSCRL', 'darkred', [0,200])
+plotLine(line1, xs_time, ys_wait, 'time', 'avg Waiting time', 'Proposed', 'navy', [0,200])
 
-plotLine(line2, x_time, yf_qLength, 'time', 'avg Queue length', 'FixedTime', 'green', [0,1500])
-plotLine(line2, xp_time, yp_qLength, 'time', 'avg Queue length', 'TSCRL', 'darkred', [0,1500])
-plotLine(line2, xs_time, ys_qLength, 'time', 'avg Queue length', 'Proposed', 'navy', [0,1500])
+plotLine(line2, x_time, yf_qLength, 'time', 'avg Queue length', 'FixedTime', 'green', [0,100])
+plotLine(line2, xp_time, yp_qLength, 'time', 'avg Queue length', 'TSCRL', 'darkred', [0,100])
+plotLine(line2, xs_time, ys_qLength, 'time', 'avg Queue length', 'Proposed', 'navy', [0,100])
 
-plotLine(line3, x_epoch, yf_green, 'time', 'avg Green time', 'FixedTime', 'green', [25,80])
-plotLine(line3, xp_epoch, yp_green, 'time', 'avg Green time', 'TSCRL', 'darkred', [25,80])
-plotLine(line3, xs_epoch, ys_green, 'time', 'avg Green time', 'Proposed', 'navy', [25,80])
+plotLine(line3, x_epoch, yf_green, 'time', 'avg Green time', 'FixedTime', 'green', [0,70])
+plotLine(line3, xp_epoch, yp_green, 'time', 'avg Green time', 'TSCRL', 'darkred', [0,70])
+plotLine(line3, xs_epoch, ys_green, 'time', 'avg Green time', 'Proposed', 'navy', [0,70])
 
-plotLine(line4, xp_epoch, yp_rew, 'time', 'Reward', 'TSCRL', 'darkred', [-10, 10])
-plotLine(line4, xs_epoch, ys_rew, 'time', 'Reward', 'Proposed', 'navy', [-10,10])
+plotLine(line4, xp_epoch, yp_rew, 'epoch', 'Reward', 'TSCRL', 'darkred', [-10,10])
+plotLine(line4, xs_epoch, ys_rew, 'epoch', 'Reward', 'Proposed', 'navy', [-10,10])
 
 plt.tight_layout()
 plt.show()

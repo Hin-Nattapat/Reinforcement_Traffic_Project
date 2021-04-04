@@ -143,13 +143,20 @@ class Reinforcement():
         return phase, green_state
     
     def getGreenTime(self, moveLane, nextLane):
+        maxDensity = 166.4
         moveDens = []
         nextDens = []
         for i in range(len(moveLane)):
-            moveDens.append(traci.lane.getLastStepHaltingNumber(moveLane[i]))
-            nextDens.append(traci.lane.getLastStepVehicleNumber(nextLane[i]))
-        avgMoveDens = (sum(moveDens) / len(moveDens)) + 1
-        avgNextDens = (sum(nextDens) / len(nextDens)) + 1
+            moveDens.append(traci.lane.getLastStepHaltingNumber(moveLane[i]) * 1000 / traci.lane.getLength(moveLane[i]))
+            nextDens.append(traci.lane.getLastStepVehicleNumber(nextLane[i]) * 1000 / traci.lane.getLength(nextLane[i]))
+        avgMoveDens = ((sum(moveDens) / len(moveDens))) / maxDensity
+        avgNextDens = ((sum(nextDens) / len(nextDens))) / maxDensity
+
+        print(avgMoveDens, avgNextDens)
+        if avgMoveDens == 0:
+            avgMoveDens = 1
+        if avgNextDens == 0:
+            avgNextDens = 1
         
         GT = avgMoveDens/avgNextDens * 60
         if GT > 60:

@@ -5,7 +5,7 @@ nextEdge_4 = {
     'TFL_1' : ['-gneE14_1','-gneE12_0','-gneE8_1','-gneE14_0','-gneE10_1','-gneE8_0','-gneE12_1','-gneE10_0']
 }
 maxWT_4 = 90
-satFR_16 = 1500
+satFR_4 = 1500
 
 edge_16 = {
     'TFL_1' : ['InB_WN_2', 'InB_NW_2', 'Mid_N_2', 'Mid_W_1'],
@@ -48,5 +48,6 @@ nextEdge_36 = {
 }
 
 maxWT_36 = 180
+satFR_36 = 4000
 avgSPD_36 = 31.03
 avgDEN_36 = 14.7

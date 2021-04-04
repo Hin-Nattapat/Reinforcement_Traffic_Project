@@ -135,13 +135,13 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
                     csvRew.saveAvgResult(reward)
                 tls.currentState = nextState
                 tls.action = agent.getAction('e_greedy', tls.currentState)
-                printResult(tls.id, data, nextState, tls.action)
+                #printResult(tls.id, data, nextState, tls.action)
                 phase, tls.moveState = agent.takeAction(tls.action, tls.currentState)
                 phase[2] = agent.getGreenTime(tls.getMoveLane(), tls.getNextLane())
                 tls.setLogic(phase)
  
 if __name__ == "__main__":
-    solution = 'PRL' #fix, PRL, SRL
+    solution = 'SRL' #fix, PRL, SRL
     route = 'p1'
     runningMap = 16
 

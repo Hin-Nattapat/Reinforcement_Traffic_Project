@@ -9,6 +9,7 @@ import paperRL as PRL
 import smarterRL as SRL
 import csv_api as CSV
 import constant as const
+import argparse
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -141,9 +142,26 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
                 tls.setLogic(phase)
  
 if __name__ == "__main__":
-    solution = 'SRL' #fix, PRL, SRL
-    route = 'p3'
-    runningMap = 36
+    parser = argparse.ArgumentParser()
+    parser.add_argument("solution", type=str, help="Solution")
+    parser.add_argument("period", type=str, help="Period")
+    parser.add_argument("runningMap", type=int, help="Running Map")
+    args = parser.parse_args()
+    print("Selected Solution : %s" % (args.solution))
+    print("Selected Period : %s" % (args.period))
+    print("Selected Map : %d" % (args.runningMap))
+    if args.solution == "fix" or args.solution == "PRL" or args.solution == "SRL" :
+        solution = args.solution #fix, PRL, SRL
+    else:
+        raise ValueError("Invalid Solution")
+    if args.period == "p1" or args.period == "p2" or args.period == "p3" :
+        route = args.period
+    else:
+        raise ValueError("Invalid Period")
+    if args.runningMap == 4 or args.runningMap == 16 or args.runningMap == 36 :
+        runningMap = args.runningMap
+    else:
+        raise ValueError("Invalid Running Map")
 
     maxState = 8
     tls = []

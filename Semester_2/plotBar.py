@@ -3,31 +3,37 @@ import pandas
 import numpy as np
 
 route = 'p3'
-runningMap = 36
+runningMap = 4
 
-resultFix = pandas.read_csv("Semester_2/map/%s-way/result/fix_result_%s.csv" %(runningMap, route))
-resultPRL = pandas.read_csv("Semester_2/map/%s-way/result/PRL_result_%s.csv" %(runningMap, route))
-resultSRL = pandas.read_csv("Semester_2/map/%s-way/result/SRL_result_%s.csv" %(runningMap, route))
+resultFix = pandas.read_csv(
+    "Semester_2/map/%s-way/result/fix_result_%s.csv" % (runningMap, route))
+resultPRL = pandas.read_csv(
+    "Semester_2/map/%s-way/result/PRL_result_%s.csv" % (runningMap, route))
+resultSRL = pandas.read_csv(
+    "Semester_2/map/%s-way/result/SRL_result_%s.csv" % (runningMap, route))
 
-rewardFix = pandas.read_csv("Semester_2/map/%s-way/result/fix_reward_%s.csv" %(runningMap, route))
-rewardPRL = pandas.read_csv("Semester_2/map/%s-way/result/PRL_reward_%s.csv" %(runningMap, route))
-rewardSRL = pandas.read_csv("Semester_2/map/%s-way/result/SRL_reward_%s.csv" %(runningMap, route))
+rewardFix = pandas.read_csv(
+    "Semester_2/map/%s-way/result/fix_reward_%s.csv" % (runningMap, route))
+rewardPRL = pandas.read_csv(
+    "Semester_2/map/%s-way/result/PRL_reward_%s.csv" % (runningMap, route))
+rewardSRL = pandas.read_csv(
+    "Semester_2/map/%s-way/result/SRL_reward_%s.csv" % (runningMap, route))
 
-#x-axis
+# x-axis
 x_time = resultFix['time']
 x_epoch = rewardFix['epoch']
 xp_time = resultPRL['time']
 xs_time = resultSRL['time']
 xp_epoch = rewardPRL['epoch']
 xs_epoch = rewardSRL['epoch']
-#y-axis fixedTime
+# y-axis fixedTime
 yf_flow = resultFix['avgFlowRate']
 yf_spd = resultFix['avgSpeed']
 yf_dens = resultFix['avgDensity']
 yf_wait = resultFix['avgWaiting']
 yf_qLength = resultFix['avgQLength']
 yf_green = rewardFix['greenTime']
-#y-axis TSCRL
+# y-axis TSCRL
 yp_flow = resultPRL['avgFlowRate']
 yp_spd = resultPRL['avgSpeed']
 yp_dens = resultPRL['avgDensity']
@@ -35,7 +41,7 @@ yp_wait = resultPRL['avgWaiting']
 yp_qLength = resultPRL['avgQLength']
 yp_green = rewardPRL['greenTime']
 yp_rew = rewardPRL['reward']
-#y-axis Proposed
+# y-axis Proposed
 ys_flow = resultSRL['avgFlowRate']
 ys_spd = resultSRL['avgSpeed']
 ys_dens = resultSRL['avgDensity']
@@ -44,17 +50,24 @@ ys_qLength = resultSRL['avgQLength']
 ys_green = rewardSRL['greenTime']
 ys_rew = rewardSRL['reward']
 
+
 def plotBar(ax, y1, y2, y3, label_y):
-    pos = [1,2,3,4,5,6,7]
-    y_val = [0, 0, y1, y2, y3, 0, 0]    
-    label_x = [None, None, 'Proposed', 'TSCRL', 'Fix', None, None]
-    width = 0.8
+    pos = [1, 2, 3, 4, 5, ]
+    
+    y_val = [ 0, y1, y2, y3, 0, ]
+    label_x = [ None, 'Proposed', 'TSCRL', 'Fix', None]
+    width = 0.6
+    
     # ax.set_ylim(0, 50)
-    ax.bar(pos, y_val, width=width, edgecolor='w', color=['w', 'w', 'navy', 'darkred', 'green', 'w', 'w'])
+    rects1 = ax.bar(pos, y_val, width=width,edgecolor='w', color=[
+                     'w', 'navy', 'darkred', 'green', 'w',])
     # ax.locator_params(nbins=3)
     ax.set_ylabel(label_y, fontsize=12)
     ax.set_xticks(pos)
     ax.set_xticklabels(label_x, rotation=30)
+    ax.bar_label(rects1,padding=3, labels=['','%.1f'%y1,'%.2f'%y2,'%.2f'%y3,''])
+    ax.margins(0.15)
+
 
 plt.close('all')
 fig = plt.figure()

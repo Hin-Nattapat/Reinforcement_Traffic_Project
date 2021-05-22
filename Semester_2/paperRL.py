@@ -1,6 +1,7 @@
 import random
 import math
 
+
 class Reinforcement():
     def __init__(self, maxState, numJunc):
         self.EXPLORE_RATE = 0.5
@@ -16,27 +17,27 @@ class Reinforcement():
         self.numJunc = numJunc
         self.reward = []
         self.greenTime = []
-        
+
         for state in range(maxState):
             temp = {
-                'qValue' : [0.0]*self.MAX_ACTIONS,
-                'sumQ' : 0.0,
-                'maxQ' : 0.0
+                'qValue': [0.0]*self.MAX_ACTIONS,
+                'sumQ': 0.0,
+                'maxQ': 0.0
             }
             self.stateSpace[state] = temp
-        
+
     def printStateSpace(self):
-        print('\nThis is result at end of simulation' ,end='')
+        print('\nThis is result at end of simulation', end='')
         for state, data in self.stateSpace.items():
-            print('\n----------------- state' ,state ,'-----------------')
+            print('\n----------------- state', state, '-----------------')
             for key, value in data.items():
-                print(key, '=' ,value)
+                print(key, '=', value)
 
     def setMaxQ(self):
         for i in range(len(self.stateSpace)):
             maxQ = max(self.stateSpace[i]['qValue'])
             self.stateSpace[i]['maxQ'] = maxQ
-    
+
     def setSumQ(self):
         for i in range(len(self.stateSpace)):
             sumQ = sum(self.stateSpace[i]['qValue'])
@@ -61,12 +62,12 @@ class Reinforcement():
         action = 0
         stateData = self.stateSpace[currentState]
         if (self.EXPLORE_RATE > random.uniform(0, 1)) or (stateData["sumQ"] == 0.0):
-            #explore
-            print('explore' ,end=' | ')
+            # explore
+            print('explore', end=' | ')
             action = self.randomAction(currentState)
         else:
-            #exploit
-            print('exploit' ,end=' | ')
+            # exploit
+            print('exploit', end=' | ')
             for count in range(self.MAX_ACTIONS):
                 if self.actionVerify(currentState, count):
                     if (stateData["qValue"][count] == stateData["maxQ"]):
@@ -77,12 +78,12 @@ class Reinforcement():
         action = 0
         stateData = self.stateSpace[currentState]
         if (self.EXPLORE_RATE > random.uniform(0, 1)) or (stateData["sumQ"] == 0.0):
-            #explore
-            print('explore' ,end=' | ')
+            # explore
+            print('explore', end=' | ')
             action = self.randomAction(currentState)
         else:
-            #exploit
-            print('exploit' ,end=' | ')
+            # exploit
+            print('exploit', end=' | ')
             action = self.randomAction(currentState)
             for count in range(self.MAX_ACTIONS):
                 if self.actionVerify(currentState, action):
@@ -95,32 +96,32 @@ class Reinforcement():
             if count == self.MAX_ACTIONS:
                 action = self.randomAction(currentState)
         return action
-    
-    def randomAction(self, state): #complete
-        action = random.randint(0,2)
+
+    def randomAction(self, state):  # complete
+        action = random.randint(0, 2)
         while not(self.actionVerify(state, action)):
-            action = random.randint(0,2)       
+            action = random.randint(0, 2)
         return action
 
-    def actionVerify(self, state, action): #complete
+    def actionVerify(self, state, action):  # complete
         if state % 2 == 0 and action in [0, 2]:
             return True
         elif state % 2 == 1 and action in [0, 1]:
             return True
         return False
-    
+
     def takeAction(self, action, currentState):
-        green_state = [currentState] #which state can go?
-        phase = [[''],[''],0]
+        green_state = [currentState]  # which state can go?
+        phase = [[''], [''], 0]
 
         if action == 0:
             green_state.append(currentState + (-2 * (currentState % 2)) + 1)
         else:
             green_state.append((currentState + 4) % 8)
-        
+
         g_phase = ''
         y_phase = ''
-        for i in [7,6,5,4,3,2,1,0]:
+        for i in [7, 6, 5, 4, 3, 2, 1, 0]:
             if i in green_state:
                 g_phase += 'G' * (1 + (i % 2))
                 y_phase += 'y' * (1 + (i % 2))
@@ -131,14 +132,14 @@ class Reinforcement():
         phase[0] = g_phase
         phase[1] = y_phase
         phase[2] = self.getGreenTime()
-        self.greenTime.append(phase[2])  
-        
+        self.greenTime.append(phase[2])
+
         return phase, green_state
-    
+
     def getGreenTime(self):
         return 60
 
-    def getNextState(self, qLength, moveState):  
+    def getNextState(self, qLength, moveState):
         length = qLength
         maxLength = max(length)
         nextState = length.index(maxLength)
@@ -148,7 +149,7 @@ class Reinforcement():
             nextState = length.index(maxLength)
         print(nextState)
         return nextState
-    
+
     def getRandomState(self, moveState):
         nextState = random.randint(0, 7)
         while nextState in moveState:
@@ -162,7 +163,8 @@ class Reinforcement():
         currentData = self.stateSpace[currentState]
         nextData = self.stateSpace[nextState]
 
-        currentData["qValue"][action] += round((self.LEARNING_RATE * (reward + (self.DISCOUNT_RATE * nextData["maxQ"])) - currentData["qValue"][action]), 5)
+        currentData["qValue"][action] += round((self.LEARNING_RATE * (reward + (
+            self.DISCOUNT_RATE * nextData["maxQ"]) - currentData["qValue"][action])), 5)
         self.stateSpace[currentState] = currentData
         self.setSumQ()
         self.count += 1
@@ -179,9 +181,8 @@ class Reinforcement():
     def getPrlReward(self, data):
         expo = -0.003930312 * (data['arrivalRate'] - 1750)
         alpha = 1 / (1 + math.exp(expo))
-        func = (alpha * data['qStd']) + ((1 - alpha) * (math.pow(self.TAU, data['flowRate'])))
+        func = (alpha * data['qStd']) + ((1 - alpha) *
+                                         (math.pow(self.TAU, data['flowRate'])))
         reward = math.log(func, self.DELTA)
-        
+
         return reward
-    
-    

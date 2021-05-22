@@ -4,6 +4,7 @@ import statistics as st
 import csv_api as CSV
 import traci
 
+
 class Reinforcement():
     def __init__(self, maxState, numJunc, sat_flowrate, max_waiting_time):
         self.EXPLORE_RATE = 0.5
@@ -24,9 +25,9 @@ class Reinforcement():
 
         for state in range(maxState):
             temp = {
-                'qValue' : [0.0]*self.MAX_ACTIONS,
-                'sumQ' : 0.0,
-                'maxQ' : 0.0
+                'qValue': [0.0]*self.MAX_ACTIONS,
+                'sumQ': 0.0,
+                'maxQ': 0.0
             }
             self.stateSpace[state] = temp
 
@@ -43,7 +44,7 @@ class Reinforcement():
         for i in range(len(self.stateSpace)):
             maxQ = max(self.stateSpace[i]["qValue"])
             self.stateSpace[i]["maxQ"] = maxQ
-    
+
     def setSumQ(self):
         for i in range(len(self.stateSpace)):
             sumQ = sum(self.stateSpace[i]["qValue"])
@@ -68,12 +69,12 @@ class Reinforcement():
         action = 0
         stateData = self.stateSpace[currentState]
         if (self.EXPLORE_RATE > random.uniform(0, 1)) or (stateData["sumQ"] == 0.0):
-            #explore
-            print('explore' ,end=' | ')
+            # explore
+            print('explore', end=' | ')
             action = self.randomAction(currentState)
         else:
-            #exploit
-            print('exploit' ,end=' | ')
+            # exploit
+            print('exploit', end=' | ')
             for count in range(self.MAX_ACTIONS):
                 if self.actionVerify(currentState, count):
                     if (stateData["qValue"][count] == stateData["maxQ"]):
@@ -84,13 +85,13 @@ class Reinforcement():
         action = 0
         stateData = self.stateSpace[currentState]
         if (self.EXPLORE_RATE > random.uniform(0, 1)) or (stateData["sumQ"] == 0.0):
-            #explore
-            print('explore' ,end=' | ')
+            # explore
+            print('explore', end=' | ')
             action = self.randomAction(currentState)
             print("ACTION => ", action)
         else:
-            #exploit
-            print('exploit' ,end=' | ')
+            # exploit
+            print('exploit', end=' | ')
             action = self.randomAction(currentState)
             for count in range(self.MAX_ACTIONS):
                 if self.actionVerify(currentState, action):
@@ -104,32 +105,32 @@ class Reinforcement():
                 action = self.randomAction(currentState)
             print("ACTION => ", action)
         return action
-    
-    def randomAction(self, state): #complete
-        action = random.randint(0,2)
+
+    def randomAction(self, state):  # complete
+        action = random.randint(0, 2)
         while not(self.actionVerify(state, action)):
-            action = random.randint(0,2)       
+            action = random.randint(0, 2)
         return action
 
-    def actionVerify(self, state, action): #complete
+    def actionVerify(self, state, action):  # complete
         if state % 2 == 0 and action in [0, 2]:
             return True
         elif state % 2 == 1 and action in [0, 1]:
             return True
         return False
-    
+
     def takeAction(self, action, currentState):
-        green_state = [currentState] #which state can go?
-        phase = [[''],[''],0]
-        
+        green_state = [currentState]  # which state can go?
+        phase = [[''], [''], 0]
+
         if action == 0:
             green_state.append(currentState + (-2 * (currentState % 2)) + 1)
         else:
             green_state.append((currentState + 4) % 8)
-        
+
         g_phase = ''
         y_phase = ''
-        for i in [7,6,5,4,3,2,1,0]:
+        for i in [7, 6, 5, 4, 3, 2, 1, 0]:
             if i in green_state:
                 g_phase += 'G' * (1 + (i % 2))
                 y_phase += 'y' * (1 + (i % 2))
@@ -138,17 +139,19 @@ class Reinforcement():
                 y_phase += 'r' * (1 + (i % 2))
 
         phase[0] = g_phase
-        phase[1] = y_phase  
-        
+        phase[1] = y_phase
+
         return phase, green_state
-    
+
     def getGreenTime(self, moveLane, nextLane):
         maxDensity = 166.4
         moveDens = []
         nextDens = []
         for i in range(len(moveLane)):
-            moveDens.append(traci.lane.getLastStepHaltingNumber(moveLane[i]) * 1000 / traci.lane.getLength(moveLane[i]))
-            nextDens.append(traci.lane.getLastStepVehicleNumber(nextLane[i]) * 1000 / traci.lane.getLength(nextLane[i]))
+            moveDens.append(traci.lane.getLastStepHaltingNumber(
+                moveLane[i]) * 1000 / traci.lane.getLength(moveLane[i]))
+            nextDens.append(traci.lane.getLastStepVehicleNumber(
+                nextLane[i]) * 1000 / traci.lane.getLength(nextLane[i]))
         avgMoveDens = ((sum(moveDens) / len(moveDens))) / maxDensity
         avgNextDens = ((sum(nextDens) / len(nextDens))) / maxDensity
 
@@ -157,17 +160,17 @@ class Reinforcement():
             avgMoveDens = 1
         if avgNextDens == 0:
             avgNextDens = 1
-        
+
         GT = avgMoveDens/avgNextDens * 60
         if GT > 60:
             greenTime = 60
-        elif GT < 20 :
+        elif GT < 20:
             greenTime = 20
-        else: 
+        else:
             greenTime = int(GT)
 
         self.greenTime.append(greenTime)
-        print("Green Time => ",greenTime)
+        print("Green Time => ", greenTime)
         return greenTime
 
     def getNextState(self, qLength, moveState, waitingTime):
@@ -187,7 +190,7 @@ class Reinforcement():
             nextState = length.index(maxLength)
         print(nextState)
         return nextState
-    
+
     def getRandomState(self, moveState):
         nextState = random.randint(0, 7)
         while nextState in moveState:
@@ -201,7 +204,8 @@ class Reinforcement():
         currentData = self.stateSpace[currentState]
         nextData = self.stateSpace[nextState]
 
-        currentData["qValue"][action] += round((self.LEARNING_RATE * (reward + (self.DISCOUNT_RATE * nextData["maxQ"])) - currentData["qValue"][action]), 5)
+        currentData["qValue"][action] += round((self.LEARNING_RATE * (reward + (
+            self.DISCOUNT_RATE * nextData["maxQ"]) - currentData["qValue"][action])), 5)
         self.stateSpace[currentState] = currentData
         self.setSumQ()
         self.count += 1
@@ -215,16 +219,16 @@ class Reinforcement():
             return [self.EPOCH - 1, avgGreen, avgRew]
         return None
 
-    def find_flowrate_expo(self,flowrate):
+    def find_flowrate_expo(self, flowrate):
         # ต้องหา avg_spd,density นำข้อมูลมาจากกราฟของการทดลองแรก
         # Saturate_Flowrate = self.SAT_FR * self.DENSITY
         Saturate_Flowrate = 3500
-        A3 =  self.SAT_FR/2
+        A3 = self.SAT_FR/2
         A2 = 2.944/(0.95-A3)
         flowrateExpo = A2*(flowrate-A3)
         return flowrateExpo
 
-    def find_waitingtime_expo(self,waitingtime):
+    def find_waitingtime_expo(self, waitingtime):
         A3 = self.MAX_WAITING_TIME/2
         A2 = 2.944/(0.95-A3)
         waitingtimeExpo = A2*(waitingtime-A3)
@@ -239,10 +243,3 @@ class Reinforcement():
         WaitingTimeScale = 1/(1+math.exp(waitingtimeExpo))
         reward = FlowRateScale/(1+WaitingTimeScale) * 10
         return reward
-
-
-     
-
-
-       
-    

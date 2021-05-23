@@ -142,7 +142,7 @@ def runSRL(api, agent, tlsList, csvManage, csvRew):
                 tls.setLogic(phase)
  
 if __name__ == "__main__":
-    solution = 'PRL' #fix, PRL, SRL
+    solution = 'SRL' #fix, PRL, SRL
     route = 'p3'
     runningMap = 36
     # parser = argparse.ArgumentParser()

@@ -3,7 +3,7 @@ import pandas
 import numpy as np
 
 route = 'p3'
-runningMap = 4
+runningMap = 36
 
 resultFix = pandas.read_csv(
     "Semester_2/map/%s-way/result/fix_result_%s.csv" % (runningMap, route))
@@ -65,7 +65,7 @@ def plotBar(ax, y1, y2, y3, label_y):
     ax.set_ylabel(label_y, fontsize=12)
     ax.set_xticks(pos)
     ax.set_xticklabels(label_x, rotation=30)
-    ax.bar_label(rects1,padding=3, labels=['','%.1f'%y1,'%.2f'%y2,'%.2f'%y3,''])
+    ax.bar_label(rects1,padding=3, labels=['','%.2f'%y1,'%.2f'%y2,'%.2f'%y3,''])
     ax.margins(0.15)
 
 
